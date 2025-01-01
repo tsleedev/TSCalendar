@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,7 +12,50 @@
 		7C0C61832D1A99A500B37075 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C0C61822D1A99A500B37075 /* Assets.xcassets */; };
 		7C0C61862D1A99A500B37075 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C0C61852D1A99A500B37075 /* Preview Assets.xcassets */; };
 		7C0FBE022D1A9E9F00392740 /* TSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 7C0FBE012D1A9E9F00392740 /* TSCalendar */; };
+		7C5BD7CA2D1CE952004069C4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5BD7C92D1CE952004069C4 /* WidgetKit.framework */; };
+		7C5BD7CC2D1CE952004069C4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5BD7CB2D1CE952004069C4 /* SwiftUI.framework */; };
+		7C5BD7D72D1CE954004069C4 /* WidgetDemoExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 7C5BD7C82D1CE952004069C4 /* WidgetDemoExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7C5BD7F02D1D44B1004069C4 /* CalendarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5BD7EF2D1D44B1004069C4 /* CalendarController.swift */; };
+		7C5BD7FB2D1E445E004069C4 /* TSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 7C5BD7FA2D1E445E004069C4 /* TSCalendar */; };
+		7C5BD7FD2D1E4482004069C4 /* TSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 7C5BD7FC2D1E4482004069C4 /* TSCalendar */; };
+		7C5BD8422D1E925B004069C4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5BD7C92D1CE952004069C4 /* WidgetKit.framework */; };
+		7C5BD8432D1E925B004069C4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5BD7CB2D1CE952004069C4 /* SwiftUI.framework */; };
+		7C5BD8502D1E925D004069C4 /* WidgetIntentDemoExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 7C5BD8412D1E925B004069C4 /* WidgetIntentDemoExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7C5BD8562D1E967C004069C4 /* TSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 7C5BD8552D1E967C004069C4 /* TSCalendar */; };
+		7CC328CC2D23B68000735807 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC328CB2D23B67F00735807 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7C5BD7D52D1CE954004069C4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C0C61732D1A99A300B37075 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C5BD7C72D1CE952004069C4;
+			remoteInfo = WidgetDemoExtension;
+		};
+		7C5BD84E2D1E925D004069C4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C0C61732D1A99A300B37075 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C5BD8402D1E925B004069C4;
+			remoteInfo = WidgetIntentDemoExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7C5BD7D82D1CE954004069C4 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7C5BD7D72D1CE954004069C4 /* WidgetDemoExtension.appex in Embed Foundation Extensions */,
+				7C5BD8502D1E925D004069C4 /* WidgetIntentDemoExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		7C0C617B2D1A99A300B37075 /* TSCalendarSwiftUIDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TSCalendarSwiftUIDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -20,8 +63,35 @@
 		7C0C61802D1A99A300B37075 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7C0C61822D1A99A500B37075 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7C0C61852D1A99A500B37075 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		7CE8B29A2D1A9A0000EE2FD5 /* TSCalendar */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = TSCalendar; path = ../..; sourceTree = "<group>"; };
+		7C5BD7C82D1CE952004069C4 /* WidgetDemoExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetDemoExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C5BD7C92D1CE952004069C4 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		7C5BD7CB2D1CE952004069C4 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		7C5BD7EF2D1D44B1004069C4 /* CalendarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarController.swift; sourceTree = "<group>"; };
+		7C5BD8412D1E925B004069C4 /* WidgetIntentDemoExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetIntentDemoExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CC328CB2D23B67F00735807 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		7C5BD7DB2D1CE954004069C4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7C5BD7C72D1CE952004069C4 /* WidgetDemoExtension */;
+		};
+		7C5BD8512D1E925D004069C4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7C5BD8402D1E925B004069C4 /* WidgetIntentDemoExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		7C5BD7CD2D1CE952004069C4 /* WidgetDemo */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (7C5BD7DB2D1CE954004069C4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WidgetDemo; sourceTree = "<group>"; };
+		7C5BD8442D1E925B004069C4 /* WidgetIntentDemo */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (7C5BD8512D1E925D004069C4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = WidgetIntentDemo; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		7C0C61782D1A99A300B37075 /* Frameworks */ = {
@@ -29,6 +99,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C0FBE022D1A9E9F00392740 /* TSCalendar in Frameworks */,
+				7C5BD7FB2D1E445E004069C4 /* TSCalendar in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C5BD7C52D1CE952004069C4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C5BD7CC2D1CE952004069C4 /* SwiftUI.framework in Frameworks */,
+				7C5BD7CA2D1CE952004069C4 /* WidgetKit.framework in Frameworks */,
+				7C5BD7FD2D1E4482004069C4 /* TSCalendar in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C5BD83E2D1E925B004069C4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C5BD8432D1E925B004069C4 /* SwiftUI.framework in Frameworks */,
+				7C5BD8422D1E925B004069C4 /* WidgetKit.framework in Frameworks */,
+				7C5BD8562D1E967C004069C4 /* TSCalendar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,8 +129,9 @@
 		7C0C61722D1A99A300B37075 = {
 			isa = PBXGroup;
 			children = (
-				7CE8B29A2D1A9A0000EE2FD5 /* TSCalendar */,
 				7C0C617D2D1A99A300B37075 /* TSCalendarSwiftUIDemo */,
+				7C5BD7CD2D1CE952004069C4 /* WidgetDemo */,
+				7C5BD8442D1E925B004069C4 /* WidgetIntentDemo */,
 				7C0FBE002D1A9E9F00392740 /* Frameworks */,
 				7C0C617C2D1A99A300B37075 /* Products */,
 			);
@@ -49,6 +141,8 @@
 			isa = PBXGroup;
 			children = (
 				7C0C617B2D1A99A300B37075 /* TSCalendarSwiftUIDemo.app */,
+				7C5BD7C82D1CE952004069C4 /* WidgetDemoExtension.appex */,
+				7C5BD8412D1E925B004069C4 /* WidgetIntentDemoExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -57,7 +151,8 @@
 			isa = PBXGroup;
 			children = (
 				7C0C617E2D1A99A300B37075 /* TSCalendarSwiftUIDemoApp.swift */,
-				7C0C61802D1A99A300B37075 /* ContentView.swift */,
+				7C5BD7EF2D1D44B1004069C4 /* CalendarController.swift */,
+				7CC328D02D23B77700735807 /* Views */,
 				7C0C61822D1A99A500B37075 /* Assets.xcassets */,
 				7C0C61842D1A99A500B37075 /* Preview Content */,
 			);
@@ -75,8 +170,19 @@
 		7C0FBE002D1A9E9F00392740 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7C5BD7C92D1CE952004069C4 /* WidgetKit.framework */,
+				7C5BD7CB2D1CE952004069C4 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7CC328D02D23B77700735807 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7C0C61802D1A99A300B37075 /* ContentView.swift */,
+				7CC328CB2D23B67F00735807 /* SettingsView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -89,15 +195,64 @@
 				7C0C61772D1A99A300B37075 /* Sources */,
 				7C0C61782D1A99A300B37075 /* Frameworks */,
 				7C0C61792D1A99A300B37075 /* Resources */,
+				7C5BD7D82D1CE954004069C4 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				7C5BD7D62D1CE954004069C4 /* PBXTargetDependency */,
+				7C5BD84F2D1E925D004069C4 /* PBXTargetDependency */,
 			);
 			name = TSCalendarSwiftUIDemo;
 			productName = TSCalendarSwiftUIDemo;
 			productReference = 7C0C617B2D1A99A300B37075 /* TSCalendarSwiftUIDemo.app */;
 			productType = "com.apple.product-type.application";
+		};
+		7C5BD7C72D1CE952004069C4 /* WidgetDemoExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C5BD7DC2D1CE954004069C4 /* Build configuration list for PBXNativeTarget "WidgetDemoExtension" */;
+			buildPhases = (
+				7C5BD7C42D1CE952004069C4 /* Sources */,
+				7C5BD7C52D1CE952004069C4 /* Frameworks */,
+				7C5BD7C62D1CE952004069C4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				7C5BD7CD2D1CE952004069C4 /* WidgetDemo */,
+			);
+			name = WidgetDemoExtension;
+			packageProductDependencies = (
+				7C5BD7FC2D1E4482004069C4 /* TSCalendar */,
+			);
+			productName = WidgetDemoExtension;
+			productReference = 7C5BD7C82D1CE952004069C4 /* WidgetDemoExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		7C5BD8402D1E925B004069C4 /* WidgetIntentDemoExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7C5BD8522D1E925D004069C4 /* Build configuration list for PBXNativeTarget "WidgetIntentDemoExtension" */;
+			buildPhases = (
+				7C5BD83D2D1E925B004069C4 /* Sources */,
+				7C5BD83E2D1E925B004069C4 /* Frameworks */,
+				7C5BD83F2D1E925B004069C4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				7C5BD8442D1E925B004069C4 /* WidgetIntentDemo */,
+			);
+			name = WidgetIntentDemoExtension;
+			packageProductDependencies = (
+				7C5BD8552D1E967C004069C4 /* TSCalendar */,
+			);
+			productName = WidgetIntentDemoExtension;
+			productReference = 7C5BD8412D1E925B004069C4 /* WidgetIntentDemoExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -106,11 +261,17 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1540;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					7C0C617A2D1A99A300B37075 = {
 						CreatedOnToolsVersion = 15.4;
+					};
+					7C5BD7C72D1CE952004069C4 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					7C5BD8402D1E925B004069C4 = {
+						CreatedOnToolsVersion = 16.2;
 					};
 				};
 			};
@@ -123,11 +284,16 @@
 				Base,
 			);
 			mainGroup = 7C0C61722D1A99A300B37075;
+			packageReferences = (
+				7C5BD7F92D1E445E004069C4 /* XCLocalSwiftPackageReference "../../../TSCalendar" */,
+			);
 			productRefGroup = 7C0C617C2D1A99A300B37075 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				7C0C617A2D1A99A300B37075 /* TSCalendarSwiftUIDemo */,
+				7C5BD7C72D1CE952004069C4 /* WidgetDemoExtension */,
+				7C5BD8402D1E925B004069C4 /* WidgetIntentDemoExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -142,6 +308,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7C5BD7C62D1CE952004069C4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C5BD83F2D1E925B004069C4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -150,11 +330,40 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C0C61812D1A99A300B37075 /* ContentView.swift in Sources */,
+				7CC328CC2D23B68000735807 /* SettingsView.swift in Sources */,
+				7C5BD7F02D1D44B1004069C4 /* CalendarController.swift in Sources */,
 				7C0C617F2D1A99A300B37075 /* TSCalendarSwiftUIDemoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7C5BD7C42D1CE952004069C4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C5BD83D2D1E925B004069C4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7C5BD7D62D1CE954004069C4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7C5BD7C72D1CE952004069C4 /* WidgetDemoExtension */;
+			targetProxy = 7C5BD7D52D1CE954004069C4 /* PBXContainerItemProxy */;
+		};
+		7C5BD84F2D1E925D004069C4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7C5BD8402D1E925B004069C4 /* WidgetIntentDemoExtension */;
+			targetProxy = 7C5BD84E2D1E925D004069C4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		7C0C61872D1A99A500B37075 /* Debug */ = {
@@ -291,6 +500,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.60;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -319,6 +529,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.60;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -326,6 +537,114 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tsleedev.TSCalendarSwiftUIDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7C5BD7D92D1CE954004069C4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WidgetDemo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WidgetDemo;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsleedev.TSCalendarSwiftUIDemo.WidgetDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7C5BD7DA2D1CE954004069C4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WidgetDemo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WidgetDemo;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsleedev.TSCalendarSwiftUIDemo.WidgetDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7C5BD8532D1E925D004069C4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WidgetIntentDemo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WidgetIntentDemo;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsleedev.TSCalendarSwiftUIDemo.WidgetIntentDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7C5BD8542D1E925D004069C4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WidgetIntentDemo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WidgetIntentDemo;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsleedev.TSCalendarSwiftUIDemo.WidgetIntentDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -353,11 +672,50 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		7C5BD7DC2D1CE954004069C4 /* Build configuration list for PBXNativeTarget "WidgetDemoExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C5BD7D92D1CE954004069C4 /* Debug */,
+				7C5BD7DA2D1CE954004069C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7C5BD8522D1E925D004069C4 /* Build configuration list for PBXNativeTarget "WidgetIntentDemoExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C5BD8532D1E925D004069C4 /* Debug */,
+				7C5BD8542D1E925D004069C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		7C5BD7F92D1E445E004069C4 /* XCLocalSwiftPackageReference "../../../TSCalendar" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../TSCalendar;
+		};
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		7C0FBE012D1A9E9F00392740 /* TSCalendar */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = TSCalendar;
+		};
+		7C5BD7FA2D1E445E004069C4 /* TSCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TSCalendar;
+		};
+		7C5BD7FC2D1E4482004069C4 /* TSCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7C5BD7F92D1E445E004069C4 /* XCLocalSwiftPackageReference "../../../TSCalendar" */;
+			productName = TSCalendar;
+		};
+		7C5BD8552D1E967C004069C4 /* TSCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7C5BD7F92D1E445E004069C4 /* XCLocalSwiftPackageReference "../../../TSCalendar" */;
 			productName = TSCalendar;
 		};
 /* End XCSwiftPackageProductDependency section */

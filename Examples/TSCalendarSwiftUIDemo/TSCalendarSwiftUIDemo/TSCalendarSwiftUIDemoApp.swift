@@ -12,7 +12,7 @@ import TSCalendar
 struct TSCalendarSwiftUIDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            TSCalendarViewFactory.createCalendarView()
+            ContentView()
         }
     }
 }
