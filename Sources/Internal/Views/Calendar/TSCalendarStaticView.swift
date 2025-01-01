@@ -16,12 +16,12 @@ struct TSCalendarStaticView: View {
             switch viewModel.displayMode {
             case .month:
                 TSCalendarMonthView(
-                    monthData: viewModel.datesData[1],
+                    monthData: viewModel.currentCalendarData,
                     viewModel: viewModel
                 )
             case .week:
                 TSCalendarWeekView(
-                    weekData: viewModel.datesData[1][0],  // 주 데이터는 datesData[1][0]
+                    weekData: viewModel.currentWeekData,
                     viewModel: viewModel
                 )
             }

@@ -23,8 +23,11 @@ struct TSCalendarMonthHeaderView: View {
                 
                 Spacer()
                 
-                Text(appearance.getHeaderTitle(date: currentMonth, displayMode: viewModel.displayMode))
-                    .font(appearance.monthHeaderFont)
+                Text(appearance.getHeaderTitle(
+                    date: viewModel.currentDisplayedDate,
+                    displayMode: viewModel.displayMode)
+                )
+                .font(appearance.monthHeaderFont)
                 
                 Spacer()
                 
@@ -34,17 +37,16 @@ struct TSCalendarMonthHeaderView: View {
                 }
                 .padding(.trailing, 16)
             } else {
-                Text(appearance.getHeaderTitle(date: currentMonth, displayMode: viewModel.displayMode))
-                    .font(appearance.monthHeaderFont)
-                    .padding(.leading, 16)
+                Text(appearance.getHeaderTitle(
+                    date: viewModel.currentDisplayedDate,
+                    displayMode: viewModel.displayMode)
+                )
+                .font(appearance.monthHeaderFont)
+                .padding(.leading, 16)
                 Spacer()
             }
         }
         .frame(height: appearance.monthHeaderHeight)
-    }
-    
-    private var currentMonth: Date {
-        viewModel.displayedDates[1]
     }
 }
 

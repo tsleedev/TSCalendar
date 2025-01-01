@@ -86,9 +86,9 @@ struct TSCalendarWeekView: View {
 #Preview {
     TSCalendarView(
         initialDate: Date(),
-        minimumDate: Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date(),
-        maximumDate: Calendar.current.date(byAdding: .year, value: 1, to: Date()) ?? Date(),
-        selectedDate: Date(),
+        minimumDate: Calendar.current.date(byAdding: .year, value: -1, to: .now) ?? .now,
+        maximumDate: Calendar.current.date(byAdding: .year, value: 1, to: .now) ?? .now,
+        selectedDate: .now,
         scrollDirection: .vertical,
         environment: .app,
         delegate: nil,

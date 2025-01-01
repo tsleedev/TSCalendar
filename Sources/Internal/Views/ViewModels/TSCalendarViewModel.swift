@@ -8,11 +8,11 @@
 import SwiftUI
 
 final class TSCalendarViewModel: ObservableObject {
-    @Published var selectedDate: Date?
-    @Published var displayMode: TSCalendarDisplayMode
-    @Published var scrollDirection: TSCalendarScrollDirection
-    @Published var displayedDates: [Date] = []
-    @Published var datesData: [[[TSCalendarDate]]] = []
+    @Published private(set) var selectedDate: Date?
+    @Published private(set) var displayMode: TSCalendarDisplayMode
+    @Published private(set) var scrollDirection: TSCalendarScrollDirection
+    @Published private(set) var displayedDates: [Date] = []
+    @Published private(set) var datesData: [[[TSCalendarDate]]] = []
     
     private let calendar = Calendar(identifier: .gregorian)
     private let minimumDate: Date?
@@ -22,6 +22,21 @@ final class TSCalendarViewModel: ObservableObject {
     
     weak var delegate: TSCalendarDelegate?
     weak var dataSource: TSCalendarDataSource?
+    
+    var currentDisplayedDate: Date {
+        let index = environment.isPagingEnabled ? 1 : 0
+        return displayedDates[safe: index] ?? Date()
+    }
+    
+    var currentCalendarData: [[TSCalendarDate]] {
+        let index = environment.isPagingEnabled ? 1 : 0
+        return datesData[safe: index] ?? []
+    }
+    
+    var currentWeekData: [TSCalendarDate] {
+        let index = environment.isPagingEnabled ? 1 : 0
+        return datesData[safe: index]?.first ?? []
+    }
     
     init(
         initialDate: Date,
@@ -65,10 +80,11 @@ final class TSCalendarViewModel: ObservableObject {
     
     func moveDate(by value: Int) {
         let component = displayMode == .month ? Calendar.Component.month : .weekOfYear
-        guard let nextDate = calendar.date(byAdding: component, value: value, to: displayedDates[1]),
+        guard let currentDate = displayedDates[safe: 1],
+              let nextDate = calendar.date(byAdding: component, value: value, to: currentDate),
               canMove(to: nextDate) else { return }
         
-        delegate?.calendar(pageWillChange: displayedDates[1])
+        delegate?.calendar(pageWillChange: currentDate)
         displayedDates = environment.isPagingEnabled ?
         getDisplayedDates(from: nextDate) : [nextDate]
         
@@ -88,7 +104,7 @@ final class TSCalendarViewModel: ObservableObject {
         }
         
         generateAllDates()
-        delegate?.calendar(pageDidChange: displayedDates[1])
+        delegate?.calendar(pageDidChange: currentDisplayedDate)
     }
     
     func selectDate(_ date: Date) {
@@ -104,13 +120,15 @@ final class TSCalendarViewModel: ObservableObject {
             if environment.isPagingEnabled {
                 datesData = displayedDates.map { generateDaysForMonth($0) }
             } else {
-                datesData = [generateDaysForMonth(displayedDates[0])]
+                guard let date = displayedDates[safe: 0] else { return }
+                datesData = [generateDaysForMonth(date)]
             }
         case .week:
             if environment.isPagingEnabled {
                 datesData = displayedDates.map { [generateDaysForWeek($0)] }
             } else {
-                datesData = [[generateDaysForWeek(displayedDates[0])]]
+                guard let date = displayedDates[safe: 0] else { return }
+                datesData = [[generateDaysForWeek(date)]]
             }
         }
     }
@@ -126,12 +144,13 @@ final class TSCalendarViewModel: ObservableObject {
         
         return (0..<7).compactMap { dayOffset in
             guard let date = calendar.date(byAdding: .day, value: dayOffset, to: adjustedWeekStart) else { return nil }
+            let currentMonth = displayedDates[safe: 0] ?? Date()
             
             return TSCalendarDate(
                 date: date,
                 isSelected: selectedDate.map { calendar.isDate($0, inSameDayAs: date) } ?? false,
                 isToday: calendar.isDateInToday(date),
-                isInCurrentMonth: calendar.isDate(date, equalTo: displayedDates[0], toGranularity: .month)
+                isInCurrentMonth: calendar.isDate(date, equalTo: currentMonth, toGranularity: .month)
             )
         }
     }
