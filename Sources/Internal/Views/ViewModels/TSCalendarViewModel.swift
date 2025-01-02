@@ -18,7 +18,7 @@ final class TSCalendarViewModel: ObservableObject {
     private let minimumDate: Date?
     private let maximumDate: Date?
     private let startWeekDay: TSCalendarStartWeekDay
-    private let environment: TSCalendarEnvironment
+    let environment: TSCalendarEnvironment
     
     weak var delegate: TSCalendarDelegate?
     weak var dataSource: TSCalendarDataSource?
@@ -139,12 +139,13 @@ final class TSCalendarViewModel: ObservableObject {
     }
     
     private func generateDaysForWeek(_ weekStart: Date) -> [TSCalendarDate] {
-        let startOffset = (calendar.component(.weekday, from: weekStart) - startWeekDay.rawValue + 7) % 7
+        let firstWeekday = calendar.component(.weekday, from: weekStart)
+        let startOffset = ((firstWeekday - 1) - startWeekDay.rawValue + 7) % 7
         let adjustedWeekStart = calendar.date(byAdding: .day, value: -startOffset, to: weekStart) ?? weekStart
         
         return (0..<7).compactMap { dayOffset in
             guard let date = calendar.date(byAdding: .day, value: dayOffset, to: adjustedWeekStart) else { return nil }
-            let currentMonth = displayedDates[safe: 0] ?? Date()
+            let currentMonth = displayedDates[safe: 0] ?? .now
             
             return TSCalendarDate(
                 date: date,
@@ -159,8 +160,12 @@ final class TSCalendarViewModel: ObservableObject {
         let startOfMonth = calendar.startOfMonth(for: month)
         let firstWeekday = calendar.component(.weekday, from: startOfMonth)
         let firstOffset = ((firstWeekday - 1) - startWeekDay.rawValue + 7) % 7
+        let daysInMonth = calendar.range(of: .day, in: .month, for: month)?.count ?? 30
         
-        let dates = (-firstOffset..<(42-firstOffset)).compactMap { offset -> TSCalendarDate? in
+        let weeksNeeded = environment.monthStyle == .fixed ? 6 : Int(ceil(Double(firstOffset + daysInMonth) / 7.0))
+        let totalDays = weeksNeeded * 7
+        
+        let dates = (-firstOffset..<(totalDays-firstOffset)).compactMap { offset -> TSCalendarDate? in
             guard let date = calendar.date(byAdding: .day, value: offset, to: startOfMonth) else { return nil }
             
             return TSCalendarDate(

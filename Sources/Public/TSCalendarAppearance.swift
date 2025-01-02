@@ -61,7 +61,7 @@ public struct TSCalendarAppearance: TSCalendarAppearanceProtocol {
     public init(type: TSCalendarAppearanceType = .app) {
         switch type {
         case .app:
-            self.daySize = 35
+            self.daySize = 25
             self.monthHeaderHeight = 40
             self.weekdayHeaderHeight = 30
             self.monthHeaderFont = .system(size: 17)
@@ -72,7 +72,7 @@ public struct TSCalendarAppearance: TSCalendarAppearanceProtocol {
         case .widget(let size):
             switch size {
             case .small:
-                self.daySize = 16
+                self.daySize = 15
                 self.monthHeaderHeight = 20
                 self.weekdayHeaderHeight = 12
                 self.monthHeaderFont = .system(size: 10)

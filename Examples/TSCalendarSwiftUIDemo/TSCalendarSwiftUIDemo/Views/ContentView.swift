@@ -16,6 +16,7 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 TSCalendar(
+                    displayMode: controller.displayMode,
                     scrollDirection: controller.scrollDirection,
                     startWeekDay: controller.startWeekDay,
                     delegate: controller,

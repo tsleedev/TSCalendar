@@ -18,9 +18,13 @@ public enum TSCalendarAppearanceType {
     }
 }
 
-public enum TSCalendarDisplayMode {
-    case month
-    case week
+public enum TSCalendarDisplayMode: String, CaseIterable {
+    case month = "Month"
+    case week = "Week"
+    
+    public var description: String {
+        return self.rawValue
+    }
 }
 
 public enum TSCalendarScrollDirection: String, CaseIterable {

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct TSCalendarEventView: View {
+    @Environment(\.calendarAppearance) private var appearance
+    
     let event: TSCalendarEvent
     let width: CGFloat
     let offsetX: CGFloat
@@ -17,10 +19,11 @@ struct TSCalendarEventView: View {
     
     var body: some View {
         Text(event.title)
-            .font(.system(size: 10))
+            .font(appearance.eventFont)
             .lineLimit(1)
             .padding(.horizontal, 4)
             .padding(.vertical, 2)
+            .fixedSize(horizontal: true, vertical: false)
             .frame(width: width - margin, alignment: .leading)
             .background(event.backgroundColor)
             .foregroundColor(event.textColor)

@@ -22,6 +22,7 @@ struct TSCalendarEventsView: View {
     private let rowHeight: CGFloat = 18
     
     var body: some View {
+        let totalWidth = dayWidth * CGFloat(weekData.count)
         let dateEvents = processEvents(events)
         let maxRows = Int(height / rowHeight)
         if maxRows > 0 {
@@ -29,9 +30,11 @@ struct TSCalendarEventsView: View {
                 // maxRows - 1까지만 표시
                 ForEach(Array(dateEvents.prefix(maxRows-1).enumerated()), id: \.offset) { rowIndex, rowEvents in
                     ForEach(Array(rowEvents.enumerated()), id: \.offset) { _, dateEvent in
+                        let eventWidth = dayWidth * CGFloat(dateEvent.endIndex - dateEvent.startIndex + 1)
+                        
                         TSCalendarEventView(
                             event: dateEvent.event,
-                            width: dayWidth * CGFloat(dateEvent.endIndex - dateEvent.startIndex + 1),
+                            width: min(eventWidth, totalWidth),
                             offsetX: dayWidth * CGFloat(dateEvent.startIndex),
                             offsetY: rowHeight * dateEvent.offsetY
                         )

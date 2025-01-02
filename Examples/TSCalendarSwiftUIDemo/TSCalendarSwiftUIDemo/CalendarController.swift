@@ -9,57 +9,63 @@ import SwiftUI
 import TSCalendar
 
 class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendarDataSource {
+    @Published var displayMode: TSCalendarDisplayMode = .month
     @Published var scrollDirection: TSCalendarScrollDirection = .horizontal
     @Published var startWeekDay: TSCalendarStartWeekDay = .sunday
     
     var events: [TSCalendarEvent] = [
+        // 첫째 주 이벤트 (겹치게 설정)
         TSCalendarEvent(
-            title: "테스트",
-            startDate: createDate(2024, 12, 1),
-            endDate: createDate(2024, 12, 2),
+            title: "첫째 주 이벤트 1",
+            startDate: createDate(monthOffset: .current, day: 1),
+            endDate: createDate(monthOffset: .current, day: 2),
+            backgroundColor: .orange,
+            textColor: .white
+        ),
+        TSCalendarEvent(
+            title: "첫째 주 이벤트 2",
+            startDate: createDate(monthOffset: .current, day: 2),
+            endDate: createDate(monthOffset: .current, day: 3),
+            backgroundColor: .blue,
+            textColor: .white
+        ),
+        TSCalendarEvent(
+            title: "첫째 주 이벤트 3",
+            startDate: createDate(monthOffset: .current, day: 1),
+            endDate: createDate(monthOffset: .current, day: 3),
             backgroundColor: .green,
             textColor: .white
         ),
         TSCalendarEvent(
-            title: "111",
-            startDate: createDate(2024, 12, 1),
-            endDate: createDate(2024, 12, 2),
-            backgroundColor: .orange,
+            title: "첫째 주 이벤트 4",
+            startDate: createDate(monthOffset: .current, day: 2),
+            endDate: createDate(monthOffset: .current, day: 5),
+            backgroundColor: .purple,
             textColor: .white
         ),
         TSCalendarEvent(
-            title: "222",
-            startDate: createDate(2024, 12, 2),
-            endDate: createDate(2024, 12, 2),
-            backgroundColor: .orange,
-            textColor: .white
-        ),
-        TSCalendarEvent(
-            title: "3333333",
-            startDate: createDate(2024, 12, 1),
-            endDate: createDate(2024, 12, 1),
-            backgroundColor: .orange,
-            textColor: .white
-        ),
-        TSCalendarEvent(
-            title: "444",
-            startDate: createDate(2024, 12, 1),
-            endDate: createDate(2024, 12, 1),
-            backgroundColor: .orange,
-            textColor: .white
-        ),
-        TSCalendarEvent(
-            title: "555",
-            startDate: createDate(2024, 12, 1),
-            endDate: createDate(2024, 12, 2),
-            backgroundColor: .orange,
-            textColor: .white
-        ),
-        TSCalendarEvent(
-            title: "생일생일생일",
-            startDate: createDate(2024, 12, 3),
-            endDate: createDate(2024, 12, 3),
+            title: "첫째 주 이벤트 5",
+            startDate: createDate(monthOffset: .current, day: 3),
+            endDate: createDate(monthOffset: .current, day: 4),
             backgroundColor: .red,
+            textColor: .white
+        ),
+        
+        // 이전 달에서 넘어온 이벤트
+        TSCalendarEvent(
+            title: "지난달에서 넘어온 이벤트",
+            startDate: createDate(monthOffset: .previous, day: 28),
+            endDate: createDate(monthOffset: .current, day: 2),
+            backgroundColor: .brown,
+            textColor: .white
+        ),
+        
+        // 다음 달로 넘어가는 이벤트
+        TSCalendarEvent(
+            title: "다음달로 넘어가는 이벤트",
+            startDate: createDate(monthOffset: .current, day: 28),
+            endDate: createDate(monthOffset: .next, day: 3),
+            backgroundColor: .cyan,
             textColor: .white
         )
     ]
@@ -89,11 +95,20 @@ class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendarDataSo
     }
     
     // 날짜 생성 헬퍼 함수
-    private static func createDate(_ year: Int, _ month: Int, _ day: Int) -> Date {
-        var components = DateComponents()
-        components.year = year
-        components.month = month
+    private enum MonthOffset: Int {
+        case previous = -1
+        case current = 0
+        case next = 1
+    }
+    
+    private static func createDate(monthOffset: MonthOffset, day: Int) -> Date {
+        let calendar = Calendar.current
+        let currentDate = Date()
+        guard let offsetDate = calendar.date(byAdding: .month, value: monthOffset.rawValue, to: currentDate) else {
+            return Date()
+        }
+        var components = calendar.dateComponents([.year, .month], from: offsetDate)
         components.day = day
-        return Calendar.current.date(from: components) ?? Date()
+        return calendar.date(from: components) ?? Date()
     }
 }
