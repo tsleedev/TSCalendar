@@ -9,10 +9,17 @@ import SwiftUI
 
 struct TSCalendarWeekdayHeaderView: View {
     @Environment(\.calendarAppearance) private var appearance
-    let startWeekDay: TSCalendarStartWeekDay
+    let viewModel: TSCalendarViewModel
     
     var body: some View {
         HStack(spacing: 0) {
+            if viewModel.showWeekNumber {
+                Text("W")  // 또는 빈 공간을 위해 ""
+                    .font(appearance.weekdayHeaderFont)
+                    .frame(width: appearance.weekNumberWidth)
+                    .foregroundColor(appearance.weekdayHeaderColor)
+            }
+            
             ForEach(getWeekdaySymbols(), id: \.self) { symbol in
                 Text(symbol)
                     .font(appearance.weekdayHeaderFont)
@@ -25,7 +32,7 @@ struct TSCalendarWeekdayHeaderView: View {
     
     private func getWeekdaySymbols() -> [String] {
         let symbols = appearance.weekdaySymbols
-        let offset = startWeekDay.rawValue
+        let offset = viewModel.startWeekDay.rawValue
         return Array(symbols[offset...] + symbols[..<offset])
     }
 }

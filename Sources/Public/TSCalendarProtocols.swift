@@ -18,24 +18,27 @@ public protocol TSCalendarAppearanceProtocol: Sendable {
     var todayColor: Color { get }
     var selectedColor: Color { get }
     var weekdayHeaderColor: Color { get }
+    var weekNumberColor: Color { get }
     var saturdayColor: Color { get }
     var sundayColor: Color { get }
     var weekdayColor: Color { get }
     
     // Sizes
+    var weekNumberWidth: CGFloat { get }
     var daySize: CGFloat { get }
-    var monthHeaderHeight: CGFloat { get }  // 년월 표시 영역 높이
+    var monthHeaderHeight: CGFloat { get } // 년월 표시 영역 높이
     var weekdayHeaderHeight: CGFloat { get } // 요일 표시 영역 높이
     
     // Fonts
     var monthHeaderFont: Font { get }
     var weekdayHeaderFont: Font { get }
+    var weekNumberFont: Font { get }
     var dayFont: Font { get }
     var eventFont: Font { get }
 }
 
 public protocol TSCalendarDataSource: AnyObject {
-    func calendar(date: Date) -> [TSCalendarEvent]  // CalendarDayView, WeekView가 아닌 날짜 기반으로 변경
+    func calendar(date: Date) -> [TSCalendarEvent]
     func calendar(startDate: Date, endDate: Date) -> [TSCalendarEvent]
 }
 

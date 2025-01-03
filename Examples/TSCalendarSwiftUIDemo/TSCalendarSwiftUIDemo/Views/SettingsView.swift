@@ -36,6 +36,8 @@ struct SettingsView: View {
                                 .tag(direction)
                         }
                     }
+                    
+                    Toggle("Show Week Numbers", isOn: $controller.showWeekNumber)
                 }
             }
             .navigationTitle("Settings")

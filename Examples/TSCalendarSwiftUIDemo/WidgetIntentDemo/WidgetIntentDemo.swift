@@ -117,22 +117,22 @@ struct WidgetIntentDemo: Widget {
 }
 
 extension ConfigurationAppIntent {
-    fileprivate static var smiley: ConfigurationAppIntent {
+    fileprivate static var current: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
         intent.selectedOffset = .current
         return intent
     }
     
-    fileprivate static var starEyes: ConfigurationAppIntent {
+    fileprivate static var minus1: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        intent.selectedOffset = .current
+        intent.selectedOffset = .minus1
         return intent
     }
 }
 
-#Preview(as: .systemSmall) {
+#Preview(as: .systemLarge) {
     WidgetIntentDemo()
 } timeline: {
-    SimpleEntry(date: .now, configuration: .smiley)
-    SimpleEntry(date: .now, configuration: .starEyes)
+    SimpleEntry(date: .now, configuration: .current)
+    SimpleEntry(date: .now, configuration: .minus1)
 }

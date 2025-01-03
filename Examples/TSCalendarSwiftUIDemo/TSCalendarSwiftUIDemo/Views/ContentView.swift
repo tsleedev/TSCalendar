@@ -19,6 +19,7 @@ struct ContentView: View {
                     displayMode: controller.displayMode,
                     scrollDirection: controller.scrollDirection,
                     startWeekDay: controller.startWeekDay,
+                    showWeekNumber: controller.showWeekNumber,
                     delegate: controller,
                     dataSource: controller
                 )

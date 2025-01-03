@@ -45,24 +45,47 @@ struct TSCalendarWeekView: View {
         ZStack(alignment: .top) {
             // 날짜 행
             HStack(spacing: 0) {
+                // 주차 표시 추가
+                if viewModel.showWeekNumber, let date = weekData.first?.date {
+                    VStack {
+                        Text("\(viewModel.weekNumberOfYear(for: date))")
+                            .font(appearance.weekNumberFont)
+                            .foregroundColor(appearance.weekNumberColor)
+                            .frame(
+                                width: appearance.weekNumberWidth,
+                                height: appearance.daySize
+                            )
+                        Spacer()
+                    }
+                }
+                
                 ForEach(weekData) { date in
                     GeometryReader { geometry in
                         VStack {
                             Text(appearance.dateFormatter.string(from: date.date))
                                 .font(appearance.dayFont)
                                 .foregroundColor(foregroundColor(for: date))
-                                .frame(width: appearance.daySize, height: appearance.daySize)
+                                .frame(
+                                    width: appearance.daySize,
+                                    height: appearance.daySize
+                                )
                                 .background(backgroundColor(for: date))
                                 .clipShape(Circle())
                                 .overlay {
                                     if date.isSelected {
                                         Circle()
-                                            .strokeBorder(appearance.selectedColor, lineWidth: 1.5)
+                                            .strokeBorder(
+                                                appearance.selectedColor,
+                                                lineWidth: 1.5
+                                            )
                                     }
                                 }
                             Spacer()
                         }
-                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .frame(
+                            width: geometry.size.width,
+                            height: geometry.size.height
+                        )
                         .contentShape(Rectangle())
                     }
                     .frame(maxWidth: .infinity)
@@ -75,6 +98,7 @@ struct TSCalendarWeekView: View {
             
             // 일정 행들
             GeometryReader { geometry in
+                let weekNumberWidth = viewModel.showWeekNumber ? appearance.weekNumberWidth : 0
                 let dayWidth = geometry.size.width / 7
                 let offsetY = appearance.daySize + 2
                 
@@ -89,7 +113,7 @@ struct TSCalendarWeekView: View {
                         height: geometry.size.height - offsetY
                     )
                     .offset(
-                        x: CGFloat(visibleStartIndex) * dayWidth,
+                        x: (CGFloat(visibleStartIndex) * dayWidth) + weekNumberWidth,
                         y: offsetY
                     )
                 }
@@ -122,8 +146,7 @@ struct TSCalendarWeekView: View {
         maximumDate: Calendar.current.date(byAdding: .year, value: 1, to: .now) ?? .now,
         selectedDate: .now,
         scrollDirection: .vertical,
-        environment: .app,
-        delegate: nil,
-        dataSource: nil
+        showWeekNumber: true,
+        environment: .app
     )
 }

@@ -15,6 +15,7 @@ public struct TSCalendar: View {
     private let displayMode: TSCalendarDisplayMode
     private let scrollDirection: TSCalendarScrollDirection
     private let startWeekDay: TSCalendarStartWeekDay
+    private let showWeekNumber: Bool
     private let environment: TSCalendarEnvironment
     private let appearanceType: TSCalendarAppearanceType
     private let delegate: TSCalendarDelegate?
@@ -28,6 +29,7 @@ public struct TSCalendar: View {
         displayMode: TSCalendarDisplayMode = .month,
         scrollDirection: TSCalendarScrollDirection = .vertical,
         startWeekDay: TSCalendarStartWeekDay = .sunday,
+        showWeekNumber: Bool = false,
         environment: TSCalendarEnvironment = .app,
         appearanceType: TSCalendarAppearanceType = .app,
         delegate: TSCalendarDelegate? = nil,
@@ -40,6 +42,7 @@ public struct TSCalendar: View {
         self.displayMode = displayMode
         self.scrollDirection = scrollDirection
         self.startWeekDay = startWeekDay
+        self.showWeekNumber = showWeekNumber
         self.environment = environment
         self.appearanceType = appearanceType
         self.delegate = delegate
@@ -55,11 +58,12 @@ public struct TSCalendar: View {
             displayMode: displayMode,
             scrollDirection: scrollDirection,
             startWeekDay: startWeekDay,
+            showWeekNumber: showWeekNumber,
             environment: environment,
             delegate: delegate,
             dataSource: dataSource
         )
         .environment(\.calendarAppearance, TSCalendarAppearance(type: appearanceType))
-        .id("\(displayMode)_\(scrollDirection)_\(startWeekDay)") // 설정 변경 시 새로 그리기
+        .id("\(displayMode)_\(scrollDirection)_\(startWeekDay)_\(showWeekNumber)") // 설정 변경 시 새로 그리기
     }
 }

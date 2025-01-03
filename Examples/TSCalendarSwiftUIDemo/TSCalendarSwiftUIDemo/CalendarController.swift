@@ -12,6 +12,7 @@ class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendarDataSo
     @Published var displayMode: TSCalendarDisplayMode = .month
     @Published var scrollDirection: TSCalendarScrollDirection = .horizontal
     @Published var startWeekDay: TSCalendarStartWeekDay = .sunday
+    @Published var showWeekNumber: Bool = false
     
     var events: [TSCalendarEvent] = [
         // 첫째 주 이벤트 (겹치게 설정)
@@ -19,36 +20,36 @@ class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendarDataSo
             title: "첫째 주 이벤트 1",
             startDate: createDate(monthOffset: .current, day: 1),
             endDate: createDate(monthOffset: .current, day: 2),
-            backgroundColor: .orange,
-            textColor: .white
+            backgroundColor: Color.orange.opacity(0.15),
+            textColor: .orange
         ),
         TSCalendarEvent(
             title: "첫째 주 이벤트 2",
             startDate: createDate(monthOffset: .current, day: 2),
             endDate: createDate(monthOffset: .current, day: 3),
-            backgroundColor: .blue,
-            textColor: .white
+            backgroundColor: Color.blue.opacity(0.15),
+            textColor: .blue
         ),
         TSCalendarEvent(
             title: "첫째 주 이벤트 3",
             startDate: createDate(monthOffset: .current, day: 1),
             endDate: createDate(monthOffset: .current, day: 3),
-            backgroundColor: .green,
-            textColor: .white
+            backgroundColor: Color.green.opacity(0.15),
+            textColor: .green
         ),
         TSCalendarEvent(
             title: "첫째 주 이벤트 4",
             startDate: createDate(monthOffset: .current, day: 2),
             endDate: createDate(monthOffset: .current, day: 5),
-            backgroundColor: .purple,
-            textColor: .white
+            backgroundColor: Color.purple.opacity(0.15),
+            textColor: .purple
         ),
         TSCalendarEvent(
             title: "첫째 주 이벤트 5",
             startDate: createDate(monthOffset: .current, day: 3),
             endDate: createDate(monthOffset: .current, day: 4),
-            backgroundColor: .red,
-            textColor: .white
+            backgroundColor: Color.red.opacity(0.15),
+            textColor: .red
         ),
         
         // 이전 달에서 넘어온 이벤트
@@ -56,8 +57,8 @@ class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendarDataSo
             title: "지난달에서 넘어온 이벤트",
             startDate: createDate(monthOffset: .previous, day: 28),
             endDate: createDate(monthOffset: .current, day: 2),
-            backgroundColor: .brown,
-            textColor: .white
+            backgroundColor: Color.brown.opacity(0.15),
+            textColor: .brown
         ),
         
         // 다음 달로 넘어가는 이벤트
@@ -65,8 +66,8 @@ class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendarDataSo
             title: "다음달로 넘어가는 이벤트",
             startDate: createDate(monthOffset: .current, day: 28),
             endDate: createDate(monthOffset: .next, day: 3),
-            backgroundColor: .cyan,
-            textColor: .white
+            backgroundColor: Color.cyan.opacity(0.15),
+            textColor: .cyan
         )
     ]
     

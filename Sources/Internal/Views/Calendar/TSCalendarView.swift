@@ -20,6 +20,7 @@ struct TSCalendarView: View {
         displayMode: TSCalendarDisplayMode = .month,
         scrollDirection: TSCalendarScrollDirection = .horizontal,
         startWeekDay: TSCalendarStartWeekDay = .sunday,
+        showWeekNumber: Bool = false,
         environment: TSCalendarEnvironment = .app,
         delegate: TSCalendarDelegate? = nil,
         dataSource: TSCalendarDataSource? = nil
@@ -32,6 +33,7 @@ struct TSCalendarView: View {
             displayMode: displayMode,
             scrollDirection: scrollDirection,
             startWeekDay: startWeekDay,
+            showWeekNumber: showWeekNumber,
             environment: environment,
             delegate: delegate,
             dataSource: dataSource
@@ -46,7 +48,9 @@ struct TSCalendarView: View {
                 viewModel: viewModel,
                 environment: environment
             )
-            TSCalendarWeekdayHeaderView(startWeekDay: startWeekDay)
+            TSCalendarWeekdayHeaderView(
+                viewModel: viewModel
+            )
             
             if environment.isPagingEnabled {
                 TSCalendarPagingView(viewModel: viewModel)

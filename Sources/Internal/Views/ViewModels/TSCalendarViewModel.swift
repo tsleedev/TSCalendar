@@ -8,20 +8,21 @@
 import SwiftUI
 
 final class TSCalendarViewModel: ObservableObject {
-    @Published private(set) var selectedDate: Date?
-    @Published private(set) var displayMode: TSCalendarDisplayMode
-    @Published private(set) var scrollDirection: TSCalendarScrollDirection
-    @Published private(set) var displayedDates: [Date] = []
-    @Published private(set) var datesData: [[[TSCalendarDate]]] = []
+    private(set) var displayedDates: [Date] = []
+    private(set) var datesData: [[[TSCalendarDate]]] = []
     
     private let calendar = Calendar(identifier: .gregorian)
     private let minimumDate: Date?
     private let maximumDate: Date?
-    private let startWeekDay: TSCalendarStartWeekDay
+    private(set) var selectedDate: Date?
+    let displayMode: TSCalendarDisplayMode
+    let scrollDirection: TSCalendarScrollDirection
+    let startWeekDay: TSCalendarStartWeekDay
+    let showWeekNumber: Bool
     let environment: TSCalendarEnvironment
     
-    weak var delegate: TSCalendarDelegate?
-    weak var dataSource: TSCalendarDataSource?
+    private(set) weak var delegate: TSCalendarDelegate?
+    private(set) weak var dataSource: TSCalendarDataSource?
     
     var currentDisplayedDate: Date {
         let index = environment.isPagingEnabled ? 1 : 0
@@ -40,21 +41,23 @@ final class TSCalendarViewModel: ObservableObject {
     
     init(
         initialDate: Date,
-        minimumDate: Date? = nil,
-        maximumDate: Date? = nil,
-        selectedDate: Date? = nil,
-        displayMode: TSCalendarDisplayMode = .month,
-        scrollDirection: TSCalendarScrollDirection = .horizontal,
-        startWeekDay: TSCalendarStartWeekDay = .sunday,
-        environment: TSCalendarEnvironment = .app,
-        delegate: TSCalendarDelegate? = nil,
-        dataSource: TSCalendarDataSource? = nil
+        minimumDate: Date?,
+        maximumDate: Date?,
+        selectedDate: Date?,
+        displayMode: TSCalendarDisplayMode,
+        scrollDirection: TSCalendarScrollDirection,
+        startWeekDay: TSCalendarStartWeekDay,
+        showWeekNumber: Bool,
+        environment: TSCalendarEnvironment,
+        delegate: TSCalendarDelegate?,
+        dataSource: TSCalendarDataSource?
     ) {
         self.minimumDate = minimumDate
         self.maximumDate = maximumDate
         self.selectedDate = selectedDate
         self.scrollDirection = scrollDirection
         self.startWeekDay = startWeekDay
+        self.showWeekNumber = showWeekNumber
         self.displayMode = displayMode
         self.environment = environment
         self.delegate = delegate
@@ -105,6 +108,10 @@ final class TSCalendarViewModel: ObservableObject {
         
         generateAllDates()
         delegate?.calendar(pageDidChange: currentDisplayedDate)
+    }
+    
+    func weekNumberOfYear(for date: Date) -> Int {
+        return calendar.component(.weekOfYear, from: date)
     }
     
     func selectDate(_ date: Date) {
