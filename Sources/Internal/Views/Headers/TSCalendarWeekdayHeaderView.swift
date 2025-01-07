@@ -13,7 +13,7 @@ struct TSCalendarWeekdayHeaderView: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            if viewModel.showWeekNumber {
+            if viewModel.config.showWeekNumber {
                 Text("W")  // 또는 빈 공간을 위해 ""
                     .font(appearance.weekdayHeaderFont)
                     .frame(width: appearance.weekNumberWidth)
@@ -32,7 +32,7 @@ struct TSCalendarWeekdayHeaderView: View {
     
     private func getWeekdaySymbols() -> [String] {
         let symbols = appearance.weekdaySymbols
-        let offset = viewModel.startWeekDay.rawValue
+        let offset = viewModel.config.startWeekDay.rawValue
         return Array(symbols[offset...] + symbols[..<offset])
     }
 }

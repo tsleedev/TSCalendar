@@ -6,37 +6,23 @@
 //
 
 import SwiftUI
-import TSCalendar
 
 struct ContentView: View {
-    @StateObject private var controller = CalendarController()
-    @State private var showSettings = false
-    
     var body: some View {
         NavigationView {
-            VStack {
-                TSCalendar(
-                    displayMode: controller.displayMode,
-                    scrollDirection: controller.scrollDirection,
-                    startWeekDay: controller.startWeekDay,
-                    showWeekNumber: controller.showWeekNumber,
-                    delegate: controller,
-                    dataSource: controller
-                )
+            List {
+                NavigationLink(
+                    destination: FullSizeCalendarView()
+                ) {
+                    Text("FullSizeCalendarView")
+                }
+                NavigationLink(
+                    destination: FixedWeekHeightCalendarView()
+                ) {
+                    Text("FixedWeekHeightCalendarView")
+                }
             }
-            .navigationBarItems(trailing: settingsButton)
-            .sheet(isPresented: $showSettings) {
-                SettingsView(controller: controller)
-            }
-        }
-    }
-    
-    private var settingsButton: some View {
-        Button(action: {
-            showSettings = true
-        }) {
-            Image(systemName: "gear")
-                .imageScale(.large)
+            .navigationTitle("Select Calendar")
         }
     }
 }

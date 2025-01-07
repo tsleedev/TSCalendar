@@ -9,18 +9,15 @@ import SwiftUI
 
 struct TSCalendarView: View {
     @StateObject private var viewModel: TSCalendarViewModel
+    private let config: TSCalendarConfig
     private let environment: TSCalendarEnvironment
-    private let startWeekDay: TSCalendarStartWeekDay
     
     init(
         initialDate: Date = .now,
         minimumDate: Date? = nil,
         maximumDate: Date? = nil,
         selectedDate: Date? = nil,
-        displayMode: TSCalendarDisplayMode = .month,
-        scrollDirection: TSCalendarScrollDirection = .horizontal,
-        startWeekDay: TSCalendarStartWeekDay = .sunday,
-        showWeekNumber: Bool = false,
+        config: TSCalendarConfig = .init(),
         environment: TSCalendarEnvironment = .app,
         delegate: TSCalendarDelegate? = nil,
         dataSource: TSCalendarDataSource? = nil
@@ -30,16 +27,13 @@ struct TSCalendarView: View {
             minimumDate: minimumDate,
             maximumDate: maximumDate,
             selectedDate: selectedDate,
-            displayMode: displayMode,
-            scrollDirection: scrollDirection,
-            startWeekDay: startWeekDay,
-            showWeekNumber: showWeekNumber,
+            config: config,
             environment: environment,
             delegate: delegate,
             dataSource: dataSource
         ))
+        self.config = config
         self.environment = environment
-        self.startWeekDay = startWeekDay
     }
     
     var body: some View {
@@ -66,8 +60,7 @@ struct TSCalendarView: View {
         minimumDate: Calendar.current.date(byAdding: .year, value: -1, to: Date()),
         maximumDate: Calendar.current.date(byAdding: .year, value: 1, to: Date()),
         selectedDate: Date(),
-        displayMode: .month,
-        scrollDirection: .vertical,
+        config: TSCalendarConfig(),
         environment: .app
     )
 }

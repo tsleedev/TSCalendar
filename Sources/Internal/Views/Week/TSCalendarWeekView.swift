@@ -14,7 +14,7 @@ struct TSCalendarWeekView: View {
     let viewModel: TSCalendarViewModel
     
     private func dateOpacity(for date: TSCalendarDate) -> Double {
-        switch viewModel.displayMode {
+        switch viewModel.config.displayMode {
         case .month:
             return viewModel.environment.monthStyle == .dynamic && !date.isInCurrentMonth ? 0 : (date.isInCurrentMonth ? 1 : 0.3)
         case .week:
@@ -24,7 +24,7 @@ struct TSCalendarWeekView: View {
     
     private var visibleDates: [TSCalendarDate] {
         weekData.filter { date in
-            switch viewModel.displayMode {
+            switch viewModel.config.displayMode {
             case .month:
                 return viewModel.environment.monthStyle == .dynamic ? date.isInCurrentMonth : true
             case .week:
@@ -46,7 +46,7 @@ struct TSCalendarWeekView: View {
             // 날짜 행
             HStack(spacing: 0) {
                 // 주차 표시 추가
-                if viewModel.showWeekNumber, let date = weekData.first?.date {
+                if viewModel.config.showWeekNumber, let date = weekData.first?.date {
                     VStack {
                         Text("\(viewModel.weekNumberOfYear(for: date))")
                             .font(appearance.weekNumberFont)
@@ -98,7 +98,7 @@ struct TSCalendarWeekView: View {
             
             // 일정 행들
             GeometryReader { geometry in
-                let weekNumberWidth = viewModel.showWeekNumber ? appearance.weekNumberWidth : 0
+                let weekNumberWidth = viewModel.config.showWeekNumber ? appearance.weekNumberWidth : 0
                 let dayWidth = geometry.size.width / 7
                 let offsetY = appearance.daySize + 2
                 
@@ -145,8 +145,10 @@ struct TSCalendarWeekView: View {
         minimumDate: Calendar.current.date(byAdding: .year, value: -1, to: .now) ?? .now,
         maximumDate: Calendar.current.date(byAdding: .year, value: 1, to: .now) ?? .now,
         selectedDate: .now,
-        scrollDirection: .vertical,
-        showWeekNumber: true,
+        config: .init(
+            scrollDirection: .vertical,
+            showWeekNumber: true
+        ),
         environment: .app
     )
 }

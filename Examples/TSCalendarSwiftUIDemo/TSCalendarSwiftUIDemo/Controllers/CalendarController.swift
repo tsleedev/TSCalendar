@@ -9,10 +9,25 @@ import SwiftUI
 import TSCalendar
 
 class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendarDataSource {
-    @Published var displayMode: TSCalendarDisplayMode = .month
-    @Published var scrollDirection: TSCalendarScrollDirection = .horizontal
-    @Published var startWeekDay: TSCalendarStartWeekDay = .sunday
-    @Published var showWeekNumber: Bool = false
+    @Published var config: TSCalendarConfig = .init()
+    
+    // config의 개별 속성에 쉽게 접근하기 위한 프로퍼티들
+    var displayMode: TSCalendarDisplayMode {
+        get { config.displayMode }
+        set { config.displayMode = newValue }
+    }
+    var scrollDirection: TSCalendarScrollDirection {
+        get { config.scrollDirection }
+        set { config.scrollDirection = newValue }
+    }
+    var startWeekDay: TSCalendarStartWeekDay {
+        get { config.startWeekDay }
+        set { config.startWeekDay = newValue }
+    }
+    var showWeekNumber: Bool {
+        get { config.showWeekNumber }
+        set { config.showWeekNumber = newValue }
+    }
     
     var events: [TSCalendarEvent] = [
         // 첫째 주 이벤트 (겹치게 설정)

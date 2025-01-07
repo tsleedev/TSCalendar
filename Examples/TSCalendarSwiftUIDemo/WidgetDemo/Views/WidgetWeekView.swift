@@ -14,7 +14,7 @@ struct WidgetWeekView : View {
     var body: some View {
         HStack {
             TSCalendar(
-                displayMode: .month,
+                config: .init(displayMode: .month),
                 environment: .widget,
                 appearanceType: .widget(.small),
                 delegate: controller,

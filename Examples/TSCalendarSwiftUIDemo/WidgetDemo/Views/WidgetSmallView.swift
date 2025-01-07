@@ -13,7 +13,7 @@ struct WidgetSmallView: View {
     
     var body: some View {
         TSCalendar(
-            displayMode: .month,
+            config: .init(displayMode: .month),
             environment: .widget,
             appearanceType: .widget(.small),
             delegate: controller,

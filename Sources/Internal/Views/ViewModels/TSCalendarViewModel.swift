@@ -15,10 +15,7 @@ final class TSCalendarViewModel: ObservableObject {
     private let minimumDate: Date?
     private let maximumDate: Date?
     private(set) var selectedDate: Date?
-    let displayMode: TSCalendarDisplayMode
-    let scrollDirection: TSCalendarScrollDirection
-    let startWeekDay: TSCalendarStartWeekDay
-    let showWeekNumber: Bool
+    let config: TSCalendarConfig
     let environment: TSCalendarEnvironment
     
     private(set) weak var delegate: TSCalendarDelegate?
@@ -44,10 +41,7 @@ final class TSCalendarViewModel: ObservableObject {
         minimumDate: Date?,
         maximumDate: Date?,
         selectedDate: Date?,
-        displayMode: TSCalendarDisplayMode,
-        scrollDirection: TSCalendarScrollDirection,
-        startWeekDay: TSCalendarStartWeekDay,
-        showWeekNumber: Bool,
+        config: TSCalendarConfig,
         environment: TSCalendarEnvironment,
         delegate: TSCalendarDelegate?,
         dataSource: TSCalendarDataSource?
@@ -55,10 +49,7 @@ final class TSCalendarViewModel: ObservableObject {
         self.minimumDate = minimumDate
         self.maximumDate = maximumDate
         self.selectedDate = selectedDate
-        self.scrollDirection = scrollDirection
-        self.startWeekDay = startWeekDay
-        self.showWeekNumber = showWeekNumber
-        self.displayMode = displayMode
+        self.config = config
         self.environment = environment
         self.delegate = delegate
         self.dataSource = dataSource
@@ -68,8 +59,8 @@ final class TSCalendarViewModel: ObservableObject {
     }
     
     private func getDisplayedDates(from date: Date) -> [Date] {
-        let current = displayMode == .month ? calendar.startOfMonth(for: date) : getCurrentWeek(from: date)
-        let component = displayMode == .month ? Calendar.Component.month : .weekOfYear
+        let current = config.displayMode == .month ? calendar.startOfMonth(for: date) : getCurrentWeek(from: date)
+        let component = config.displayMode == .month ? Calendar.Component.month : .weekOfYear
         return [-1, 0, 1].compactMap { offset in
             calendar.date(byAdding: component, value: offset, to: current)
         }
@@ -82,7 +73,7 @@ final class TSCalendarViewModel: ObservableObject {
     }
     
     func moveDate(by value: Int) {
-        let component = displayMode == .month ? Calendar.Component.month : .weekOfYear
+        let component = config.displayMode == .month ? Calendar.Component.month : .weekOfYear
         guard let currentDate = displayedDates[safe: 1],
               let nextDate = calendar.date(byAdding: component, value: value, to: currentDate),
               canMove(to: nextDate) else { return }
@@ -96,7 +87,7 @@ final class TSCalendarViewModel: ObservableObject {
             if calendar.isDate(nextDate, equalTo: today, toGranularity: .month) {
                 selectedDate = today
             } else {
-                switch displayMode {
+                switch config.displayMode {
                 case .month:
                     selectedDate = calendar.startOfMonth(for: nextDate)
                 case .week:
@@ -122,7 +113,7 @@ final class TSCalendarViewModel: ObservableObject {
     }
     
     private func generateAllDates() {
-        switch displayMode {
+        switch config.displayMode {
         case .month:
             if environment.isPagingEnabled {
                 datesData = displayedDates.map { generateDaysForMonth($0) }
@@ -147,7 +138,7 @@ final class TSCalendarViewModel: ObservableObject {
     
     private func generateDaysForWeek(_ weekStart: Date) -> [TSCalendarDate] {
         let firstWeekday = calendar.component(.weekday, from: weekStart)
-        let startOffset = ((firstWeekday - 1) - startWeekDay.rawValue + 7) % 7
+        let startOffset = ((firstWeekday - 1) - config.startWeekDay.rawValue + 7) % 7
         let adjustedWeekStart = calendar.date(byAdding: .day, value: -startOffset, to: weekStart) ?? weekStart
         
         return (0..<7).compactMap { dayOffset in
@@ -166,7 +157,7 @@ final class TSCalendarViewModel: ObservableObject {
     private func generateDaysForMonth(_ month: Date) -> [[TSCalendarDate]] {
         let startOfMonth = calendar.startOfMonth(for: month)
         let firstWeekday = calendar.component(.weekday, from: startOfMonth)
-        let firstOffset = ((firstWeekday - 1) - startWeekDay.rawValue + 7) % 7
+        let firstOffset = ((firstWeekday - 1) - config.startWeekDay.rawValue + 7) % 7
         let daysInMonth = calendar.range(of: .day, in: .month, for: month)?.count ?? 30
         
         let weeksNeeded = environment.monthStyle == .fixed ? 6 : Int(ceil(Double(firstOffset + daysInMonth) / 7.0))

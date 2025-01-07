@@ -13,7 +13,7 @@ struct TSCalendarPagingView: View {
     
     var body: some View {
         Group {
-            switch viewModel.scrollDirection {
+            switch viewModel.config.scrollDirection {
             case .horizontal:
                 pagingView(isVertical: false)
             case .vertical:
@@ -46,7 +46,7 @@ struct TSCalendarPagingView: View {
     private func calendarView(for index: Int) -> some View {
         Group {
             if let monthData = viewModel.datesData[safe: index] {
-                switch viewModel.displayMode {
+                switch viewModel.config.displayMode {
                 case .month:
                     TSCalendarMonthView(
                         monthData: monthData,
@@ -114,6 +114,6 @@ private struct TabViewRotationModifier: ViewModifier {
 
 #Preview {
     TSCalendarView(
-        scrollDirection: .vertical
+        config: .init(scrollDirection: .vertical)
     )
 }

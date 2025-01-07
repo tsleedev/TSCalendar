@@ -13,7 +13,7 @@ struct TSCalendarStaticView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            switch viewModel.displayMode {
+            switch viewModel.config.displayMode {
             case .month:
                 TSCalendarMonthView(
                     monthData: viewModel.currentCalendarData,

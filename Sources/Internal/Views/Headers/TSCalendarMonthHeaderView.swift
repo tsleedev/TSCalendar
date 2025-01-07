@@ -25,7 +25,7 @@ struct TSCalendarMonthHeaderView: View {
                 
                 Text(appearance.getHeaderTitle(
                     date: viewModel.currentDisplayedDate,
-                    displayMode: viewModel.displayMode)
+                    displayMode: viewModel.config.displayMode)
                 )
                 .font(appearance.monthHeaderFont)
                 
@@ -39,7 +39,7 @@ struct TSCalendarMonthHeaderView: View {
             } else {
                 Text(appearance.getHeaderTitle(
                     date: viewModel.currentDisplayedDate,
-                    displayMode: viewModel.displayMode)
+                    displayMode: viewModel.config.displayMode)
                 )
                 .font(appearance.monthHeaderFont)
                 .padding(.leading, 16)
@@ -52,7 +52,7 @@ struct TSCalendarMonthHeaderView: View {
 
 #Preview {
     TSCalendarView(
-        displayMode: .week,
+        config: .init(displayMode: .week),
         environment: .widget
     )
 }

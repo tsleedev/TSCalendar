@@ -56,7 +56,7 @@ struct WidgetIntentDemoEntryView : View {
                     value: entry.configuration.selectedOffset.rawValue,
                     to: .now
                 ) ?? .now,
-                displayMode: .month,
+                config: .init(displayMode: .month),
                 environment: .widget,
                 appearanceType: .widget(.small)
             )
@@ -68,7 +68,7 @@ struct WidgetIntentDemoEntryView : View {
                     value: entry.configuration.selectedOffset.rawValue,
                     to: .now
                 ) ?? .now,
-                displayMode: .week,
+                config: .init(displayMode: .week),
                 environment: .widget,
                 appearanceType: .widget(.medium)
             )
@@ -80,7 +80,7 @@ struct WidgetIntentDemoEntryView : View {
                     value: entry.configuration.selectedOffset.rawValue,
                     to: .now
                 ) ?? .now,
-                displayMode: .month,
+                config: .init(displayMode: .month),
                 environment: .widget,
                 appearanceType: .widget(.large)
             )
