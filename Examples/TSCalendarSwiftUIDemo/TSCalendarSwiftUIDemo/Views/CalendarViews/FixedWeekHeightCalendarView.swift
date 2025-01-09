@@ -9,7 +9,12 @@ import SwiftUI
 import TSCalendar
 
 struct FixedWeekHeightCalendarView: View {
-    @StateObject private var controller = CalendarController()
+    @StateObject private var controller = CalendarController(
+        config: TSCalendarConfig(
+            heightStyle: .fixed(60),
+            scrollDirection: .vertical
+        )
+    )
     @State private var showSettings = false
     
     var body: some View {
@@ -19,6 +24,8 @@ struct FixedWeekHeightCalendarView: View {
                 delegate: controller,
                 dataSource: controller
             )
+            Text("테스트")
+            Spacer()
         }
         .navigationTitle("FixedWeekHeightCalendar")
         .navigationBarTitleDisplayMode(.inline)

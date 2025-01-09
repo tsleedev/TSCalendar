@@ -57,7 +57,6 @@ struct WidgetIntentDemoEntryView : View {
                     to: .now
                 ) ?? .now,
                 config: .init(displayMode: .month),
-                environment: .widget,
                 appearanceType: .widget(.small)
             )
             .padding(4)
@@ -69,7 +68,6 @@ struct WidgetIntentDemoEntryView : View {
                     to: .now
                 ) ?? .now,
                 config: .init(displayMode: .week),
-                environment: .widget,
                 appearanceType: .widget(.medium)
             )
             .padding(4)
@@ -81,7 +79,6 @@ struct WidgetIntentDemoEntryView : View {
                     to: .now
                 ) ?? .now,
                 config: .init(displayMode: .month),
-                environment: .widget,
                 appearanceType: .widget(.large)
             )
             .padding(4)

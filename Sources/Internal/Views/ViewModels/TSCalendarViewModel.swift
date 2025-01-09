@@ -8,31 +8,31 @@
 import SwiftUI
 
 final class TSCalendarViewModel: ObservableObject {
-    private(set) var displayedDates: [Date] = []
-    private(set) var datesData: [[[TSCalendarDate]]] = []
+    @Published private(set) var displayedDates: [Date] = []
+    @Published private(set) var datesData: [[[TSCalendarDate]]] = []
+    @Published private(set) var currentHeight: CGFloat?
     
     private let calendar = Calendar(identifier: .gregorian)
     private let minimumDate: Date?
     private let maximumDate: Date?
     private(set) var selectedDate: Date?
     let config: TSCalendarConfig
-    let environment: TSCalendarEnvironment
     
     private(set) weak var delegate: TSCalendarDelegate?
     private(set) weak var dataSource: TSCalendarDataSource?
     
     var currentDisplayedDate: Date {
-        let index = environment.isPagingEnabled ? 1 : 0
+        let index = config.isPagingEnabled ? 1 : 0
         return displayedDates[safe: index] ?? Date()
     }
     
     var currentCalendarData: [[TSCalendarDate]] {
-        let index = environment.isPagingEnabled ? 1 : 0
+        let index = config.isPagingEnabled ? 1 : 0
         return datesData[safe: index] ?? []
     }
     
     var currentWeekData: [TSCalendarDate] {
-        let index = environment.isPagingEnabled ? 1 : 0
+        let index = config.isPagingEnabled ? 1 : 0
         return datesData[safe: index]?.first ?? []
     }
     
@@ -42,7 +42,6 @@ final class TSCalendarViewModel: ObservableObject {
         maximumDate: Date?,
         selectedDate: Date?,
         config: TSCalendarConfig,
-        environment: TSCalendarEnvironment,
         delegate: TSCalendarDelegate?,
         dataSource: TSCalendarDataSource?
     ) {
@@ -50,11 +49,10 @@ final class TSCalendarViewModel: ObservableObject {
         self.maximumDate = maximumDate
         self.selectedDate = selectedDate
         self.config = config
-        self.environment = environment
         self.delegate = delegate
         self.dataSource = dataSource
         
-        self.displayedDates = environment.isPagingEnabled ? getDisplayedDates(from: initialDate) : [initialDate]
+        self.displayedDates = config.isPagingEnabled ? getDisplayedDates(from: initialDate) : [initialDate]
         generateAllDates()
     }
     
@@ -79,26 +77,52 @@ final class TSCalendarViewModel: ObservableObject {
               canMove(to: nextDate) else { return }
         
         delegate?.calendar(pageWillChange: currentDate)
-        displayedDates = environment.isPagingEnabled ?
-        getDisplayedDates(from: nextDate) : [nextDate]
         
-        if environment.autoSelectToday {
-            let today = Date()
-            if calendar.isDate(nextDate, equalTo: today, toGranularity: .month) {
-                selectedDate = today
-            } else {
-                switch config.displayMode {
-                case .month:
-                    selectedDate = calendar.startOfMonth(for: nextDate)
-                case .week:
-                    selectedDate = getCurrentWeek(from: nextDate)
+        displayedDates = config.isPagingEnabled ? getDisplayedDates(from: nextDate) : [nextDate]
+        
+        // 다음 달의 높이를 계산
+        if case let .fixed(height) = config.heightStyle {
+            switch config.displayMode {
+            case .month:
+                let monthData = generateDaysForMonth(nextDate)
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    currentHeight = height * CGFloat(monthData.count)
                 }
-                delegate?.calendar(didSelect: nextDate)
+            case .week:
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    currentHeight = height  // 주 모드는 항상 한 주의 높이
+                }
             }
         }
-        
-        generateAllDates()
-        delegate?.calendar(pageDidChange: currentDisplayedDate)
+       
+       if config.autoSelectToday {
+           let today = Date()
+           if calendar.isDate(nextDate, equalTo: today, toGranularity: .month) {
+               selectedDate = today
+           } else {
+               switch config.displayMode {
+               case .month:
+                   selectedDate = calendar.startOfMonth(for: nextDate)
+               case .week:
+                   selectedDate = getCurrentWeek(from: nextDate)
+               }
+               delegate?.calendar(didSelect: nextDate)
+           }
+       }
+       
+       generateAllDates()
+       delegate?.calendar(pageDidChange: currentDisplayedDate)
+    }
+    
+    private func generateDatesData(for dates: [Date]) -> [[[TSCalendarDate]]] {
+       dates.map { date in
+           switch config.displayMode {
+           case .month:
+               return generateDaysForMonth(date)
+           case .week:
+               return [generateDaysForWeek(date)]
+           }
+       }
     }
     
     func weekNumberOfYear(for date: Date) -> Int {
@@ -115,14 +139,14 @@ final class TSCalendarViewModel: ObservableObject {
     private func generateAllDates() {
         switch config.displayMode {
         case .month:
-            if environment.isPagingEnabled {
+            if config.isPagingEnabled {
                 datesData = displayedDates.map { generateDaysForMonth($0) }
             } else {
                 guard let date = displayedDates[safe: 0] else { return }
                 datesData = [generateDaysForMonth(date)]
             }
         case .week:
-            if environment.isPagingEnabled {
+            if config.isPagingEnabled {
                 datesData = displayedDates.map { [generateDaysForWeek($0)] }
             } else {
                 guard let date = displayedDates[safe: 0] else { return }
@@ -160,7 +184,7 @@ final class TSCalendarViewModel: ObservableObject {
         let firstOffset = ((firstWeekday - 1) - config.startWeekDay.rawValue + 7) % 7
         let daysInMonth = calendar.range(of: .day, in: .month, for: month)?.count ?? 30
         
-        let weeksNeeded = environment.monthStyle == .fixed ? 6 : Int(ceil(Double(firstOffset + daysInMonth) / 7.0))
+        let weeksNeeded = config.monthStyle == .fixed ? 6 : Int(ceil(Double(firstOffset + daysInMonth) / 7.0))
         let totalDays = weeksNeeded * 7
         
         let dates = (-firstOffset..<(totalDays-firstOffset)).compactMap { offset -> TSCalendarDate? in

@@ -13,7 +13,6 @@ public struct TSCalendar: View {
     private let maximumDate: Date?
     private let selectedDate: Date?
     private let config: TSCalendarConfig
-    private let environment: TSCalendarEnvironment
     private let appearanceType: TSCalendarAppearanceType
     private let delegate: TSCalendarDelegate?
     private let dataSource: TSCalendarDataSource?
@@ -24,7 +23,6 @@ public struct TSCalendar: View {
         maximumDate: Date? = nil,
         selectedDate: Date? = nil,
         config: TSCalendarConfig = .init(),
-        environment: TSCalendarEnvironment = .app,
         appearanceType: TSCalendarAppearanceType = .app,
         delegate: TSCalendarDelegate? = nil,
         dataSource: TSCalendarDataSource? = nil
@@ -34,7 +32,6 @@ public struct TSCalendar: View {
         self.maximumDate = maximumDate
         self.selectedDate = selectedDate
         self.config = config
-        self.environment = environment
         self.appearanceType = appearanceType
         self.delegate = delegate
         self.dataSource = dataSource
@@ -47,7 +44,6 @@ public struct TSCalendar: View {
             maximumDate: maximumDate,
             selectedDate: selectedDate,
             config: config,
-            environment: environment,
             delegate: delegate,
             dataSource: dataSource
         )

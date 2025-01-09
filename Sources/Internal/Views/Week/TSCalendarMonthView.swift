@@ -18,6 +18,7 @@ struct TSCalendarMonthView: View {
                     weekData: monthData[weekIndex],
                     viewModel: viewModel
                 )
+                .frame(height: viewModel.config.heightStyle.height)
             }
         }
     }

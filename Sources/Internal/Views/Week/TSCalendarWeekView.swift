@@ -16,7 +16,7 @@ struct TSCalendarWeekView: View {
     private func dateOpacity(for date: TSCalendarDate) -> Double {
         switch viewModel.config.displayMode {
         case .month:
-            return viewModel.environment.monthStyle == .dynamic && !date.isInCurrentMonth ? 0 : (date.isInCurrentMonth ? 1 : 0.3)
+            return viewModel.config.monthStyle == .dynamic && !date.isInCurrentMonth ? 0 : (date.isInCurrentMonth ? 1 : 0.3)
         case .week:
             return 1
         }
@@ -26,7 +26,7 @@ struct TSCalendarWeekView: View {
         weekData.filter { date in
             switch viewModel.config.displayMode {
             case .month:
-                return viewModel.environment.monthStyle == .dynamic ? date.isInCurrentMonth : true
+                return viewModel.config.monthStyle == .dynamic ? date.isInCurrentMonth : true
             case .week:
                 return true
             }
@@ -34,7 +34,7 @@ struct TSCalendarWeekView: View {
     }
     
     private var visibleStartIndex: Int {
-        if viewModel.environment.monthStyle == .dynamic {
+        if viewModel.config.monthStyle == .dynamic {
             return weekData.firstIndex { $0.date == visibleDates.first?.date } ?? 0
         } else {
             return 0
@@ -148,7 +148,6 @@ struct TSCalendarWeekView: View {
         config: .init(
             scrollDirection: .vertical,
             showWeekNumber: true
-        ),
-        environment: .app
+        )
     )
 }

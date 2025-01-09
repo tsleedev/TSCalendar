@@ -16,28 +16,28 @@ struct SettingsView: View {
         NavigationView {
             List {
                 Section(header: Text("Calendar Settings")) {
-                    Picker("Display Mode", selection: $controller.displayMode) {
+                    Picker("Display Mode", selection: $controller.config.displayMode) {
                         ForEach(TSCalendarDisplayMode.allCases, id: \.self) { mode in
                             Text(mode.description)
                                 .tag(mode)
                         }
                     }
                     
-                    Picker("Start of Week", selection: $controller.startWeekDay) {
+                    Picker("Start of Week", selection: $controller.config.startWeekDay) {
                         ForEach(TSCalendarStartWeekDay.allCases, id: \.self) { weekDay in
                             Text(weekDay.description)
                                 .tag(weekDay)
                         }
                     }
                     
-                    Picker("Scroll Direction", selection: $controller.scrollDirection) {
+                    Picker("Scroll Direction", selection: $controller.config.scrollDirection) {
                         ForEach(TSCalendarScrollDirection.allCases, id: \.self) { direction in
                             Text(direction.description)
                                 .tag(direction)
                         }
                     }
                     
-                    Toggle("Show Week Numbers", isOn: $controller.showWeekNumber)
+                    Toggle("Show Week Numbers", isOn: $controller.config.showWeekNumber)
                 }
             }
             .navigationTitle("Settings")
