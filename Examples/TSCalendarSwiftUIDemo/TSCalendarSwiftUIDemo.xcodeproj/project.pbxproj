@@ -17,6 +17,7 @@
 		7C48099A2D2D1CB50055C225 /* CalendarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4809922D2D1CB40055C225 /* CalendarController.swift */; };
 		7C48099B2D2D1CB50055C225 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C48098A2D2D1CB40055C225 /* Preview Assets.xcassets */; };
 		7C48099C2D2D1CB50055C225 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C4809912D2D1CB40055C225 /* Assets.xcassets */; };
+		7C4809F22D311A0B0055C225 /* CustomHeaderCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4809F12D311A010055C225 /* CustomHeaderCalendarView.swift */; };
 		7C5BD7CA2D1CE952004069C4 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5BD7C92D1CE952004069C4 /* WidgetKit.framework */; };
 		7C5BD7CC2D1CE952004069C4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5BD7CB2D1CE952004069C4 /* SwiftUI.framework */; };
 		7C5BD7D72D1CE954004069C4 /* WidgetDemoExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 7C5BD7C82D1CE952004069C4 /* WidgetDemoExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -71,6 +72,7 @@
 		7C48098F2D2D1CB40055C225 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7C4809912D2D1CB40055C225 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7C4809922D2D1CB40055C225 /* CalendarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarController.swift; sourceTree = "<group>"; };
+		7C4809F12D311A010055C225 /* CustomHeaderCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeaderCalendarView.swift; sourceTree = "<group>"; };
 		7C5BD7C82D1CE952004069C4 /* WidgetDemoExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetDemoExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C5BD7C92D1CE952004069C4 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		7C5BD7CB2D1CE952004069C4 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -222,6 +224,7 @@
 			children = (
 				7C48098D2D2D1CB40055C225 /* FixedWeekHeightCalendarView.swift */,
 				7C48098E2D2D1CB40055C225 /* FullSizeCalendarView.swift */,
+				7C4809F12D311A010055C225 /* CustomHeaderCalendarView.swift */,
 			);
 			path = CalendarViews;
 			sourceTree = "<group>";
@@ -380,6 +383,7 @@
 			files = (
 				7C4809942D2D1CB50055C225 /* TSCalendarSwiftUIDemoApp.swift in Sources */,
 				7C4809952D2D1CB50055C225 /* TSCalendarWeekHeight.swift in Sources */,
+				7C4809F22D311A0B0055C225 /* CustomHeaderCalendarView.swift in Sources */,
 				7C4809962D2D1CB50055C225 /* ContentView.swift in Sources */,
 				7C4809972D2D1CB50055C225 /* FixedWeekHeightCalendarView.swift in Sources */,
 				7C4809982D2D1CB50055C225 /* FullSizeCalendarView.swift in Sources */,

@@ -21,6 +21,11 @@ struct ContentView: View {
                 ) {
                     Text("FixedWeekHeightCalendarView")
                 }
+                NavigationLink(
+                    destination: CustomHeaderCalendarView()
+                ) {
+                    Text("CustomHeaderCalendarView")
+                }
             }
             .navigationTitle("Select Calendar")
         }

@@ -9,10 +9,20 @@ import SwiftUI
 import TSCalendar
 
 class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendarDataSource {
+    @Published private(set) var headerTitle: String = ""
     @Published var config: TSCalendarConfig
+    
+    var isFlexible: Bool {
+        if case .flexible = config.heightStyle {
+            return true
+        } else {
+            return false
+        }
+    }
     
     init(config: TSCalendarConfig = .init()) {
         self.config = config
+        self.headerTitle = getHeaderTitle(date: .now)
     }
     
     var events: [TSCalendarEvent] = [
@@ -94,6 +104,17 @@ class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendarDataSo
     
     func calendar(pageDidChange date: Date) {
         print("Page changed to: \(date)")
+        headerTitle = getHeaderTitle(date: date)
+    }
+    
+    private func getHeaderTitle(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = DateFormatter.dateFormat(
+            fromTemplate: "MMMM yyyy",
+            options: 0,
+            locale: Locale.current
+        )
+        return dateFormatter.string(from: date)
     }
     
     // 날짜 생성 헬퍼 함수
