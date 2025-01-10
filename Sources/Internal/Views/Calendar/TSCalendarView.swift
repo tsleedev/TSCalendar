@@ -45,7 +45,6 @@ struct TSCalendarView: View {
             
             if config.isPagingEnabled {
                 TSCalendarPagingView(viewModel: viewModel)
-                    .background(.yellow)
             } else {
                 TSCalendarStaticView(viewModel: viewModel)
             }
