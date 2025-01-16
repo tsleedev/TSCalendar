@@ -15,6 +15,7 @@ struct CustomHeaderCalendarView: View {
         )
     )
     @State private var showSettings = false
+    @State private var refreshID = UUID()
     
     var body: some View {
         VStack {
@@ -23,9 +24,10 @@ struct CustomHeaderCalendarView: View {
                     .font(.system(size: 17))
                 Spacer()
                 Button(action: {
-                    controller.config.heightStyle = controller.isFlexible ? .fixed(60) : .flexible
+                    controller.config.heightStyle = controller.config.heightStyle.isFlexible ? .fixed(60) : .flexible
+                    refreshID = UUID()
                 }) {
-                    Text(controller.isFlexible ? "Collapse" : "Expand")
+                    Text(controller.config.heightStyle.isFlexible ? "Collapse" : "Expand")
                         .font(.system(size: 14))
                 }
             }
@@ -35,11 +37,12 @@ struct CustomHeaderCalendarView: View {
                 delegate: controller,
                 dataSource: controller
             )
-            if !controller.isFlexible {
+            if !controller.config.heightStyle.isFlexible {
                 Spacer()
             }
         }
-        .navigationTitle("CustomHeaderCalendarView")
+        .id(refreshID)
+        .navigationTitle("CustomHeaderCalendar")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(trailing: settingsButton)
         .sheet(isPresented: $showSettings) {

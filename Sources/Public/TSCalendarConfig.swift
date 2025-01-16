@@ -7,22 +7,22 @@
 
 import Foundation
 
-public struct TSCalendarConfig: Sendable {
-    public var autoSelectToday: Bool
-    public var displayMode: TSCalendarDisplayMode
-    public var heightStyle: TSCalendarHeightStyle
-    public var isPagingEnabled: Bool
-    public var monthStyle: TSCalendarMonthStyle
-    public var scrollDirection: TSCalendarScrollDirection
-    public var showHeader: Bool
-    public var showWeekNumber: Bool
-    public var startWeekDay: TSCalendarStartWeekDay
+public final class TSCalendarConfig: ObservableObject {
+    @Published public var autoSelectToday: Bool
+    @Published public var displayMode: TSCalendarDisplayMode
+    @Published public var heightStyle: TSCalendarHeightStyle
+    @Published public var isPagingEnabled: Bool
+    @Published public var monthStyle: TSCalendarMonthStyle
+    @Published public var scrollDirection: TSCalendarScrollDirection
+    @Published public var showHeader: Bool
+    @Published public var showWeekNumber: Bool
+    @Published public var startWeekDay: TSCalendarStartWeekDay
     
     private var identifiableProperties: [Any] {
         [
             autoSelectToday,
             displayMode,
-            heightStyle,
+//            heightStyle,      // 외부에서 새로고침 필요
             isPagingEnabled,
             monthStyle,
             scrollDirection,

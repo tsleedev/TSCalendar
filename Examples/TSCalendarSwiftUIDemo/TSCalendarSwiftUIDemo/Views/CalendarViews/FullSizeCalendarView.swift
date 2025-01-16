@@ -20,7 +20,7 @@ struct FullSizeCalendarView: View {
                 dataSource: controller
             )
         }
-        .navigationTitle("FullSizeCalendarView")
+        .navigationTitle("FullSizeCalendar")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(trailing: settingsButton)
         .sheet(isPresented: $showSettings) {

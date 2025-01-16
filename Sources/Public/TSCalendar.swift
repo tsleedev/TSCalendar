@@ -8,14 +8,9 @@
 import SwiftUI
 
 public struct TSCalendar: View {
-    private let initialDate: Date
-    private let minimumDate: Date?
-    private let maximumDate: Date?
-    private let selectedDate: Date?
-    private let config: TSCalendarConfig
+    @StateObject var viewModel: TSCalendarViewModel
+    @ObservedObject var config: TSCalendarConfig
     private let appearanceType: TSCalendarAppearanceType
-    private let delegate: TSCalendarDelegate?
-    private let dataSource: TSCalendarDataSource?
     
     public init(
         initialDate: Date = .now,
@@ -27,18 +22,7 @@ public struct TSCalendar: View {
         delegate: TSCalendarDelegate? = nil,
         dataSource: TSCalendarDataSource? = nil
     ) {
-        self.initialDate = initialDate
-        self.minimumDate = minimumDate
-        self.maximumDate = maximumDate
-        self.selectedDate = selectedDate
-        self.config = config
-        self.appearanceType = appearanceType
-        self.delegate = delegate
-        self.dataSource = dataSource
-    }
-    
-    public var body: some View {
-        TSCalendarView(
+        _viewModel = StateObject(wrappedValue: TSCalendarViewModel(
             initialDate: initialDate,
             minimumDate: minimumDate,
             maximumDate: maximumDate,
@@ -46,8 +30,17 @@ public struct TSCalendar: View {
             config: config,
             delegate: delegate,
             dataSource: dataSource
-        )
-        .environment(\.calendarAppearance, TSCalendarAppearance(type: appearanceType))
-        .id(config.id)
+        ))
+        self.config = config
+        self.appearanceType = appearanceType
+    }
+    
+    public var body: some View {
+        TSCalendarView(viewModel: viewModel)
+            .environment(\.calendarAppearance, TSCalendarAppearance(type: appearanceType))
+            .id(config.id)
+//            .onChange(of: config.heightStyle) { newHeightStyle in
+//                viewModel.updateHeight()
+//            }
     }
 }

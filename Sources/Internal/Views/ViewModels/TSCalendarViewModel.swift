@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 final class TSCalendarViewModel: ObservableObject {
     // MARK: - Published Properties
@@ -19,9 +20,12 @@ final class TSCalendarViewModel: ObservableObject {
     private let maximumDate: Date?
     private(set) var selectedDate: Date?
     let config: TSCalendarConfig
+    private let disableSwiftUIAnimation: Bool
     
     private(set) weak var delegate: TSCalendarDelegate?
     private(set) weak var dataSource: TSCalendarDataSource?
+    private var cancellables = Set<AnyCancellable>()
+    private var configCancellable: AnyCancellable?
     
     private static let defaultWeekHeight: CGFloat = 60.0
     private static let animationDuration: TimeInterval = 0.3
@@ -44,13 +48,14 @@ final class TSCalendarViewModel: ObservableObject {
     
     // MARK: - Initialization
     init(
-        initialDate: Date,
-        minimumDate: Date?,
-        maximumDate: Date?,
-        selectedDate: Date?,
-        config: TSCalendarConfig,
-        delegate: TSCalendarDelegate?,
-        dataSource: TSCalendarDataSource?
+        initialDate: Date = .now,
+        minimumDate: Date? = nil,
+        maximumDate: Date? = nil,
+        selectedDate: Date? = nil,
+        config: TSCalendarConfig = .init(),
+        delegate: TSCalendarDelegate? = nil,
+        dataSource: TSCalendarDataSource? = nil,
+        disableSwiftUIAnimation: Bool = false
     ) {
         self.minimumDate = minimumDate
         self.maximumDate = maximumDate
@@ -58,6 +63,7 @@ final class TSCalendarViewModel: ObservableObject {
         self.config = config
         self.delegate = delegate
         self.dataSource = dataSource
+        self.disableSwiftUIAnimation = disableSwiftUIAnimation
         
         self.displayedDates = config.isPagingEnabled ? getDisplayedDates(from: initialDate) : [initialDate]
         generateAllDates()
@@ -75,8 +81,7 @@ extension TSCalendarViewModel {
     
     func moveDate(by value: Int) {
         let component = config.displayMode == .month ? Calendar.Component.month : .weekOfYear
-        guard let currentDate = displayedDates[safe: 1],
-              let nextDate = calendar.date(byAdding: component, value: value, to: currentDate),
+        guard let nextDate = calendar.date(byAdding: component, value: value, to: currentDisplayedDate),
               canMove(to: nextDate) else { return }
         
         displayedDates = config.isPagingEnabled ? getDisplayedDates(from: nextDate) : [nextDate]
@@ -87,18 +92,17 @@ extension TSCalendarViewModel {
     
     func willMoveDate(by value: Int) {
         let component = config.displayMode == .month ? Calendar.Component.month : .weekOfYear
-        guard let currentDate = displayedDates[safe: 1],
-              let nextDate = calendar.date(byAdding: component, value: value, to: currentDate),
+        guard let nextDate = calendar.date(byAdding: component, value: value, to: currentDisplayedDate),
               canMove(to: nextDate) else { return }
         
-        delegate?.calendar(pageWillChange: currentDate)
+        delegate?.calendar(pageWillChange: nextDate)
         updateHeight(for: nextDate, animated: true)
     }
     
     func selectDate(_ date: Date) {
         guard canMove(to: date) else { return }
         selectedDate = date
-        generateAllDates()
+//        generateAllDates()
         delegate?.calendar(didSelect: date)
     }
     
@@ -145,7 +149,9 @@ private extension TSCalendarViewModel {
     
     func updateHeight(for date: Date, animated: Bool = false) {
         let newHeight = Self.calculateHeight(for: date, config: config)
-        if animated {
+        let shouldAnimate = animated && !disableSwiftUIAnimation
+        
+        if shouldAnimate {
             withAnimation(.easeInOut(duration: Self.animationDuration)) {
                 currentHeight = newHeight
             }

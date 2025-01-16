@@ -140,7 +140,7 @@ struct TSCalendarWeekView: View {
 }
 
 #Preview {
-    TSCalendarView(
+    let viewModel = TSCalendarViewModel(
         initialDate: Date(),
         minimumDate: Calendar.current.date(byAdding: .year, value: -1, to: .now) ?? .now,
         maximumDate: Calendar.current.date(byAdding: .year, value: 1, to: .now) ?? .now,
@@ -150,4 +150,5 @@ struct TSCalendarWeekView: View {
             showWeekNumber: true
         )
     )
+    TSCalendarView(viewModel: viewModel)
 }

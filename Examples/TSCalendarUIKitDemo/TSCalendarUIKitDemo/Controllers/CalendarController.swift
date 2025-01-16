@@ -10,7 +10,7 @@ import TSCalendar
 
 final class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendarDataSource {
     @Published private(set) var headerTitle: String = ""
-    @ObservedObject var config: TSCalendarConfig
+    @Published var config: TSCalendarConfig
     
     init(config: TSCalendarConfig = .init()) {
         self.config = config
@@ -84,7 +84,6 @@ final class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendar
     }
     
     func calendar(startDate: Date, endDate: Date) -> [TSCalendarEvent] {
-//        print("CalendarController \(startDate) ~ \(endDate)")
         return events.filter { event in
             // 이벤트가 해당 기간과 겹치는지 확인
             !(event.endDate < startDate || event.startDate > endDate)

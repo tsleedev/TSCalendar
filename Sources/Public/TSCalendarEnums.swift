@@ -18,7 +18,7 @@ public enum TSCalendarAppearanceType {
     }
 }
 
-public enum TSCalendarDisplayMode: String, CaseIterable, Sendable {
+public enum TSCalendarDisplayMode: String, CaseIterable {
     case month = "Month"
     case week = "Week"
     
@@ -27,26 +27,37 @@ public enum TSCalendarDisplayMode: String, CaseIterable, Sendable {
     }
 }
 
-public enum TSCalendarHeightStyle: Sendable {
-   case flexible
-   case fixed(CGFloat)
-   
-   public var height: CGFloat? {
-       switch self {
-       case .flexible:
-           return nil
-       case .fixed(let height):
-           return height
-       }
-   }
+public enum TSCalendarHeightStyle: Equatable {
+    case flexible
+    case fixed(CGFloat)
+    
+    public var height: CGFloat? {
+        switch self {
+        case .flexible:
+            return nil
+        case .fixed(let height):
+            return height
+        }
+    }
+    
+    public var isFlexible: Bool {
+        return self == .flexible
+    }
+    
+    public var isFixed: Bool {
+        if case .fixed = self {
+            return true
+        }
+        return false
+    }
 }
 
-public enum TSCalendarMonthStyle: Sendable {
-   case fixed    // 항상 6주 표시 (42일)
-   case dynamic  // 현재 달에 필요한 주 수만큼만 표시
+public enum TSCalendarMonthStyle {
+    case fixed    // 항상 6주 표시 (42일)
+    case dynamic  // 현재 달에 필요한 주 수만큼만 표시
 }
 
-public enum TSCalendarScrollDirection: String, CaseIterable, Sendable {
+public enum TSCalendarScrollDirection: String, CaseIterable {
     case vertical = "Vertical"
     case horizontal = "Horizontal"
     
@@ -55,7 +66,7 @@ public enum TSCalendarScrollDirection: String, CaseIterable, Sendable {
     }
 }
 
-public enum TSCalendarStartWeekDay: Int, CaseIterable, Sendable {
+public enum TSCalendarStartWeekDay: Int, CaseIterable {
     case sunday = 0
     case monday = 1
     case tuesday = 2

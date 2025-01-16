@@ -8,55 +8,32 @@
 import SwiftUI
 
 struct TSCalendarView: View {
-    @StateObject private var viewModel: TSCalendarViewModel
-    private let config: TSCalendarConfig
-    
-    init(
-        initialDate: Date = .now,
-        minimumDate: Date? = nil,
-        maximumDate: Date? = nil,
-        selectedDate: Date? = nil,
-        config: TSCalendarConfig = .init(),
-        delegate: TSCalendarDelegate? = nil,
-        dataSource: TSCalendarDataSource? = nil
-    ) {
-        _viewModel = StateObject(wrappedValue: TSCalendarViewModel(
-            initialDate: initialDate,
-            minimumDate: minimumDate,
-            maximumDate: maximumDate,
-            selectedDate: selectedDate,
-            config: config,
-            delegate: delegate,
-            dataSource: dataSource
-        ))
-        self.config = config
-    }
+    @ObservedObject var viewModel: TSCalendarViewModel
     
     var body: some View {
         VStack(spacing: 0) {
-            if config.showHeader {
+            if viewModel.config.showHeader {
                 TSCalendarMonthHeaderView(
                     viewModel: viewModel
                 )
+                .transaction { transaction in
+                    transaction.disablesAnimations = true  // 상위 애니메이션 비활성화
+                }
             }
             TSCalendarWeekdayHeaderView(
                 viewModel: viewModel
             )
             
-            if config.isPagingEnabled {
+            if viewModel.config.isPagingEnabled {
                 TSCalendarPagingView(viewModel: viewModel)
             } else {
                 TSCalendarStaticView(viewModel: viewModel)
             }
         }
-        .frame(maxHeight: config.heightStyle.height == nil ? .infinity : nil)
     }
 }
 
 #Preview {
-    TSCalendarView(
-        minimumDate: Calendar.current.date(byAdding: .year, value: -1, to: Date()),
-        maximumDate: Calendar.current.date(byAdding: .year, value: 1, to: Date()),
-        selectedDate: Date()
-    )
+    let viewModel = TSCalendarViewModel()
+    TSCalendarView(viewModel: viewModel)
 }

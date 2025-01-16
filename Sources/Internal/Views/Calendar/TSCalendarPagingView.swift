@@ -25,7 +25,7 @@ private class PagingGestureHandler: ObservableObject {
     @Published var isDragging = false
     @Published var transitionState: TransitionState?
     
-    let viewModel: TSCalendarViewModel
+    @ObservedObject private var viewModel: TSCalendarViewModel
     
     private let transitionAnimation: Animation = .easeOut(duration: 0.3)
     private let transitionDelay: TimeInterval = 0.3
@@ -79,37 +79,18 @@ private class PagingGestureHandler: ObservableObject {
     }
 }
 
-private extension PagingGestureHandler {
-    @ViewBuilder
-    func createCalendarView(for index: Int) -> some View {
-        if let monthData = viewModel.datesData[safe: index] {
-            switch viewModel.config.displayMode {
-            case .month:
-                TSCalendarMonthView(
-                    monthData: monthData,
-                    viewModel: viewModel
-                )
-            case .week:
-                TSCalendarWeekView(
-                    weekData: monthData.first ?? [],
-                    viewModel: viewModel
-                )
-            }
-        }
-    }
-}
-
 struct TSCalendarPagingView: View {
     @ObservedObject var viewModel: TSCalendarViewModel
     
     var body: some View {
         Group {
-            if case .fixed = viewModel.config.heightStyle {
-                fixedHeightContent
-            } else {
+            if viewModel.config.heightStyle.isFlexible {
                 flexibleHeightContent
+            } else {
+                fixedHeightContent
             }
         }
+        .contentShape(Rectangle())
         .clipped()
     }
     
@@ -138,19 +119,21 @@ struct TSCalendarPagingView: View {
 
 private struct FixedHeightHorizontalPagingView: View {
     @StateObject private var handler: PagingGestureHandler
+    @ObservedObject private var viewModel: TSCalendarViewModel
     
     init(viewModel: TSCalendarViewModel) {
         _handler = StateObject(wrappedValue: PagingGestureHandler(viewModel: viewModel))
+        self.viewModel = viewModel
     }
     
     var body: some View {
         GeometryReader { geometry in
             HStack(alignment: .top, spacing: 0) {
                 ForEach(0..<3, id: \.self) { index in
-                    handler.createCalendarView(for: index)
+                    calendarView(for: index)
                         .frame(
                             width: geometry.size.width,
-                            height: handler.viewModel.getPageHeight(at: index)
+                            height: viewModel.getPageHeight(at: index)
                         )
                 }
             }
@@ -176,26 +159,47 @@ private struct FixedHeightHorizontalPagingView: View {
             )
             .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
         }
-        .frame(height: handler.viewModel.currentHeight)
+        .frame(height: viewModel.currentHeight)
+    }
+    
+    private func calendarView(for index: Int) -> some View {
+        Group {
+            if let monthData = viewModel.datesData[safe: index] {
+                switch viewModel.config.displayMode {
+                case .month:
+                    TSCalendarMonthView(
+                        monthData: monthData,
+                        viewModel: viewModel
+                    )
+                case .week:
+                    TSCalendarWeekView(
+                        weekData: monthData.first ?? [],
+                        viewModel: viewModel
+                    )
+                }
+            }
+        }
     }
 }
 
 private struct FixedHeightVerticalPagingView: View {
     @StateObject private var handler: PagingGestureHandler
+    @ObservedObject private var viewModel: TSCalendarViewModel
     
     init(viewModel: TSCalendarViewModel) {
         _handler = StateObject(wrappedValue: PagingGestureHandler(viewModel: viewModel))
+        self.viewModel = viewModel
     }
     
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
                 ForEach(0..<3, id: \.self) { index in
-                    handler.createCalendarView(for: index)
-                        .frame(height: handler.viewModel.getPageHeight(at: index))
+                    calendarView(for: index)
+                        .frame(height: viewModel.getPageHeight(at: index))
                 }
             }
-            .offset(y: -handler.viewModel.getPageHeight(at: 0) + handler.offset)
+            .offset(y: -viewModel.getPageHeight(at: 0) + handler.offset)
             .gesture(
                 DragGesture()
                     .onChanged { value in
@@ -203,8 +207,8 @@ private struct FixedHeightVerticalPagingView: View {
                         handler.handleDragGesture(
                             value: value,
                             axis: .vertical,
-                            pageSize: handler.viewModel.getPageHeight(at: 0),
-                            nextPageSize: handler.viewModel.getPageHeight(at: 1)
+                            pageSize: viewModel.getPageHeight(at: 0),
+                            nextPageSize: viewModel.getPageHeight(at: 1)
                         )
                     }
                     .onEnded { value in
@@ -212,29 +216,53 @@ private struct FixedHeightVerticalPagingView: View {
                         handler.handleDragGesture(
                             value: value,
                             axis: .vertical,
-                            pageSize: handler.viewModel.getPageHeight(at: 0),
-                            nextPageSize: handler.viewModel.getPageHeight(at: 1)
+                            pageSize: viewModel.getPageHeight(at: 0),
+                            nextPageSize: viewModel.getPageHeight(at: 1)
                         )
                     }
             )
             .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
         }
-        .frame(height: handler.viewModel.currentHeight)
+        .frame(height: {
+            print("tslee viewModel.currentHeight \(viewModel.currentHeight)")
+            return viewModel.currentHeight
+        }())
+    }
+    
+    private func calendarView(for index: Int) -> some View {
+        Group {
+            if let monthData = viewModel.datesData[safe: index] {
+                switch viewModel.config.displayMode {
+                case .month:
+                    TSCalendarMonthView(
+                        monthData: monthData,
+                        viewModel: viewModel
+                    )
+                case .week:
+                    TSCalendarWeekView(
+                        weekData: monthData.first ?? [],
+                        viewModel: viewModel
+                    )
+                }
+            }
+        }
     }
 }
 
 private struct FlexibleHeightHorizontalPagingView: View {
     @StateObject private var handler: PagingGestureHandler
+    @ObservedObject private var viewModel: TSCalendarViewModel
     
     init(viewModel: TSCalendarViewModel) {
         _handler = StateObject(wrappedValue: PagingGestureHandler(viewModel: viewModel))
+        self.viewModel = viewModel
     }
     
     var body: some View {
         GeometryReader { geometry in
             HStack(alignment: .top, spacing: 0) {
                 ForEach(0..<3, id: \.self) { index in
-                    handler.createCalendarView(for: index)
+                    calendarView(for: index)
                         .frame(width: geometry.size.width)
                 }
             }
@@ -261,20 +289,41 @@ private struct FlexibleHeightHorizontalPagingView: View {
             .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
         }
     }
+    
+    private func calendarView(for index: Int) -> some View {
+        Group {
+            if let monthData = viewModel.datesData[safe: index] {
+                switch viewModel.config.displayMode {
+                case .month:
+                    TSCalendarMonthView(
+                        monthData: monthData,
+                        viewModel: viewModel
+                    )
+                case .week:
+                    TSCalendarWeekView(
+                        weekData: monthData.first ?? [],
+                        viewModel: viewModel
+                    )
+                }
+            }
+        }
+    }
 }
 
 private struct FlexibleHeightVerticalPagingView: View {
     @StateObject private var handler: PagingGestureHandler
+    @ObservedObject private var viewModel: TSCalendarViewModel
     
     init(viewModel: TSCalendarViewModel) {
         _handler = StateObject(wrappedValue: PagingGestureHandler(viewModel: viewModel))
+        self.viewModel = viewModel
     }
     
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
                 ForEach(0..<3, id: \.self) { index in
-                    handler.createCalendarView(for: index)
+                    calendarView(for: index)
                         .frame(height: geometry.size.height)
                 }
             }
@@ -301,13 +350,33 @@ private struct FlexibleHeightVerticalPagingView: View {
             .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
         }
     }
+    
+    private func calendarView(for index: Int) -> some View {
+        Group {
+            if let monthData = viewModel.datesData[safe: index] {
+                switch viewModel.config.displayMode {
+                case .month:
+                    TSCalendarMonthView(
+                        monthData: monthData,
+                        viewModel: viewModel
+                    )
+                case .week:
+                    TSCalendarWeekView(
+                        weekData: monthData.first ?? [],
+                        viewModel: viewModel
+                    )
+                }
+            }
+        }
+    }
 }
 
 #Preview {
-    TSCalendarView(
+    let viewModel = TSCalendarViewModel(
         config: .init(
             heightStyle: .fixed(40),
             scrollDirection: .horizontal
         )
     )
+    TSCalendarView(viewModel: viewModel)
 }

@@ -13,7 +13,10 @@ struct TSCalendarMonthHeaderView: View {
     
     var body: some View {
         HStack {
-            Button(action: { viewModel.moveDate(by: -1) }) {
+            Button(action: {
+                viewModel.willMoveDate(by: -1)
+                viewModel.moveDate(by: -1)
+            }) {
                 Image(systemName: "chevron.left")
                     .foregroundColor(.primary)
             }
@@ -29,7 +32,10 @@ struct TSCalendarMonthHeaderView: View {
             
             Spacer()
             
-            Button(action: { viewModel.moveDate(by: 1) }) {
+            Button(action: {
+                viewModel.willMoveDate(by: 1)
+                viewModel.moveDate(by: 1)
+            }) {
                 Image(systemName: "chevron.right")
                     .foregroundColor(.primary)
             }
@@ -40,7 +46,8 @@ struct TSCalendarMonthHeaderView: View {
 }
 
 #Preview {
-    TSCalendarView(
+    let viewModel = TSCalendarViewModel(
         config: .init(displayMode: .week)
     )
+    TSCalendarView(viewModel: viewModel)
 }
