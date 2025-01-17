@@ -14,17 +14,27 @@ struct ContentView: View {
                 NavigationLink(
                     destination: FullSizeCalendarView()
                 ) {
-                    Text("FullSizeCalendarView")
+                    Text("FullSizeCalendar")
+                }
+                NavigationLink(
+                    destination: FullSizeStaticCalendarView()
+                ) {
+                    Text("FullSizeStaticCalendar")
                 }
                 NavigationLink(
                     destination: FixedWeekHeightCalendarView()
                 ) {
-                    Text("FixedWeekHeightCalendarView")
+                    Text("FixedWeekHeightCalendar")
+                }
+                NavigationLink(
+                    destination: FixedWeekHeightStaticCalendarView()
+                ) {
+                    Text("FixedWeekHeightStaticCalendar")
                 }
                 NavigationLink(
                     destination: CustomHeaderCalendarView()
                 ) {
-                    Text("CustomHeaderCalendarView")
+                    Text("CustomHeaderCalendar")
                 }
             }
             .navigationTitle("Select Calendar")

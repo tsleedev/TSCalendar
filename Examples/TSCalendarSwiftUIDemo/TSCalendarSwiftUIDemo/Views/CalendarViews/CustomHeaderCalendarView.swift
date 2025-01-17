@@ -16,6 +16,7 @@ struct CustomHeaderCalendarView: View {
     )
     @State private var showSettings = false
     @State private var refreshID = UUID()
+    @State private var selectedDate: Date? = .now
     
     var body: some View {
         VStack {
@@ -23,6 +24,12 @@ struct CustomHeaderCalendarView: View {
                 Text(controller.headerTitle)
                     .font(.system(size: 17))
                 Spacer()
+                Button(action: {
+                    selectedDate = .now
+                }) {
+                    Text("Today")
+                        .font(.system(size: 14))
+                }
                 Button(action: {
                     controller.config.heightStyle = controller.config.heightStyle.isFlexible ? .fixed(60) : .flexible
                     refreshID = UUID()
@@ -33,6 +40,7 @@ struct CustomHeaderCalendarView: View {
             }
             .padding(.horizontal, 16)
             TSCalendar(
+                selectedDate: $selectedDate,
                 config: controller.config,
                 delegate: controller,
                 dataSource: controller

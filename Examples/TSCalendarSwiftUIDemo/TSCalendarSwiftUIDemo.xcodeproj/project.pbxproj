@@ -27,6 +27,8 @@
 		7C5BD8432D1E925B004069C4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C5BD7CB2D1CE952004069C4 /* SwiftUI.framework */; };
 		7C5BD8502D1E925D004069C4 /* WidgetIntentDemoExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 7C5BD8412D1E925B004069C4 /* WidgetIntentDemoExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7C5BD8562D1E967C004069C4 /* TSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 7C5BD8552D1E967C004069C4 /* TSCalendar */; };
+		7CF6986C2D3A25A7009514D1 /* FixedWeekHeightStaticCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF6986B2D3A25A2009514D1 /* FixedWeekHeightStaticCalendarView.swift */; };
+		7CF6986E2D3A25E9009514D1 /* FullSizeStaticCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF6986D2D3A25E5009514D1 /* FullSizeStaticCalendarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +79,8 @@
 		7C5BD7C92D1CE952004069C4 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		7C5BD7CB2D1CE952004069C4 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		7C5BD8412D1E925B004069C4 /* WidgetIntentDemoExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetIntentDemoExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CF6986B2D3A25A2009514D1 /* FixedWeekHeightStaticCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedWeekHeightStaticCalendarView.swift; sourceTree = "<group>"; };
+		7CF6986D2D3A25E5009514D1 /* FullSizeStaticCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullSizeStaticCalendarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -223,7 +227,9 @@
 			isa = PBXGroup;
 			children = (
 				7C48098D2D2D1CB40055C225 /* FixedWeekHeightCalendarView.swift */,
+				7CF6986B2D3A25A2009514D1 /* FixedWeekHeightStaticCalendarView.swift */,
 				7C48098E2D2D1CB40055C225 /* FullSizeCalendarView.swift */,
+				7CF6986D2D3A25E5009514D1 /* FullSizeStaticCalendarView.swift */,
 				7C4809F12D311A010055C225 /* CustomHeaderCalendarView.swift */,
 			);
 			path = CalendarViews;
@@ -381,6 +387,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CF6986E2D3A25E9009514D1 /* FullSizeStaticCalendarView.swift in Sources */,
+				7CF6986C2D3A25A7009514D1 /* FixedWeekHeightStaticCalendarView.swift in Sources */,
 				7C4809942D2D1CB50055C225 /* TSCalendarSwiftUIDemoApp.swift in Sources */,
 				7C4809952D2D1CB50055C225 /* TSCalendarWeekHeight.swift in Sources */,
 				7C4809F22D311A0B0055C225 /* CustomHeaderCalendarView.swift in Sources */,

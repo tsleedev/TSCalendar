@@ -1,16 +1,18 @@
 //
-//  FullSizeCalendarView.swift
+//  FullSizeStaticCalendarView.swift
 //  TSCalendarSwiftUIDemo
 //
-//  Created by TAE SU LEE on 1/7/25.
+//  Created by TAE SU LEE on 1/17/25.
 //
 
 import SwiftUI
 import TSCalendar
 
-struct FullSizeCalendarView: View {
+struct FullSizeStaticCalendarView: View {
     @StateObject private var controller = CalendarController(
         config: TSCalendarConfig(
+            autoSelectToday: false,
+            isPagingEnabled: false,
             scrollDirection: .vertical
         )
     )
@@ -24,7 +26,7 @@ struct FullSizeCalendarView: View {
                 dataSource: controller
             )
         }
-        .navigationTitle("FullSizeCalendar")
+        .navigationTitle("FullSizeStaticCalendar")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(trailing: settingsButton)
         .sheet(isPresented: $showSettings) {
@@ -43,5 +45,5 @@ struct FullSizeCalendarView: View {
 }
 
 #Preview {
-    FullSizeCalendarView()
+    FullSizeStaticCalendarView()
 }

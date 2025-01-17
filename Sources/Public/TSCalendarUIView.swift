@@ -20,6 +20,7 @@ public class TSCalendarUIView: UIView {
     private let dataSource: TSCalendarDataSource?
     private var heightConstraint: NSLayoutConstraint?
     private var cancellable = Set<AnyCancellable>()
+    private var viewModel: TSCalendarViewModel
     
     public init(
         initialDate: Date = .now,
@@ -40,7 +41,7 @@ public class TSCalendarUIView: UIView {
         self.delegate = delegate
         self.dataSource = dataSource
         
-        let viewModel = TSCalendarViewModel(
+        self.viewModel = TSCalendarViewModel(
             initialDate: initialDate,
             minimumDate: minimumDate,
             maximumDate: maximumDate,
@@ -56,7 +57,7 @@ public class TSCalendarUIView: UIView {
         
         self.hostingController = UIHostingController(rootView: AnyView(calendarView))
         super.init(frame: .zero)
-        bindCalendarHeight(viewModel: viewModel)
+        bindCalendarHeight()
         
         setupHostingController()
     }
@@ -99,7 +100,7 @@ public class TSCalendarUIView: UIView {
         config.displayMode
     }
     
-    private func bindCalendarHeight(viewModel: TSCalendarViewModel) {
+    private func bindCalendarHeight() {
         heightConstraint?.isActive = false
         cancellable = Set<AnyCancellable>()
         guard viewModel.config.heightStyle.isFixed else { return }
@@ -111,7 +112,7 @@ public class TSCalendarUIView: UIView {
                 UIView.animate(withDuration: 1) {
                     self.heightConstraint?.isActive = false
                     let headerHeight: CGFloat
-                    if viewModel.config.showHeader {
+                    if self.viewModel.config.showHeader {
                         headerHeight = self.appearance.monthHeaderHeight + self.appearance.weekdayHeaderHeight
                     } else {
                         headerHeight = self.appearance.weekdayHeaderHeight
@@ -126,7 +127,7 @@ public class TSCalendarUIView: UIView {
     
     public func updateConfig(_ newConfig: TSCalendarConfig) {
         self.config = newConfig
-        let viewModel = TSCalendarViewModel(
+        self.viewModel = TSCalendarViewModel(
             initialDate: initialDate,
             minimumDate: minimumDate,
             maximumDate: maximumDate,
@@ -136,11 +137,15 @@ public class TSCalendarUIView: UIView {
             dataSource: dataSource,
             disableSwiftUIAnimation: true
         )
-        bindCalendarHeight(viewModel: viewModel)
+        bindCalendarHeight()
         
         let calendarView = TSCalendarView(viewModel: viewModel)
             .environment(\.calendarAppearance, appearance)
             .id(config.id)
         hostingController.rootView = AnyView(calendarView)
+    }
+    
+    public func selectDate(_ date: Date) {
+        viewModel.selectDate(date)
     }
 }

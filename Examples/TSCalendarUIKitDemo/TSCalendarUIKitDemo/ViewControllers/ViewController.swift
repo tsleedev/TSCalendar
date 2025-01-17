@@ -19,10 +19,11 @@ class ViewController: UIViewController {
     }()
     
     private let items = [
-        "FullSizeCalendarView",
-        "FullSizeStaticCalendarView",
-        "FixedWeekHeightCalendarView",
-        "CustomHeaderCalendarView"
+        "FullSizeCalendar",
+        "FullSizeStaticCalendar",
+        "FixedWeekHeightCalendar",
+        "FixedWeekHeightStaticCalendar",
+        "CustomHeaderCalendar"
     ]
     
     override func viewDidLoad() {
@@ -73,6 +74,8 @@ extension ViewController: UITableViewDelegate {
         case 2:
             viewController = FixedWeekHeightCalendarViewController()
         case 3:
+            viewController = FixedWeekHeightStaticCalendarViewController()
+        case 4:
             viewController = CustomHeaderCalendarViewController()
         default:
             return

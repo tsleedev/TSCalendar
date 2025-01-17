@@ -10,13 +10,14 @@ import SwiftUI
 public struct TSCalendar: View {
     @StateObject var viewModel: TSCalendarViewModel
     @ObservedObject var config: TSCalendarConfig
+    @Binding var selectedDate: Date?
     private let appearanceType: TSCalendarAppearanceType
     
     public init(
         initialDate: Date = .now,
         minimumDate: Date? = nil,
         maximumDate: Date? = nil,
-        selectedDate: Date? = nil,
+        selectedDate: Binding<Date?> = .constant(nil),
         config: TSCalendarConfig = .init(),
         appearanceType: TSCalendarAppearanceType = .app,
         delegate: TSCalendarDelegate? = nil,
@@ -26,11 +27,12 @@ public struct TSCalendar: View {
             initialDate: initialDate,
             minimumDate: minimumDate,
             maximumDate: maximumDate,
-            selectedDate: selectedDate,
+            selectedDate: selectedDate.wrappedValue,
             config: config,
             delegate: delegate,
             dataSource: dataSource
         ))
+        _selectedDate = selectedDate
         self.config = config
         self.appearanceType = appearanceType
     }
@@ -39,8 +41,13 @@ public struct TSCalendar: View {
         TSCalendarView(viewModel: viewModel)
             .environment(\.calendarAppearance, TSCalendarAppearance(type: appearanceType))
             .id(config.id)
-//            .onChange(of: config.heightStyle) { newHeightStyle in
-//                viewModel.updateHeight()
-//            }
+            .onChange(of: selectedDate) { newDate in
+                if let date = newDate {
+                    viewModel.selectDate(date)
+                }
+            }
+            .onChange(of: viewModel.selectedDate) { newDate in
+                selectedDate = newDate  // ViewModel에서 선택이 변경될 때도 상태 업데이트
+            }
     }
 }

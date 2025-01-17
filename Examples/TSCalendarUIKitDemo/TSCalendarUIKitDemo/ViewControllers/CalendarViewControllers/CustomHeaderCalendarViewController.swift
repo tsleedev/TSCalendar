@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 import TSCalendar
 
 class CustomHeaderCalendarViewController: UIViewController {
@@ -19,7 +20,7 @@ class CustomHeaderCalendarViewController: UIViewController {
     private lazy var headerStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
-        stack.spacing = 0
+        stack.spacing = 12
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -29,6 +30,14 @@ class CustomHeaderCalendarViewController: UIViewController {
         label.font = .systemFont(ofSize: 17)
         label.text = controller.headerTitle
         return label
+    }()
+    
+    private lazy var todayButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.titleLabel?.font = .systemFont(ofSize: 14)
+        button.setTitle("Today", for: .normal)
+        button.addTarget(self, action: #selector(todayButtonTapped), for: .touchUpInside)
+        return button
     }()
     
     private lazy var expandButton: UIButton = {
@@ -41,7 +50,6 @@ class CustomHeaderCalendarViewController: UIViewController {
     private lazy var calendarContainerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .yellow
         return view
     }()
     
@@ -52,17 +60,18 @@ class CustomHeaderCalendarViewController: UIViewController {
             dataSource: controller
         )
         calendar.translatesAutoresizingMaskIntoConstraints = false
-        calendar.backgroundColor = .gray
         return calendar
     }()
     
     private var containerBottomConstraint: NSLayoutConstraint?
+    private var cancellables = Set<AnyCancellable>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
         setupViews()
         setupConstraints()
+        bindHeaderTitle()
     }
     
     private func setupNavigationBar() {
@@ -83,6 +92,7 @@ class CustomHeaderCalendarViewController: UIViewController {
         view.addSubview(headerStackView)
         headerStackView.addArrangedSubview(headerTitleLabel)
         headerStackView.addArrangedSubview(UIView()) // Spacer
+        headerStackView.addArrangedSubview(todayButton)
         headerStackView.addArrangedSubview(expandButton)
         
         // Calendar View
@@ -116,6 +126,14 @@ class CustomHeaderCalendarViewController: UIViewController {
         updateContainerConstraints()
     }
     
+    private func bindHeaderTitle() {
+        controller.$headerTitle
+            .sink { [weak self] newTitle in
+                self?.headerTitleLabel.text = newTitle
+            }
+            .store(in: &cancellables)
+    }
+    
     private func updateContainerConstraints() {
         if controller.config.heightStyle.isFlexible {
             // flexible 모드: 컨테이너를 화면 끝까지
@@ -131,6 +149,10 @@ class CustomHeaderCalendarViewController: UIViewController {
             controller.config.heightStyle.isFlexible ? "Collapse" : "Expand",
             for: .normal
         )
+    }
+    
+    @objc private func todayButtonTapped() {
+        calendarView.selectDate(.now)
     }
     
     @objc private func expandButtonTapped() {

@@ -100,10 +100,22 @@ extension TSCalendarViewModel {
     }
     
     func selectDate(_ date: Date) {
-        guard canMove(to: date) else { return }
-        selectedDate = date
-//        generateAllDates()
-        delegate?.calendar(didSelect: date)
+        let normalizedDate = calendar.startOfDay(for: date)
+        
+        guard canMove(to: normalizedDate) else { return }
+        selectedDate = normalizedDate
+        
+        let currentMonth = calendar.component(.month, from: currentDisplayedDate)
+        let selectedMonth = calendar.component(.month, from: normalizedDate)
+        
+        if currentMonth != selectedMonth {
+            let monthDiff = selectedMonth - currentMonth
+            willMoveDate(by: monthDiff)
+            moveDate(by: monthDiff)
+        } else {
+            generateAllDates()
+        }
+        delegate?.calendar(didSelect: normalizedDate)
     }
     
     func weekNumberOfYear(for date: Date) -> Int {
