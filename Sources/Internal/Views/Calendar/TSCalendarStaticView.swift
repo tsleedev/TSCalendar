@@ -10,6 +10,7 @@ import SwiftUI
 // Widget에서 사용할 정적 달력 뷰
 struct TSCalendarStaticView: View {
     @ObservedObject var viewModel: TSCalendarViewModel
+    let customization: TSCalendarCustomization?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -17,7 +18,8 @@ struct TSCalendarStaticView: View {
             case .month:
                 TSCalendarMonthView(
                     monthData: viewModel.currentCalendarData,
-                    viewModel: viewModel
+                    viewModel: viewModel,
+                    customization: customization
                 )
             case .week:
                 TSCalendarWeekView(

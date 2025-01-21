@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TSCalendarView: View {
     @ObservedObject var viewModel: TSCalendarViewModel
+    let customization: TSCalendarCustomization?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -25,9 +26,15 @@ struct TSCalendarView: View {
             )
             
             if viewModel.config.isPagingEnabled {
-                TSCalendarPagingView(viewModel: viewModel)
+                TSCalendarPagingView(
+                    viewModel: viewModel,
+                    customization: customization
+                )
             } else {
-                TSCalendarStaticView(viewModel: viewModel)
+                TSCalendarStaticView(
+                    viewModel: viewModel,
+                    customization: customization
+                )
             }
         }
     }
@@ -35,5 +42,8 @@ struct TSCalendarView: View {
 
 #Preview {
     let viewModel = TSCalendarViewModel()
-    TSCalendarView(viewModel: viewModel)
+    TSCalendarView(
+        viewModel: viewModel,
+        customization: nil
+    )
 }

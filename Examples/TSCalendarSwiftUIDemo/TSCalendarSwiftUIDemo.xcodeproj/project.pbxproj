@@ -29,6 +29,9 @@
 		7C5BD8562D1E967C004069C4 /* TSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 7C5BD8552D1E967C004069C4 /* TSCalendar */; };
 		7CF6986C2D3A25A7009514D1 /* FixedWeekHeightStaticCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF6986B2D3A25A2009514D1 /* FixedWeekHeightStaticCalendarView.swift */; };
 		7CF6986E2D3A25E9009514D1 /* FullSizeStaticCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF6986D2D3A25E5009514D1 /* FullSizeStaticCalendarView.swift */; };
+		7CF698C72D3F58D3009514D1 /* CustomWeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF698C62D3F58D3009514D1 /* CustomWeekView.swift */; };
+		7CF698CB2D3F7D8C009514D1 /* CustomCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF698CA2D3F7D8C009514D1 /* CustomCalendarView.swift */; };
+		7CF698CE2D3F8396009514D1 /* CustomCalendarCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF698CD2D3F8396009514D1 /* CustomCalendarCustomization.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +84,9 @@
 		7C5BD8412D1E925B004069C4 /* WidgetIntentDemoExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetIntentDemoExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CF6986B2D3A25A2009514D1 /* FixedWeekHeightStaticCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedWeekHeightStaticCalendarView.swift; sourceTree = "<group>"; };
 		7CF6986D2D3A25E5009514D1 /* FullSizeStaticCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullSizeStaticCalendarView.swift; sourceTree = "<group>"; };
+		7CF698C62D3F58D3009514D1 /* CustomWeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWeekView.swift; sourceTree = "<group>"; };
+		7CF698CA2D3F7D8C009514D1 /* CustomCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendarView.swift; sourceTree = "<group>"; };
+		7CF698CD2D3F8396009514D1 /* CustomCalendarCustomization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendarCustomization.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -231,6 +237,7 @@
 				7C48098E2D2D1CB40055C225 /* FullSizeCalendarView.swift */,
 				7CF6986D2D3A25E5009514D1 /* FullSizeStaticCalendarView.swift */,
 				7C4809F12D311A010055C225 /* CustomHeaderCalendarView.swift */,
+				7CF698CC2D3F7DB4009514D1 /* Custom */,
 			);
 			path = CalendarViews;
 			sourceTree = "<group>";
@@ -241,6 +248,16 @@
 				7C48098F2D2D1CB40055C225 /* SettingsView.swift */,
 			);
 			path = SettingsViews;
+			sourceTree = "<group>";
+		};
+		7CF698CC2D3F7DB4009514D1 /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				7CF698CA2D3F7D8C009514D1 /* CustomCalendarView.swift */,
+				7CF698CD2D3F8396009514D1 /* CustomCalendarCustomization.swift */,
+				7CF698C62D3F58D3009514D1 /* CustomWeekView.swift */,
+			);
+			path = Custom;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -391,12 +408,15 @@
 				7CF6986C2D3A25A7009514D1 /* FixedWeekHeightStaticCalendarView.swift in Sources */,
 				7C4809942D2D1CB50055C225 /* TSCalendarSwiftUIDemoApp.swift in Sources */,
 				7C4809952D2D1CB50055C225 /* TSCalendarWeekHeight.swift in Sources */,
+				7CF698CB2D3F7D8C009514D1 /* CustomCalendarView.swift in Sources */,
 				7C4809F22D311A0B0055C225 /* CustomHeaderCalendarView.swift in Sources */,
 				7C4809962D2D1CB50055C225 /* ContentView.swift in Sources */,
 				7C4809972D2D1CB50055C225 /* FixedWeekHeightCalendarView.swift in Sources */,
 				7C4809982D2D1CB50055C225 /* FullSizeCalendarView.swift in Sources */,
 				7C4809992D2D1CB50055C225 /* SettingsView.swift in Sources */,
 				7C48099A2D2D1CB50055C225 /* CalendarController.swift in Sources */,
+				7CF698C72D3F58D3009514D1 /* CustomWeekView.swift in Sources */,
+				7CF698CE2D3F8396009514D1 /* CustomCalendarCustomization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

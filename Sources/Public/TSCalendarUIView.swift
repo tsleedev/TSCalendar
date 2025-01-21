@@ -51,9 +51,11 @@ public class TSCalendarUIView: UIView {
             dataSource: dataSource,
             disableSwiftUIAnimation: true
         )
-        let calendarView = TSCalendarView(viewModel: viewModel)
+        let calendarView = TSCalendarView(
+            viewModel: viewModel,
+            customization: nil
+        )
             .environment(\.calendarAppearance, appearance)
-            .id(config.id)
         
         self.hostingController = UIHostingController(rootView: AnyView(calendarView))
         super.init(frame: .zero)
@@ -139,9 +141,11 @@ public class TSCalendarUIView: UIView {
         )
         bindCalendarHeight()
         
-        let calendarView = TSCalendarView(viewModel: viewModel)
+        let calendarView = TSCalendarView(
+            viewModel: viewModel,
+            customization: nil
+        )
             .environment(\.calendarAppearance, appearance)
-            .id(config.id)
         hostingController.rootView = AnyView(calendarView)
     }
     

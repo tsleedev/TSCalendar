@@ -106,15 +106,22 @@ extension TSCalendarViewModel {
         selectedDate = normalizedDate
         
         let currentMonth = calendar.component(.month, from: currentDisplayedDate)
-        let selectedMonth = calendar.component(.month, from: normalizedDate)
+        let currentYear = calendar.component(.year, from: currentDisplayedDate)
         
-        if currentMonth != selectedMonth {
-            let monthDiff = selectedMonth - currentMonth
+        let selectedMonth = calendar.component(.month, from: normalizedDate)
+        let selectedYear = calendar.component(.year, from: normalizedDate)
+        
+        // 연도 및 월 비교
+        if currentYear != selectedYear || currentMonth != selectedMonth {
+            let yearDiff = selectedYear - currentYear
+            let monthDiff = (yearDiff * 12) + (selectedMonth - currentMonth)
+            
             willMoveDate(by: monthDiff)
             moveDate(by: monthDiff)
         } else {
             generateAllDates()
         }
+        
         delegate?.calendar(didSelect: normalizedDate)
     }
     

@@ -36,6 +36,11 @@ struct ContentView: View {
                 ) {
                     Text("CustomHeaderCalendar")
                 }
+                NavigationLink(
+                    destination: CustomCalendarView()
+                ) {
+                    Text("CustomCalendarView")
+                }
             }
             .navigationTitle("Select Calendar")
         }

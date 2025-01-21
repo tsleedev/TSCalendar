@@ -49,5 +49,8 @@ struct TSCalendarMonthHeaderView: View {
     let viewModel = TSCalendarViewModel(
         config: .init(displayMode: .week)
     )
-    TSCalendarView(viewModel: viewModel)
+    TSCalendarView(
+        viewModel: viewModel,
+        customization: nil
+    )
 }

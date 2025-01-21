@@ -150,5 +150,8 @@ struct TSCalendarWeekView: View {
             showWeekNumber: true
         )
     )
-    TSCalendarView(viewModel: viewModel)
+    TSCalendarView(
+        viewModel: viewModel,
+        customization: nil
+    )
 }

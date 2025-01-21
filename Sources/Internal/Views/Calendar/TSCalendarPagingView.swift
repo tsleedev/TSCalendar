@@ -81,6 +81,7 @@ private class PagingGestureHandler: ObservableObject {
 
 struct TSCalendarPagingView: View {
     @ObservedObject var viewModel: TSCalendarViewModel
+    let customization: TSCalendarCustomization?
     
     var body: some View {
         Group {
@@ -98,9 +99,15 @@ struct TSCalendarPagingView: View {
         Group {
             switch viewModel.config.scrollDirection {
             case .horizontal:
-                FixedHeightHorizontalPagingView(viewModel: viewModel)
+                FixedHeightHorizontalPagingView(
+                    viewModel: viewModel,
+                    customization: customization
+                )
             case .vertical:
-                FixedHeightVerticalPagingView(viewModel: viewModel)
+                FixedHeightVerticalPagingView(
+                    viewModel: viewModel,
+                    customization: customization
+                )
             }
         }
     }
@@ -109,9 +116,15 @@ struct TSCalendarPagingView: View {
         Group {
             switch viewModel.config.scrollDirection {
             case .horizontal:
-                FlexibleHeightHorizontalPagingView(viewModel: viewModel)
+                FlexibleHeightHorizontalPagingView(
+                    viewModel: viewModel,
+                    customization: customization
+                )
             case .vertical:
-                FlexibleHeightVerticalPagingView(viewModel: viewModel)
+                FlexibleHeightVerticalPagingView(
+                    viewModel: viewModel,
+                    customization: customization
+                )
             }
         }
     }
@@ -120,10 +133,12 @@ struct TSCalendarPagingView: View {
 private struct FixedHeightHorizontalPagingView: View {
     @StateObject private var handler: PagingGestureHandler
     @ObservedObject private var viewModel: TSCalendarViewModel
+    private let customization: TSCalendarCustomization?
     
-    init(viewModel: TSCalendarViewModel) {
+    init(viewModel: TSCalendarViewModel, customization: TSCalendarCustomization?) {
         _handler = StateObject(wrappedValue: PagingGestureHandler(viewModel: viewModel))
         self.viewModel = viewModel
+        self.customization = customization
     }
     
     var body: some View {
@@ -169,7 +184,8 @@ private struct FixedHeightHorizontalPagingView: View {
                 case .month:
                     TSCalendarMonthView(
                         monthData: monthData,
-                        viewModel: viewModel
+                        viewModel: viewModel,
+                        customization: customization
                     )
                 case .week:
                     TSCalendarWeekView(
@@ -185,10 +201,12 @@ private struct FixedHeightHorizontalPagingView: View {
 private struct FixedHeightVerticalPagingView: View {
     @StateObject private var handler: PagingGestureHandler
     @ObservedObject private var viewModel: TSCalendarViewModel
+    private let customization: TSCalendarCustomization?
     
-    init(viewModel: TSCalendarViewModel) {
+    init(viewModel: TSCalendarViewModel, customization: TSCalendarCustomization?) {
         _handler = StateObject(wrappedValue: PagingGestureHandler(viewModel: viewModel))
         self.viewModel = viewModel
+        self.customization = customization
     }
     
     var body: some View {
@@ -236,7 +254,8 @@ private struct FixedHeightVerticalPagingView: View {
                 case .month:
                     TSCalendarMonthView(
                         monthData: monthData,
-                        viewModel: viewModel
+                        viewModel: viewModel,
+                        customization: customization
                     )
                 case .week:
                     TSCalendarWeekView(
@@ -252,10 +271,12 @@ private struct FixedHeightVerticalPagingView: View {
 private struct FlexibleHeightHorizontalPagingView: View {
     @StateObject private var handler: PagingGestureHandler
     @ObservedObject private var viewModel: TSCalendarViewModel
+    private let customization: TSCalendarCustomization?
     
-    init(viewModel: TSCalendarViewModel) {
+    init(viewModel: TSCalendarViewModel, customization: TSCalendarCustomization?) {
         _handler = StateObject(wrappedValue: PagingGestureHandler(viewModel: viewModel))
         self.viewModel = viewModel
+        self.customization = customization
     }
     
     var body: some View {
@@ -297,7 +318,8 @@ private struct FlexibleHeightHorizontalPagingView: View {
                 case .month:
                     TSCalendarMonthView(
                         monthData: monthData,
-                        viewModel: viewModel
+                        viewModel: viewModel,
+                        customization: customization
                     )
                 case .week:
                     TSCalendarWeekView(
@@ -313,10 +335,12 @@ private struct FlexibleHeightHorizontalPagingView: View {
 private struct FlexibleHeightVerticalPagingView: View {
     @StateObject private var handler: PagingGestureHandler
     @ObservedObject private var viewModel: TSCalendarViewModel
+    private let customization: TSCalendarCustomization?
     
-    init(viewModel: TSCalendarViewModel) {
+    init(viewModel: TSCalendarViewModel, customization: TSCalendarCustomization?) {
         _handler = StateObject(wrappedValue: PagingGestureHandler(viewModel: viewModel))
         self.viewModel = viewModel
+        self.customization = customization
     }
     
     var body: some View {
@@ -358,7 +382,8 @@ private struct FlexibleHeightVerticalPagingView: View {
                 case .month:
                     TSCalendarMonthView(
                         monthData: monthData,
-                        viewModel: viewModel
+                        viewModel: viewModel,
+                        customization: customization
                     )
                 case .week:
                     TSCalendarWeekView(
@@ -378,5 +403,8 @@ private struct FlexibleHeightVerticalPagingView: View {
             scrollDirection: .horizontal
         )
     )
-    TSCalendarView(viewModel: viewModel)
+    TSCalendarView(
+        viewModel: viewModel,
+        customization: nil
+    )
 }
