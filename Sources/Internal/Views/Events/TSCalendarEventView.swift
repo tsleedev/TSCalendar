@@ -19,14 +19,20 @@ struct TSCalendarEventView: View {
     
     var body: some View {
         Text(event.title)
-            .font(appearance.eventFont)
+            .textStyle(
+                TSCalendarTextStyle(
+                    font: appearance.eventTextStyle.font,
+                    color: event.textColor,
+                    kerning: appearance.eventTextStyle.kerning,
+                    tracking: appearance.eventTextStyle.tracking
+                )
+            )
             .lineLimit(1)
-            .padding(.horizontal, 4)
-            .padding(.vertical, 2)
+            .padding(.horizontal, 2)
+            .padding(.vertical, 1)
             .fixedSize(horizontal: true, vertical: false)
             .frame(width: width - margin, alignment: .leading)
             .background(event.backgroundColor)
-            .foregroundColor(event.textColor)
             .cornerRadius(4)
             .offset(x: offsetX, y: offsetY)
     }

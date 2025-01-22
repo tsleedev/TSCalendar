@@ -28,7 +28,7 @@ struct TSCalendarMonthHeaderView: View {
                 date: viewModel.currentDisplayedDate,
                 displayMode: viewModel.config.displayMode)
             )
-            .font(appearance.monthHeaderFont)
+            .textStyle(appearance.monthHeaderTextStyle)
             
             Spacer()
             

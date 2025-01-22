@@ -11,7 +11,7 @@ public struct TSCalendar: View {
     @StateObject var viewModel: TSCalendarViewModel
     @ObservedObject var config: TSCalendarConfig
     @Binding var selectedDate: Date?
-    private let appearanceType: TSCalendarAppearanceType
+    private let appearance: TSCalendarAppearance
     private let customization: TSCalendarCustomization?
     
     public init(
@@ -21,7 +21,7 @@ public struct TSCalendar: View {
         selectedDate: Binding<Date?> = .constant(nil),
         config: TSCalendarConfig = .init(),
         customization: TSCalendarCustomization? = nil,
-        appearanceType: TSCalendarAppearanceType = .app,
+        appearance: TSCalendarAppearance = TSCalendarAppearance(type: .app),
         delegate: TSCalendarDelegate? = nil,
         dataSource: TSCalendarDataSource? = nil
     ) {
@@ -36,7 +36,7 @@ public struct TSCalendar: View {
         ))
         _selectedDate = selectedDate
         self.config = config
-        self.appearanceType = appearanceType
+        self.appearance = appearance
         self.customization = customization
     }
     
@@ -45,7 +45,7 @@ public struct TSCalendar: View {
             viewModel: viewModel,
             customization: customization
         )
-        .environment(\.calendarAppearance, TSCalendarAppearance(type: appearanceType))
+        .environment(\.calendarAppearance, appearance)
         .id(config.id)
         .onChange(of: selectedDate) { newDate in
             if let date = newDate {

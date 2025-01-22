@@ -16,7 +16,7 @@ struct TSCalendarWeekView: View {
     private func dateOpacity(for date: TSCalendarDate) -> Double {
         switch viewModel.config.displayMode {
         case .month:
-            return viewModel.config.monthStyle == .dynamic && !date.isInCurrentMonth ? 0 : (date.isInCurrentMonth ? 1 : 0.3)
+            return viewModel.config.monthStyle == .dynamic && !date.isInCurrentMonth ? 0 : (date.isInCurrentMonth ? 1 : appearance.otherMonthDateOpacity)
         case .week:
             return 1
         }
@@ -49,8 +49,7 @@ struct TSCalendarWeekView: View {
                 if viewModel.config.showWeekNumber, let date = weekData.first?.date {
                     VStack {
                         Text("\(viewModel.weekNumberOfYear(for: date))")
-                            .font(appearance.weekNumberFont)
-                            .foregroundColor(appearance.weekNumberColor)
+                            .textStyle(appearance.weekNumberTextStyle)
                             .frame(
                                 width: appearance.weekNumberWidth,
                                 height: appearance.daySize
@@ -63,7 +62,7 @@ struct TSCalendarWeekView: View {
                     GeometryReader { geometry in
                         VStack {
                             Text(appearance.dateFormatter.string(from: date.date))
-                                .font(appearance.dayFont)
+                                .textStyle(appearance.dayTextStyle)
                                 .foregroundColor(foregroundColor(for: date))
                                 .frame(
                                     width: appearance.daySize,
@@ -76,7 +75,7 @@ struct TSCalendarWeekView: View {
                                         Circle()
                                             .strokeBorder(
                                                 appearance.selectedColor,
-                                                lineWidth: 1.5
+                                                lineWidth: 1
                                             )
                                     }
                                 }

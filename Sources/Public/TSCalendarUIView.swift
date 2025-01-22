@@ -28,7 +28,7 @@ public class TSCalendarUIView: UIView {
         maximumDate: Date? = nil,
         selectedDate: Date? = nil,
         config: TSCalendarConfig = .init(),
-        appearanceType: TSCalendarAppearanceType = .app,
+        appearance: TSCalendarAppearance = TSCalendarAppearance(type: .app),
         delegate: TSCalendarDelegate? = nil,
         dataSource: TSCalendarDataSource? = nil
     ) {
@@ -37,7 +37,7 @@ public class TSCalendarUIView: UIView {
         self.maximumDate = maximumDate
         self.selectedDate = selectedDate
         self.config = config
-        self.appearance = TSCalendarAppearance(type: appearanceType)
+        self.appearance = appearance
         self.delegate = delegate
         self.dataSource = dataSource
         

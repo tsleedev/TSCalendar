@@ -47,43 +47,66 @@ struct WidgetIntentDemoEntryView : View {
     let calendar = Calendar.current
     var entry: Provider.Entry
     
+    @StateObject private var controller = CalendarController()
+    
     var body: some View {
-        switch widgetFamily {
-        case .systemSmall:
-            TSCalendar(
-                initialDate: calendar.date(
-                    byAdding: .month,
-                    value: entry.configuration.selectedOffset.rawValue,
-                    to: .now
-                ) ?? .now,
-                config: .init(displayMode: .month),
-                appearanceType: .widget(.small)
-            )
-            .padding(4)
-        case .systemMedium:
-            TSCalendar(
-                initialDate: calendar.date(
-                    byAdding: .month,
-                    value: entry.configuration.selectedOffset.rawValue,
-                    to: .now
-                ) ?? .now,
-                config: .init(displayMode: .week),
-                appearanceType: .widget(.medium)
-            )
-            .padding(4)
-        case .systemLarge:
-            TSCalendar(
-                initialDate: calendar.date(
-                    byAdding: .month,
-                    value: entry.configuration.selectedOffset.rawValue,
-                    to: .now
-                ) ?? .now,
-                config: .init(displayMode: .month),
-                appearanceType: .widget(.large)
-            )
-            .padding(4)
-        default:
-            Text("Unsupported widget size")
+        VStack(spacing: 0) {
+            Text(controller.headerTitle)
+                .font(.system(size: 12, weight: .semibold))
+                .padding(.horizontal, 16)
+                .padding(.vertical, 4)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            switch widgetFamily {
+            case .systemSmall:
+                TSCalendar(
+                    initialDate: calendar.date(
+                        byAdding: .month,
+                        value: entry.configuration.selectedOffset.rawValue,
+                        to: .now
+                    ) ?? .now,
+                    config: .init(
+                        autoSelectToday: false,
+                        displayMode: .week,
+                        isPagingEnabled: false,
+                        showHeader: false
+                    ),
+                    appearance: TSCalendarAppearance(type: .widget(.small))
+                )
+            case .systemMedium:
+                TSCalendar(
+                    initialDate: calendar.date(
+                        byAdding: .month,
+                        value: entry.configuration.selectedOffset.rawValue,
+                        to: .now
+                    ) ?? .now,
+                    config: .init(
+                        autoSelectToday: false,
+                        displayMode: .week,
+                        isPagingEnabled: false,
+                        showHeader: false
+                    ),
+                    appearance: TSCalendarAppearance(type: .widget(.medium))
+                )
+            case .systemLarge:
+                TSCalendar(
+                    initialDate: calendar.date(
+                        byAdding: .month,
+                        value: entry.configuration.selectedOffset.rawValue,
+                        to: .now
+                    ) ?? .now,
+                    config: .init(
+                        autoSelectToday: false,
+                        displayMode: .month,
+                        isPagingEnabled: false,
+                        showHeader: false
+                    ),
+                    appearance: TSCalendarAppearance(type: .widget(.large)),
+                    delegate: controller,
+                    dataSource: controller
+                )
+            default:
+                Text("Unsupported widget size")
+            }
         }
     }
 }

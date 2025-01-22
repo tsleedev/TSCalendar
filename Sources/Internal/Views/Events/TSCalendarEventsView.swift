@@ -15,14 +15,16 @@ private struct DateEvent {
 }
 
 struct TSCalendarEventsView: View {
+    @Environment(\.calendarAppearance) private var appearance
+    
     let weekData: [TSCalendarDate]
     let events: [TSCalendarEvent]
     let dayWidth: CGFloat
     let height: CGFloat
-    private let rowHeight: CGFloat = 18
     
     var body: some View {
         let totalWidth = dayWidth * CGFloat(weekData.count)
+        let rowHeight = appearance.eventHeight
         let dateEvents = processEvents(events)
         let maxRows = Int(height / rowHeight)
         if maxRows > 0 {
@@ -40,6 +42,18 @@ struct TSCalendarEventsView: View {
                         )
                     }
                 }
+//                ForEach(Array(dateEvents.prefix(maxRows).enumerated()), id: \.offset) { rowIndex, rowEvents in
+//                    ForEach(Array(rowEvents.enumerated()), id: \.offset) { _, dateEvent in
+//                        let eventWidth = dayWidth * CGFloat(dateEvent.endIndex - dateEvent.startIndex + 1)
+//                        
+//                        TSCalendarEventView(
+//                            event: dateEvent.event,
+//                            width: min(eventWidth, totalWidth),
+//                            offsetX: dayWidth * CGFloat(dateEvent.startIndex),
+//                            offsetY: rowHeight * dateEvent.offsetY
+//                        )
+//                    }
+//                }
                 
                 // 날짜별 남은 이벤트 개수 표시
                 ForEach(weekData.indices, id: \.self) { index in
@@ -55,8 +69,7 @@ struct TSCalendarEventsView: View {
                     
                     if remainingCount > 0 {
                         Text("+\(remainingCount)")
-                            .font(.system(size: 10))
-                            .foregroundColor(.gray)
+                            .textStyle(appearance.eventTextStyle)
                             .frame(width: dayWidth, alignment: .center)
                             .offset(
                                 x: dayWidth * CGFloat(index),

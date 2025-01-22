@@ -14,17 +14,15 @@ struct TSCalendarWeekdayHeaderView: View {
     var body: some View {
         HStack(spacing: 0) {
             if viewModel.config.showWeekNumber {
-                Text("W")  // 또는 빈 공간을 위해 ""
-                    .font(appearance.weekdayHeaderFont)
+                Text("W")
+                    .textStyle(appearance.weekdayHeaderTextStyle)
                     .frame(width: appearance.weekNumberWidth)
-                    .foregroundColor(appearance.weekdayHeaderColor)
             }
             
             ForEach(getWeekdaySymbols(), id: \.self) { symbol in
                 Text(symbol)
-                    .font(appearance.weekdayHeaderFont)
+                    .textStyle(appearance.weekdayHeaderTextStyle)
                     .frame(maxWidth: .infinity)
-                    .foregroundColor(appearance.weekdayHeaderColor)
             }
         }
         .frame(height: appearance.weekdayHeaderHeight)

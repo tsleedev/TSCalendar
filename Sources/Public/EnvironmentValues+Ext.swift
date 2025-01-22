@@ -8,11 +8,11 @@
 import SwiftUI
 
 private struct TSCalendarAppearanceKey: EnvironmentKey {
-    static let defaultValue: any (TSCalendarAppearanceProtocol & Sendable) = TSCalendarAppearance(type: .app)
+    static let defaultValue: TSCalendarAppearance = TSCalendarAppearance(type: .app)
 }
 
 public extension EnvironmentValues {
-    var calendarAppearance: any (TSCalendarAppearanceProtocol & Sendable) {
+    var calendarAppearance: TSCalendarAppearance {
         get { self[TSCalendarAppearanceKey.self] }
         set { self[TSCalendarAppearanceKey.self] = newValue }
     }
