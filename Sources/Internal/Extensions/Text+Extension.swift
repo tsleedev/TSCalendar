@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension Text {
-    func textStyle(_ style: TSCalendarTextStyle) -> Text {
+    func textStyle(_ style: TSCalendarContentStyle) -> Text {
         self
             .font(style.font)
             .foregroundColor(style.color)

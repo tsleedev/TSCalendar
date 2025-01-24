@@ -51,11 +51,11 @@ struct WidgetIntentDemoEntryView : View {
     
     var body: some View {
         VStack(spacing: 0) {
-            Text(controller.headerTitle)
-                .font(.system(size: 12, weight: .semibold))
-                .padding(.horizontal, 16)
-                .padding(.vertical, 4)
-                .frame(maxWidth: .infinity, alignment: .leading)
+//            Text(controller.headerTitle)
+//                .font(.system(size: 12, weight: .semibold))
+//                .padding(.horizontal, 16)
+//                .padding(.vertical, 4)
+//                .frame(maxWidth: .infinity, alignment: .leading)
             switch widgetFamily {
             case .systemSmall:
                 TSCalendar(
@@ -83,9 +83,12 @@ struct WidgetIntentDemoEntryView : View {
                         autoSelectToday: false,
                         displayMode: .week,
                         isPagingEnabled: false,
-                        showHeader: false
+//                        showHeader: false
+                        showWeekNumber: true
                     ),
-                    appearance: TSCalendarAppearance(type: .widget(.medium))
+                    appearance: TSCalendarAppearance(type: .widget(.medium)),
+                    delegate: controller,
+                    dataSource: controller
                 )
             case .systemLarge:
                 TSCalendar(
@@ -98,7 +101,8 @@ struct WidgetIntentDemoEntryView : View {
                         autoSelectToday: false,
                         displayMode: .month,
                         isPagingEnabled: false,
-                        showHeader: false
+//                        showHeader: false
+                        showWeekNumber: true
                     ),
                     appearance: TSCalendarAppearance(type: .widget(.large)),
                     delegate: controller,

@@ -24,13 +24,14 @@ struct TSCalendarEventsView: View {
     
     var body: some View {
         let totalWidth = dayWidth * CGFloat(weekData.count)
-        let rowHeight = appearance.eventHeight
+        let rowHeight = appearance.eventContentStyle.height ?? TSCalendarConstants.eventHeight
+        let moreHeight = appearance.eventMoreContentStyle.height ?? TSCalendarConstants.eventMoreHeight
         let dateEvents = processEvents(events)
-        let maxRows = Int(height / rowHeight)
+        let maxRows = Int((height - moreHeight) / rowHeight)
         if maxRows > 0 {
             ZStack(alignment: .topLeading) {
                 // maxRows - 1까지만 표시
-                ForEach(Array(dateEvents.prefix(maxRows-1).enumerated()), id: \.offset) { rowIndex, rowEvents in
+                ForEach(Array(dateEvents.prefix(maxRows).enumerated()), id: \.offset) { rowIndex, rowEvents in
                     ForEach(Array(rowEvents.enumerated()), id: \.offset) { _, dateEvent in
                         let eventWidth = dayWidth * CGFloat(dateEvent.endIndex - dateEvent.startIndex + 1)
                         
@@ -40,20 +41,9 @@ struct TSCalendarEventsView: View {
                             offsetX: dayWidth * CGFloat(dateEvent.startIndex),
                             offsetY: rowHeight * dateEvent.offsetY
                         )
+                        .frame(height: rowHeight)
                     }
                 }
-//                ForEach(Array(dateEvents.prefix(maxRows).enumerated()), id: \.offset) { rowIndex, rowEvents in
-//                    ForEach(Array(rowEvents.enumerated()), id: \.offset) { _, dateEvent in
-//                        let eventWidth = dayWidth * CGFloat(dateEvent.endIndex - dateEvent.startIndex + 1)
-//                        
-//                        TSCalendarEventView(
-//                            event: dateEvent.event,
-//                            width: min(eventWidth, totalWidth),
-//                            offsetX: dayWidth * CGFloat(dateEvent.startIndex),
-//                            offsetY: rowHeight * dateEvent.offsetY
-//                        )
-//                    }
-//                }
                 
                 // 날짜별 남은 이벤트 개수 표시
                 ForEach(weekData.indices, id: \.self) { index in
@@ -63,17 +53,18 @@ struct TSCalendarEventsView: View {
                         return dayIndex >= event.startIndex && dayIndex <= event.endIndex
                     }
                     
-                    let visibleCount = allEventsForDay.filter { $0.offsetY < CGFloat(maxRows-1) }.count
+                    let visibleCount = allEventsForDay.filter { $0.offsetY < CGFloat(maxRows) }.count
                     let totalCount = allEventsForDay.count
                     let remainingCount = totalCount - visibleCount
                     
                     if remainingCount > 0 {
                         Text("+\(remainingCount)")
-                            .textStyle(appearance.eventTextStyle)
-                            .frame(width: dayWidth, alignment: .center)
+                            .textStyle(appearance.eventMoreContentStyle)
+                            .frame(width: dayWidth, height: moreHeight, alignment: .center)
+                            .background(.yellow)
                             .offset(
                                 x: dayWidth * CGFloat(index),
-                                y: rowHeight * CGFloat(maxRows-1)
+                                y: rowHeight * CGFloat(maxRows)
                             )
                     }
                 }

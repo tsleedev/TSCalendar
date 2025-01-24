@@ -10,38 +10,61 @@ import SwiftUI
 struct TSCalendarMonthHeaderView: View {
     @Environment(\.calendarAppearance) private var appearance
     @ObservedObject var viewModel: TSCalendarViewModel
-    
+
     var body: some View {
         HStack {
-            Button(action: {
-                viewModel.willMoveDate(by: -1)
-                viewModel.moveDate(by: -1)
-            }) {
-                Image(systemName: "chevron.left")
-                    .foregroundColor(.primary)
+            if viewModel.config.isPagingEnabled {
+                pagingHeader
+            } else {
+                staticHeader
             }
-            .padding(.leading, 16)
-            
+        }
+        .frame(height: appearance.monthHeaderContentStyle.height)
+    }
+
+    // MARK: - Paging Header (버튼이 있는 헤더)
+    private var pagingHeader: some View {
+        HStack {
+            navigationButton(direction: -1) // 이전 버튼
+
             Spacer()
-            
+
             Text(appearance.getHeaderTitle(
                 date: viewModel.currentDisplayedDate,
-                displayMode: viewModel.config.displayMode)
-            )
-            .textStyle(appearance.monthHeaderTextStyle)
-            
+                displayMode: viewModel.config.displayMode
+            ))
+            .textStyle(appearance.monthHeaderContentStyle)
+
             Spacer()
-            
-            Button(action: {
-                viewModel.willMoveDate(by: 1)
-                viewModel.moveDate(by: 1)
-            }) {
-                Image(systemName: "chevron.right")
-                    .foregroundColor(.primary)
-            }
-            .padding(.trailing, 16)
+
+            navigationButton(direction: 1) // 다음 버튼
         }
-        .frame(height: appearance.monthHeaderHeight)
+    }
+
+    // MARK: - Static Header (버튼이 없는 헤더)
+    private var staticHeader: some View {
+        HStack {
+            Text(appearance.getHeaderTitle(
+                date: viewModel.currentDisplayedDate,
+                displayMode: viewModel.config.displayMode
+            ))
+            .textStyle(appearance.monthHeaderContentStyle)
+
+            Spacer()
+        }
+        .padding(.horizontal, 12)
+    }
+
+    // MARK: - Navigation Button
+    private func navigationButton(direction: Int) -> some View {
+        Button(action: {
+            viewModel.willMoveDate(by: direction)
+            viewModel.moveDate(by: direction)
+        }) {
+            Image(systemName: direction < 0 ? "chevron.left" : "chevron.right")
+                .foregroundColor(.primary)
+        }
+        .padding(direction < 0 ? .leading : .trailing, 16)
     }
 }
 

@@ -15,17 +15,17 @@ struct TSCalendarWeekdayHeaderView: View {
         HStack(spacing: 0) {
             if viewModel.config.showWeekNumber {
                 Text("W")
-                    .textStyle(appearance.weekdayHeaderTextStyle)
-                    .frame(width: appearance.weekNumberWidth)
+                    .textStyle(appearance.weekdayHeaderContentStyle)
+                    .frame(width: appearance.weekNumberContentStyle.width)
             }
             
             ForEach(getWeekdaySymbols(), id: \.self) { symbol in
                 Text(symbol)
-                    .textStyle(appearance.weekdayHeaderTextStyle)
+                    .textStyle(appearance.weekdayHeaderContentStyle)
                     .frame(maxWidth: .infinity)
             }
         }
-        .frame(height: appearance.weekdayHeaderHeight)
+        .frame(height: appearance.weekNumberContentStyle.height)
     }
     
     private func getWeekdaySymbols() -> [String] {

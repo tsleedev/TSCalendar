@@ -49,10 +49,10 @@ struct TSCalendarWeekView: View {
                 if viewModel.config.showWeekNumber, let date = weekData.first?.date {
                     VStack {
                         Text("\(viewModel.weekNumberOfYear(for: date))")
-                            .textStyle(appearance.weekNumberTextStyle)
+                            .textStyle(appearance.weekNumberContentStyle)
                             .frame(
-                                width: appearance.weekNumberWidth,
-                                height: appearance.daySize
+                                width: appearance.weekNumberContentStyle.width ?? TSCalendarConstants.weekNumberWidth,
+                                height: appearance.dayContentStyle.height ?? TSCalendarConstants.daySize
                             )
                         Spacer()
                     }
@@ -62,11 +62,11 @@ struct TSCalendarWeekView: View {
                     GeometryReader { geometry in
                         VStack {
                             Text(appearance.dateFormatter.string(from: date.date))
-                                .textStyle(appearance.dayTextStyle)
+                                .textStyle(appearance.dayContentStyle)
                                 .foregroundColor(foregroundColor(for: date))
                                 .frame(
-                                    width: appearance.daySize,
-                                    height: appearance.daySize
+                                    width: appearance.dayContentStyle.width ?? TSCalendarConstants.daySize,
+                                    height: appearance.dayContentStyle.height ?? TSCalendarConstants.daySize
                                 )
                                 .background(backgroundColor(for: date))
                                 .clipShape(Circle())
@@ -97,9 +97,9 @@ struct TSCalendarWeekView: View {
             
             // 일정 행들
             GeometryReader { geometry in
-                let weekNumberWidth = viewModel.config.showWeekNumber ? appearance.weekNumberWidth : 0
-                let dayWidth = geometry.size.width / 7
-                let offsetY = appearance.daySize + 2
+                let weekNumberWidth = viewModel.config.showWeekNumber ? (appearance.weekNumberContentStyle.width ?? TSCalendarConstants.weekNumberWidth) : 0
+                let dayWidth = (geometry.size.width - weekNumberWidth) / 7
+                let offsetY = (appearance.dayContentStyle.height ?? TSCalendarConstants.daySize) + 2
                 
                 if let firstDate = visibleDates.first?.date,
                    let lastDate = visibleDates.last?.date,

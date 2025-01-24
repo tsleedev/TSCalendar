@@ -55,6 +55,49 @@ class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendarDataSo
             textColor: .red
         ),
         
+        TSCalendarEvent(
+            title: "이벤트 1",
+            startDate: createDate(monthOffset: .current, day: 20),
+            endDate: createDate(monthOffset: .current, day: 25),
+            backgroundColor: Color.purple.opacity(0.15),
+            textColor: .purple
+        ),
+        TSCalendarEvent(
+            title: "이벤트 2",
+            startDate: createDate(monthOffset: .current, day: 23),
+            endDate: createDate(monthOffset: .current, day: 24),
+            backgroundColor: Color.red.opacity(0.15),
+            textColor: .red
+        ),
+        TSCalendarEvent(
+            title: "이벤트 3",
+            startDate: createDate(monthOffset: .current, day: 20),
+            endDate: createDate(monthOffset: .current, day: 25),
+            backgroundColor: Color.purple.opacity(0.15),
+            textColor: .purple
+        ),
+        TSCalendarEvent(
+            title: "이벤트 4",
+            startDate: createDate(monthOffset: .current, day: 23),
+            endDate: createDate(monthOffset: .current, day: 24),
+            backgroundColor: Color.red.opacity(0.15),
+            textColor: .red
+        ),
+        TSCalendarEvent(
+            title: "이벤트 5",
+            startDate: createDate(monthOffset: .current, day: 20),
+            endDate: createDate(monthOffset: .current, day: 25),
+            backgroundColor: Color.purple.opacity(0.15),
+            textColor: .purple
+        ),
+        TSCalendarEvent(
+            title: "이벤트 6",
+            startDate: createDate(monthOffset: .current, day: 23),
+            endDate: createDate(monthOffset: .current, day: 24),
+            backgroundColor: Color.red.opacity(0.15),
+            textColor: .red
+        ),
+        
         // 이전 달에서 넘어온 이벤트
         TSCalendarEvent(
             title: "지난달에서 넘어온 이벤트",

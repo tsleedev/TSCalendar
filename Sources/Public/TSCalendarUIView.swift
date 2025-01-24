@@ -115,9 +115,9 @@ public class TSCalendarUIView: UIView {
                     self.heightConstraint?.isActive = false
                     let headerHeight: CGFloat
                     if self.viewModel.config.showHeader {
-                        headerHeight = self.appearance.monthHeaderHeight + self.appearance.weekdayHeaderHeight
+                        headerHeight = (self.appearance.monthHeaderContentStyle.height ?? 40) + (self.appearance.weekdayHeaderContentStyle.height ?? 30)
                     } else {
-                        headerHeight = self.appearance.weekdayHeaderHeight
+                        headerHeight = self.appearance.weekdayHeaderContentStyle.height ?? 30
                     }
                     self.heightConstraint = self.hostingController.view.heightAnchor.constraint(equalToConstant: height + headerHeight)
                     self.heightConstraint?.isActive = true
