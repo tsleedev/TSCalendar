@@ -242,7 +242,6 @@ private struct FixedHeightVerticalPagingView: View {
             .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
         }
         .frame(height: {
-            print("tslee viewModel.currentHeight \(viewModel.currentHeight)")
             return viewModel.currentHeight
         }())
     }

@@ -161,7 +161,7 @@ class CustomHeaderCalendarViewController: UIViewController {
         UIView.animate(withDuration: 0.3) {
             self.updateContainerConstraints()
             self.updateExpandButtonTitle()
-            self.calendarView.updateConfig(self.controller.config)
+            self.calendarView.reloadCalendar()
             self.view.layoutIfNeeded()
         }
     }

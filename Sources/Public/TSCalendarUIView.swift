@@ -10,16 +10,15 @@ import Combine
 
 public class TSCalendarUIView: UIView {
     private let hostingController: UIHostingController<AnyView>
-    private let initialDate: Date
     private let minimumDate: Date?
     private let maximumDate: Date?
-    private let selectedDate: Date?
     private var config: TSCalendarConfig
     private let appearance: TSCalendarAppearance
     private let delegate: TSCalendarDelegate?
     private let dataSource: TSCalendarDataSource?
     private var heightConstraint: NSLayoutConstraint?
-    private var cancellable = Set<AnyCancellable>()
+    private var configCancellables = Set<AnyCancellable>()
+    private var heightCancellables = Set<AnyCancellable>()
     private var viewModel: TSCalendarViewModel
     
     public init(
@@ -32,10 +31,8 @@ public class TSCalendarUIView: UIView {
         delegate: TSCalendarDelegate? = nil,
         dataSource: TSCalendarDataSource? = nil
     ) {
-        self.initialDate = initialDate
         self.minimumDate = minimumDate
         self.maximumDate = maximumDate
-        self.selectedDate = selectedDate
         self.config = config
         self.appearance = appearance
         self.delegate = delegate
@@ -59,6 +56,7 @@ public class TSCalendarUIView: UIView {
         
         self.hostingController = UIHostingController(rootView: AnyView(calendarView))
         super.init(frame: .zero)
+        bind()
         bindCalendarHeight()
         
         setupHostingController()
@@ -99,12 +97,18 @@ public class TSCalendarUIView: UIView {
     }
     
     private func bind() {
-        config.displayMode
+        // heightStyle를 제외한 프로퍼티들 변경 감지 (자연스러운 애니메이션을 위해 heightStyle 수동으로 업데이트 필요)
+        config.calendarSettingsDidChange
+            .sink { [weak self] _ in
+                guard let self else { return }
+                reloadCalendar()
+            }
+            .store(in: &configCancellables)
     }
     
     private func bindCalendarHeight() {
         heightConstraint?.isActive = false
-        cancellable = Set<AnyCancellable>()
+        heightCancellables = Set<AnyCancellable>()
         guard viewModel.config.heightStyle.isFixed else { return }
         
         viewModel.$currentHeight
@@ -124,12 +128,13 @@ public class TSCalendarUIView: UIView {
                     self.setNeedsLayout()
                 }
             }
-            .store(in: &cancellable)
+            .store(in: &heightCancellables)
     }
     
-    public func updateConfig(_ newConfig: TSCalendarConfig) {
-        self.config = newConfig
-        self.viewModel = TSCalendarViewModel(
+    public func reloadCalendar() {
+        let initialDate = viewModel.currentDisplayedDate
+        let selectedDate = viewModel.selectedDate
+        viewModel = TSCalendarViewModel(
             initialDate: initialDate,
             minimumDate: minimumDate,
             maximumDate: maximumDate,

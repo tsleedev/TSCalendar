@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 public final class TSCalendarConfig: ObservableObject {
     @Published public var autoSelectToday: Bool
@@ -17,6 +18,23 @@ public final class TSCalendarConfig: ObservableObject {
     @Published public var showHeader: Bool
     @Published public var showWeekNumber: Bool
     @Published public var startWeekDay: TSCalendarStartWeekDay
+    
+    // heightStyle 제외한 모든 프로퍼티 변경을 모니터링하는 publisher
+    public var calendarSettingsDidChange: AnyPublisher<Void, Never> {
+        let publishers: [AnyPublisher<Void, Never>] = [
+            $autoSelectToday.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $displayMode.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $isPagingEnabled.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $monthStyle.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $scrollDirection.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $showHeader.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $showWeekNumber.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $startWeekDay.dropFirst().map { _ in () }.eraseToAnyPublisher()
+        ]
+        
+        return Publishers.MergeMany(publishers)
+            .eraseToAnyPublisher()
+    }
     
     private var identifiableProperties: [Any] {
         [
