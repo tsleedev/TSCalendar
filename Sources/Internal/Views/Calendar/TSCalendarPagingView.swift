@@ -10,7 +10,7 @@ import SwiftUI
 private enum TransitionState {
     case next
     case previous
-    
+
     var direction: Int {
         switch self {
         case .next: return 1
@@ -24,17 +24,20 @@ private class PagingGestureHandler: ObservableObject {
     @Published var offset: CGFloat = 0
     @Published var isDragging = false
     @Published var transitionState: TransitionState?
-    
+
     @ObservedObject private var viewModel: TSCalendarViewModel
-    
+
     private let transitionAnimation: Animation = .easeOut(duration: 0.3)
     private let transitionDelay: TimeInterval = 0.3
     private let dragThreshold: CGFloat = 50
-    
+
+    // 레이스 컨디션 방지를 위한 DispatchWorkItem
+    private var pendingWorkItem: DispatchWorkItem?
+
     init(viewModel: TSCalendarViewModel) {
         self.viewModel = viewModel
     }
-    
+
     func handleDragGesture(
         value: DragGesture.Value,
         axis: Axis,
@@ -45,9 +48,9 @@ private class PagingGestureHandler: ObservableObject {
             offset = axis == .horizontal ? value.translation.width : value.translation.height
             return
         }
-        
+
         let translation = axis == .horizontal ? value.translation.width : value.translation.height
-        
+
         if translation > dragThreshold {
             transitionState = .previous
             viewModel.willMoveDate(by: -1)
@@ -67,22 +70,32 @@ private class PagingGestureHandler: ObservableObject {
             }
         }
     }
-    
+
     func handleOffsetChange() {
         guard let state = transitionState,
-              !isDragging else { return }
+            !isDragging
+        else { return }
         transitionState = nil
-        DispatchQueue.main.asyncAfter(deadline: .now() + transitionDelay) {
+
+        // 이전 작업이 있다면 취소
+        pendingWorkItem?.cancel()
+
+        // 새로운 작업 생성
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
             self.viewModel.moveDate(by: state.direction)
             self.offset = 0
         }
+
+        pendingWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + transitionDelay, execute: workItem)
     }
 }
 
 struct TSCalendarPagingView: View {
     @ObservedObject var viewModel: TSCalendarViewModel
     let customization: TSCalendarCustomization?
-    
+
     var body: some View {
         Group {
             if viewModel.config.heightStyle.isFlexible {
@@ -94,7 +107,7 @@ struct TSCalendarPagingView: View {
         .contentShape(Rectangle())
         .clipped()
     }
-    
+
     private var fixedHeightContent: some View {
         Group {
             switch viewModel.config.scrollDirection {
@@ -111,7 +124,7 @@ struct TSCalendarPagingView: View {
             }
         }
     }
-    
+
     private var flexibleHeightContent: some View {
         Group {
             switch viewModel.config.scrollDirection {
@@ -134,13 +147,13 @@ private struct FixedHeightHorizontalPagingView: View {
     @StateObject private var handler: PagingGestureHandler
     @ObservedObject private var viewModel: TSCalendarViewModel
     private let customization: TSCalendarCustomization?
-    
+
     init(viewModel: TSCalendarViewModel, customization: TSCalendarCustomization?) {
         _handler = StateObject(wrappedValue: PagingGestureHandler(viewModel: viewModel))
         self.viewModel = viewModel
         self.customization = customization
     }
-    
+
     var body: some View {
         GeometryReader { geometry in
             HStack(alignment: .top, spacing: 0) {
@@ -176,7 +189,7 @@ private struct FixedHeightHorizontalPagingView: View {
         }
         .frame(height: viewModel.currentHeight)
     }
-    
+
     private func calendarView(for index: Int) -> some View {
         Group {
             if let monthData = viewModel.datesData[safe: index] {
@@ -202,13 +215,13 @@ private struct FixedHeightVerticalPagingView: View {
     @StateObject private var handler: PagingGestureHandler
     @ObservedObject private var viewModel: TSCalendarViewModel
     private let customization: TSCalendarCustomization?
-    
+
     init(viewModel: TSCalendarViewModel, customization: TSCalendarCustomization?) {
         _handler = StateObject(wrappedValue: PagingGestureHandler(viewModel: viewModel))
         self.viewModel = viewModel
         self.customization = customization
     }
-    
+
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
@@ -241,11 +254,12 @@ private struct FixedHeightVerticalPagingView: View {
             )
             .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
         }
-        .frame(height: {
-            return viewModel.currentHeight
-        }())
+        .frame(
+            height: {
+                return viewModel.currentHeight
+            }())
     }
-    
+
     private func calendarView(for index: Int) -> some View {
         Group {
             if let monthData = viewModel.datesData[safe: index] {
@@ -271,13 +285,13 @@ private struct FlexibleHeightHorizontalPagingView: View {
     @StateObject private var handler: PagingGestureHandler
     @ObservedObject private var viewModel: TSCalendarViewModel
     private let customization: TSCalendarCustomization?
-    
+
     init(viewModel: TSCalendarViewModel, customization: TSCalendarCustomization?) {
         _handler = StateObject(wrappedValue: PagingGestureHandler(viewModel: viewModel))
         self.viewModel = viewModel
         self.customization = customization
     }
-    
+
     var body: some View {
         GeometryReader { geometry in
             HStack(alignment: .top, spacing: 0) {
@@ -309,7 +323,7 @@ private struct FlexibleHeightHorizontalPagingView: View {
             .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
         }
     }
-    
+
     private func calendarView(for index: Int) -> some View {
         Group {
             if let monthData = viewModel.datesData[safe: index] {
@@ -335,13 +349,13 @@ private struct FlexibleHeightVerticalPagingView: View {
     @StateObject private var handler: PagingGestureHandler
     @ObservedObject private var viewModel: TSCalendarViewModel
     private let customization: TSCalendarCustomization?
-    
+
     init(viewModel: TSCalendarViewModel, customization: TSCalendarCustomization?) {
         _handler = StateObject(wrappedValue: PagingGestureHandler(viewModel: viewModel))
         self.viewModel = viewModel
         self.customization = customization
     }
-    
+
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
@@ -373,7 +387,7 @@ private struct FlexibleHeightVerticalPagingView: View {
             .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
         }
     }
-    
+
     private func calendarView(for index: Int) -> some View {
         Group {
             if let monthData = viewModel.datesData[safe: index] {
