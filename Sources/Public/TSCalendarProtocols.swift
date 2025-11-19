@@ -83,7 +83,12 @@ public protocol TSCalendarDelegate: AnyObject {
 
     /// 사용자가 날짜를 선택했을 때 호출됩니다.
     ///
-    /// 날짜 탭 또는 프로그래매틱하게 날짜가 선택되었을 때 호출됩니다.
+    /// 이 메서드는 다음 경우에 호출됩니다:
+    /// - 사용자가 날짜를 탭한 경우
+    /// - `selectDate(_:)` 메서드가 프로그래매틱하게 호출된 경우
+    ///
+    /// - Note: 초기화 시에는 호출되지 않습니다.
+    ///   초기 `selectedDate`에 대한 처리는 부모 뷰의 `onAppear`에서 수행하세요.
     ///
     /// - Parameter date: 선택된 날짜
     func calendar(didSelect date: Date)
