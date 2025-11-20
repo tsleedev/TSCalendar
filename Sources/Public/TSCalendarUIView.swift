@@ -157,6 +157,22 @@ public class TSCalendarUIView: UIView {
     public func selectDate(_ date: Date) {
         viewModel.selectDate(date)
     }
+
+    /// 현재 표시되고 있는 날짜를 가져오거나 설정합니다.
+    ///
+    /// 이 프로퍼티를 설정하면 달력이 해당 월/주로 이동합니다.
+    /// SwiftUI의 `currentDisplayedDate` Binding과 동등한 기능을 UIKit에서 제공합니다.
+    ///
+    /// - Note: 값을 설정하면 `calendar(pageDidChange:)` delegate가 호출될 수 있지만,
+    ///   `calendar(didSelect:)`는 호출되지 않습니다.
+    public var currentDisplayedDate: Date {
+        get {
+            return viewModel.currentDisplayedDate
+        }
+        set {
+            viewModel.moveTo(date: newValue)
+        }
+    }
 }
 
 // MARK: - Public Navigation Methods

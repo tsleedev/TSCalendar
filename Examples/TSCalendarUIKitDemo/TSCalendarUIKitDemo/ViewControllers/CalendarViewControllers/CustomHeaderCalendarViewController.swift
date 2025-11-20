@@ -24,14 +24,30 @@ class CustomHeaderCalendarViewController: UIViewController {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
-    
+
+    private lazy var previousButton: UIButton = {
+        let button = UIButton(type: .system)
+        let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
+        button.setImage(UIImage(systemName: "chevron.left", withConfiguration: config), for: .normal)
+        button.addTarget(self, action: #selector(previousButtonTapped), for: .touchUpInside)
+        return button
+    }()
+
     private lazy var headerTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 17)
+        label.font = .systemFont(ofSize: 17, weight: .semibold)
         label.text = controller.headerTitle
         return label
     }()
-    
+
+    private lazy var nextButton: UIButton = {
+        let button = UIButton(type: .system)
+        let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)
+        button.setImage(UIImage(systemName: "chevron.right", withConfiguration: config), for: .normal)
+        button.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        return button
+    }()
+
     private lazy var todayButton: UIButton = {
         let button = UIButton(type: .system)
         button.titleLabel?.font = .systemFont(ofSize: 14)
@@ -39,7 +55,7 @@ class CustomHeaderCalendarViewController: UIViewController {
         button.addTarget(self, action: #selector(todayButtonTapped), for: .touchUpInside)
         return button
     }()
-    
+
     private lazy var expandButton: UIButton = {
         let button = UIButton(type: .system)
         button.titleLabel?.font = .systemFont(ofSize: 14)
@@ -87,14 +103,16 @@ class CustomHeaderCalendarViewController: UIViewController {
     
     private func setupViews() {
         view.backgroundColor = .systemBackground
-        
+
         // Header Stack View
         view.addSubview(headerStackView)
+        headerStackView.addArrangedSubview(previousButton)
         headerStackView.addArrangedSubview(headerTitleLabel)
+        headerStackView.addArrangedSubview(nextButton)
         headerStackView.addArrangedSubview(UIView()) // Spacer
         headerStackView.addArrangedSubview(todayButton)
         headerStackView.addArrangedSubview(expandButton)
-        
+
         // Calendar View
         view.addSubview(calendarContainerView)
         calendarContainerView.addSubview(calendarView)
@@ -151,13 +169,21 @@ class CustomHeaderCalendarViewController: UIViewController {
         )
     }
     
+    @objc private func previousButtonTapped() {
+        calendarView.moveToPrevious()
+    }
+
+    @objc private func nextButtonTapped() {
+        calendarView.moveToNext()
+    }
+
     @objc private func todayButtonTapped() {
         calendarView.selectDate(.now)
     }
-    
+
     @objc private func expandButtonTapped() {
         controller.config.heightStyle = controller.config.heightStyle.isFlexible ? .fixed(60) : .flexible
-        
+
         UIView.animate(withDuration: 0.3) {
             self.updateContainerConstraints()
             self.updateExpandButtonTitle()
@@ -165,7 +191,7 @@ class CustomHeaderCalendarViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-    
+
     @objc private func settingsButtonTapped() {
         let settingsVC = SettingsViewController(controller: controller)
         let navController = UINavigationController(rootViewController: settingsVC)

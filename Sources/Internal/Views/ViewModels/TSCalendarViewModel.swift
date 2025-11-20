@@ -106,6 +106,29 @@ extension TSCalendarViewModel {
         updateHeight(for: nextDate, animated: true)
     }
 
+    func moveTo(date: Date) {
+        let normalizedDate = calendar.startOfDay(for: date)
+
+        guard canMove(to: normalizedDate) else { return }
+
+        let currentMonth = calendar.component(.month, from: currentDisplayedDate)
+        let currentYear = calendar.component(.year, from: currentDisplayedDate)
+
+        let targetMonth = calendar.component(.month, from: normalizedDate)
+        let targetYear = calendar.component(.year, from: normalizedDate)
+
+        // 연도 및 월 비교
+        if currentYear != targetYear || currentMonth != targetMonth {
+            let yearDiff = targetYear - currentYear
+            let monthDiff = (yearDiff * 12) + (targetMonth - currentMonth)
+
+            willMoveDate(by: monthDiff)
+            moveDate(by: monthDiff)
+        } else {
+            generateAllDates()
+        }
+    }
+
     func selectDate(_ date: Date) {
         let normalizedDate = calendar.startOfDay(for: date)
 

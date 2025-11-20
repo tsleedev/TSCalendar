@@ -11,6 +11,7 @@ public struct TSCalendar: View {
     @StateObject var viewModel: TSCalendarViewModel
     @ObservedObject var config: TSCalendarConfig
     @Binding var selectedDate: Date?
+    private var currentDisplayedDate: Binding<Date>?
     private let appearance: TSCalendarAppearance
     private let customization: TSCalendarCustomization?
 
@@ -18,6 +19,7 @@ public struct TSCalendar: View {
         initialDate: Date = .now,
         minimumDate: Date? = nil,
         maximumDate: Date? = nil,
+        currentDisplayedDate: Binding<Date>? = nil,
         selectedDate: Binding<Date?> = .constant(nil),
         config: TSCalendarConfig = .init(),
         customization: TSCalendarCustomization? = nil,
@@ -41,9 +43,12 @@ public struct TSCalendar: View {
             adjustedInitialDate = maxDate
         }
 
+        // currentDisplayedDate가 제공되면 해당 날짜를 사용, 아니면 initialDate 사용
+        let displayDate = currentDisplayedDate?.wrappedValue ?? adjustedInitialDate
+
         _viewModel = StateObject(
             wrappedValue: TSCalendarViewModel(
-                initialDate: adjustedInitialDate,
+                initialDate: displayDate,
                 minimumDate: minimumDate,
                 maximumDate: maximumDate,
                 selectedDate: selectedDate.wrappedValue,
@@ -52,6 +57,7 @@ public struct TSCalendar: View {
                 dataSource: dataSource
             ))
         _selectedDate = selectedDate
+        self.currentDisplayedDate = currentDisplayedDate
         self.config = config
         self.appearance = appearance
         self.customization = customization
@@ -81,6 +87,22 @@ public struct TSCalendar: View {
                 }
             } else if newDate != selectedDate {
                 selectedDate = newDate
+            }
+        }
+        .onChange(of: currentDisplayedDate?.wrappedValue) { newDate in
+            // currentDisplayedDate binding이 변경되면 해당 월/주로 이동
+            if let date = newDate,
+                !Calendar.current.isDate(date, inSameDayAs: viewModel.currentDisplayedDate)
+            {
+                viewModel.moveTo(date: date)
+            }
+        }
+        .onChange(of: viewModel.currentDisplayedDate) { newDate in
+            // ViewModel의 currentDisplayedDate가 변경되면 binding 업데이트
+            if let binding = currentDisplayedDate,
+                !Calendar.current.isDate(newDate, inSameDayAs: binding.wrappedValue)
+            {
+                currentDisplayedDate?.wrappedValue = newDate
             }
         }
     }

@@ -34,12 +34,12 @@ iOS 15+ 용 SwiftUI & UIKit 달력 라이브러리
    ```
    https://github.com/tsleedev/TSCalendar.git
    ```
-4. 버전 선택: `0.3.0` 이상
+4. 버전 선택: `0.4.0` 이상
 
 #### Package.swift에 추가
 ```swift
 dependencies: [
-    .package(url: "https://github.com/tsleedev/TSCalendar.git", from: "0.3.0")
+    .package(url: "https://github.com/tsleedev/TSCalendar.git", from: "0.4.0")
 ]
 ```
 
@@ -92,42 +92,55 @@ class ViewController: UIViewController {
 
 외부에서 달력을 프로그래매틱하게 이동시킬 수 있습니다. 커스텀 헤더를 만들 때 유용합니다.
 
-#### SwiftUI
+#### SwiftUI - currentDisplayedDate Binding (권장)
 
 ```swift
 import SwiftUI
 import TSCalendar
 
 struct ContentView: View {
+    @State private var currentDisplayedDate = Date()
     @State private var selectedDate: Date? = Date()
-    @State private var config = TSCalendarConfig()
-    private var calendar = TSCalendar(
-        selectedDate: $selectedDate,
-        config: config
-    )
+    @StateObject private var config = TSCalendarConfig(showHeader: false)
 
     var body: some View {
         VStack {
             // 커스텀 헤더
             HStack {
-                Button("이전") {
-                    calendar.moveToPrevious()  // 이전 월/주로 이동
+                Button("◀︎") {
+                    currentDisplayedDate = Calendar.current.date(
+                        byAdding: .month,
+                        value: -1,
+                        to: currentDisplayedDate
+                    ) ?? currentDisplayedDate
                 }
-                Spacer()
-                Text("나의 커스텀 헤더")
-                Spacer()
-                Button("다음") {
-                    calendar.moveToNext()  // 다음 월/주로 이동
+
+                Text(monthYearString(from: currentDisplayedDate))
+                    .font(.headline)
+
+                Button("▶︎") {
+                    currentDisplayedDate = Calendar.current.date(
+                        byAdding: .month,
+                        value: 1,
+                        to: currentDisplayedDate
+                    ) ?? currentDisplayedDate
                 }
             }
             .padding()
 
-            // 달력 (기본 헤더 숨김)
-            calendar
-                .onAppear {
-                    config.showHeader = false
-                }
+            // currentDisplayedDate binding으로 제어
+            TSCalendar(
+                currentDisplayedDate: $currentDisplayedDate,
+                selectedDate: $selectedDate,
+                config: config
+            )
         }
+    }
+
+    private func monthYearString(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy년 M월"
+        return formatter.string(from: date)
     }
 }
 ```
@@ -168,17 +181,28 @@ class ViewController: UIViewController {
 }
 ```
 
-### 사용 가능한 메서드
+### SwiftUI 제어 방법
 
+**1. currentDisplayedDate Binding (권장)**
 ```swift
-// 다음 월/주로 이동
-moveToNext()
+@State private var currentDisplayedDate = Date()
 
-// 이전 월/주로 이동
-moveToPrevious()
+TSCalendar(
+    currentDisplayedDate: $currentDisplayedDate,  // 양방향 바인딩
+    selectedDate: $selectedDate,
+    config: config
+)
 
-// N개 월/주 이동 (양수: 미래, 음수: 과거)
-move(by: Int)
+// 날짜 변경으로 달력 이동
+currentDisplayedDate = Calendar.current.date(byAdding: .month, value: 1, to: currentDisplayedDate)!
+```
+
+**2. UIKit 메서드 (UIKit 전용)**
+```swift
+// TSCalendarUIView에서 사용 가능
+calendarView.moveToNext()
+calendarView.moveToPrevious()
+calendarView.move(by: 3)
 ```
 
 **참고**: 네비게이션 시 `calendar(pageDidChange:)` delegate만 호출되며, `calendar(didSelect:)`는 호출되지 않습니다. 이는 페이지 이동과 날짜 선택을 명확히 구분하기 위함입니다.
@@ -350,6 +374,17 @@ open TSCalendarSwiftUIDemo.xcodeproj
 현재 알려진 주요 버그는 없습니다. 문제를 발견하시면 [Issues](https://github.com/tsleedev/TSCalendar/issues)에 등록해주세요.
 
 ## 📝 변경 이력
+
+### 0.4.0 (2025-11-21)
+- 선언적 네비게이션 API 추가
+  - SwiftUI: `currentDisplayedDate: Binding<Date>?` 파라미터로 양방향 바인딩 지원
+  - UIKit: `currentDisplayedDate` 프로퍼티로 현재 표시 날짜 접근/설정
+  - ViewModel에 `moveTo(date:)` 메서드 추가
+- 네비게이션과 선택의 명확한 분리
+  - 네비게이션: `pageDidChange` delegate만 호출
+  - 선택: `didSelect` delegate 호출
+- CustomHeaderCalendarView 예제 개선 (SwiftUI, UIKit)
+- StateObject 라이프사이클 이슈 해결
 
 ### 0.3.2 (2025-11-21)
 - 프로그래매틱 네비게이션 API 추가
