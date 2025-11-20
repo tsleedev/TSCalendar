@@ -86,6 +86,103 @@ class ViewController: UIViewController {
 }
 ```
 
+## 🎯 프로그래매틱 제어
+
+### 달력 네비게이션
+
+외부에서 달력을 프로그래매틱하게 이동시킬 수 있습니다. 커스텀 헤더를 만들 때 유용합니다.
+
+#### SwiftUI
+
+```swift
+import SwiftUI
+import TSCalendar
+
+struct ContentView: View {
+    @State private var selectedDate: Date? = Date()
+    @State private var config = TSCalendarConfig()
+    private var calendar = TSCalendar(
+        selectedDate: $selectedDate,
+        config: config
+    )
+
+    var body: some View {
+        VStack {
+            // 커스텀 헤더
+            HStack {
+                Button("이전") {
+                    calendar.moveToPrevious()  // 이전 월/주로 이동
+                }
+                Spacer()
+                Text("나의 커스텀 헤더")
+                Spacer()
+                Button("다음") {
+                    calendar.moveToNext()  // 다음 월/주로 이동
+                }
+            }
+            .padding()
+
+            // 달력 (기본 헤더 숨김)
+            calendar
+                .onAppear {
+                    config.showHeader = false
+                }
+        }
+    }
+}
+```
+
+#### UIKit
+
+```swift
+import UIKit
+import TSCalendar
+
+class ViewController: UIViewController {
+    private var calendarView: TSCalendarUIView!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        calendarView = TSCalendarUIView(
+            config: TSCalendarConfig()
+        )
+
+        view.addSubview(calendarView)
+        // Auto Layout 설정...
+    }
+
+    @objc func previousButtonTapped() {
+        calendarView.moveToPrevious()  // 이전 월/주로 이동
+    }
+
+    @objc func nextButtonTapped() {
+        calendarView.moveToNext()  // 다음 월/주로 이동
+    }
+
+    @objc func jumpToDate() {
+        // 특정 날짜로 여러 단계 이동
+        calendarView.move(by: 3)   // 3개월 앞으로
+        calendarView.move(by: -2)  // 2개월 뒤로
+    }
+}
+```
+
+### 사용 가능한 메서드
+
+```swift
+// 다음 월/주로 이동
+moveToNext()
+
+// 이전 월/주로 이동
+moveToPrevious()
+
+// N개 월/주 이동 (양수: 미래, 음수: 과거)
+move(by: Int)
+```
+
+**참고**: 네비게이션 시 `calendar(pageDidChange:)` delegate만 호출되며, `calendar(didSelect:)`는 호출되지 않습니다. 이는 페이지 이동과 날짜 선택을 명확히 구분하기 위함입니다.
+
 ## ⚙️ 설정
 
 ### TSCalendarConfig
@@ -253,6 +350,14 @@ open TSCalendarSwiftUIDemo.xcodeproj
 현재 알려진 주요 버그는 없습니다. 문제를 발견하시면 [Issues](https://github.com/tsleedev/TSCalendar/issues)에 등록해주세요.
 
 ## 📝 변경 이력
+
+### 0.3.2 (2025-11-21)
+- 프로그래매틱 네비게이션 API 추가
+  - `moveToNext()`: 다음 월/주로 이동
+  - `moveToPrevious()`: 이전 월/주로 이동
+  - `move(by:)`: N개 월/주 이동
+- 커스텀 헤더 구현을 위한 외부 제어 기능 강화
+- SwiftUI 및 UIKit 모두 지원
 
 ### 0.3.0 (2025-11-18)
 - UIKit 지원 추가 (TSCalendarUIView)
