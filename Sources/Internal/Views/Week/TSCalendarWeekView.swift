@@ -141,8 +141,7 @@ struct TSCalendarWeekView: View {
                     .frame(width: 4, height: 4)
             case .count:
                 Text("+\(count)")
-                    .font(.system(size: 8))
-                    .foregroundColor(appearance.eventContentStyle.color)
+                    .textStyle(appearance.eventMoreContentStyle)
             default:
                 EmptyView()
             }
