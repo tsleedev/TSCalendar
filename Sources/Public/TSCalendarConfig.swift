@@ -11,6 +11,7 @@ import Combine
 public final class TSCalendarConfig: ObservableObject {
     @Published public var autoSelectToday: Bool
     @Published public var displayMode: TSCalendarDisplayMode
+    @Published public var eventDisplayStyle: TSCalendarEventDisplayStyle
     @Published public var heightStyle: TSCalendarHeightStyle
     @Published public var isPagingEnabled: Bool
     @Published public var monthStyle: TSCalendarMonthStyle
@@ -25,6 +26,7 @@ public final class TSCalendarConfig: ObservableObject {
         let publishers: [AnyPublisher<Void, Never>] = [
             $autoSelectToday.dropFirst().map { _ in () }.eraseToAnyPublisher(),
             $displayMode.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $eventDisplayStyle.dropFirst().map { _ in () }.eraseToAnyPublisher(),
             $isPagingEnabled.dropFirst().map { _ in () }.eraseToAnyPublisher(),
             $monthStyle.dropFirst().map { _ in () }.eraseToAnyPublisher(),
             $scrollDirection.dropFirst().map { _ in () }.eraseToAnyPublisher(),
@@ -42,6 +44,7 @@ public final class TSCalendarConfig: ObservableObject {
         [
             autoSelectToday,
             displayMode,
+            eventDisplayStyle,
 //            heightStyle,      // 외부에서 새로고침 필요
             isPagingEnabled,
             monthStyle,
@@ -60,6 +63,7 @@ public final class TSCalendarConfig: ObservableObject {
     public init(
         autoSelectToday: Bool = true,
         displayMode: TSCalendarDisplayMode = .month,
+        eventDisplayStyle: TSCalendarEventDisplayStyle = .bars,
         heightStyle: TSCalendarHeightStyle = .flexible,
         isPagingEnabled: Bool = true,
         monthStyle: TSCalendarMonthStyle = .dynamic,
@@ -71,6 +75,7 @@ public final class TSCalendarConfig: ObservableObject {
     ) {
         self.autoSelectToday = autoSelectToday
         self.displayMode = displayMode
+        self.eventDisplayStyle = eventDisplayStyle
         self.heightStyle = heightStyle
         self.isPagingEnabled = isPagingEnabled
         self.monthStyle = monthStyle

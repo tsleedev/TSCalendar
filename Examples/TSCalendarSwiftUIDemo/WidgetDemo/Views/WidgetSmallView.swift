@@ -15,7 +15,8 @@ struct WidgetSmallView: View {
         TSCalendar(
             config: .init(
                 displayMode: .month,
-                isPagingEnabled: false  // 스몰 위젯에서 네비게이션 버튼 숨김
+                eventDisplayStyle: .count,  // "+1", "+2" 형태로 이벤트 카운트 표시
+                isPagingEnabled: false      // 스몰 위젯에서 네비게이션 버튼 숨김
             ),
             appearance: TSCalendarAppearance(type: .widget(.small)),
             delegate: controller,

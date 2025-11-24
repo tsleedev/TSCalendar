@@ -63,17 +63,20 @@ struct WidgetIntentDemoEntryView : View {
         VStack(spacing: 0) {
             switch widgetFamily {
             case .systemSmall:
-                // 스몰: 컴팩트 네비게이션 헤더 + 달력
+                // 스몰: 컴팩트 네비게이션 헤더 + 달력 + 이벤트 카운트
                 smallNavigationHeader
                 TSCalendar(
                     initialDate: displayDate,
                     config: .init(
                         autoSelectToday: false,
                         displayMode: .month,
+                        eventDisplayStyle: .count,  // "+1", "+2" 형태로 이벤트 표시
                         isPagingEnabled: false,
                         showHeader: false
                     ),
-                    appearance: TSCalendarAppearance(type: .widget(.small))
+                    appearance: TSCalendarAppearance(type: .widget(.small)),
+                    delegate: controller,
+                    dataSource: controller
                 )
             case .systemMedium:
                 // 미디엄: 네비게이션 헤더 + 주 뷰

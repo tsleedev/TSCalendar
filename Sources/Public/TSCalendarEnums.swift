@@ -101,3 +101,19 @@ public enum TSCalendarWeekdaySymbolType: String, CaseIterable {
         return self.rawValue
     }
 }
+
+/// 이벤트 표시 스타일
+public enum TSCalendarEventDisplayStyle: String, CaseIterable {
+    /// 가로 바 형태 (기본값)
+    case bars = "Bars"
+    /// 점 표시
+    case dots = "Dots"
+    /// 숫자 표시 (+1, +2)
+    case count = "Count"
+    /// 표시 안함
+    case none = "None"
+
+    public var description: String {
+        return self.rawValue
+    }
+}

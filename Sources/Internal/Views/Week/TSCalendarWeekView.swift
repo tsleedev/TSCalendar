@@ -60,7 +60,7 @@ struct TSCalendarWeekView: View {
                 
                 ForEach(weekData) { date in
                     GeometryReader { geometry in
-                        VStack {
+                        VStack(spacing: 1) {
                             Text(appearance.dateFormatter.string(from: date.date))
                                 .textStyle(appearance.dayContentStyle)
                                 .foregroundColor(foregroundColor(for: date))
@@ -79,6 +79,12 @@ struct TSCalendarWeekView: View {
                                             )
                                     }
                                 }
+
+                            // 이벤트 인디케이터 (dots/count 스타일)
+                            if viewModel.config.eventDisplayStyle == .dots || viewModel.config.eventDisplayStyle == .count {
+                                eventIndicator(for: date)
+                            }
+
                             Spacer()
                         }
                         .frame(
@@ -95,29 +101,57 @@ struct TSCalendarWeekView: View {
                 }
             }
             
-            // 일정 행들
-            GeometryReader { geometry in
-                let weekNumberWidth = viewModel.config.showWeekNumber ? (appearance.weekNumberContentStyle.width ?? TSCalendarConstants.weekNumberWidth) : 0
-                let dayWidth = (geometry.size.width - weekNumberWidth) / 7
-                let offsetY = (appearance.dayContentStyle.height ?? TSCalendarConstants.daySize) + 2
-                
-                if let firstDate = visibleDates.first?.date,
-                   let lastDate = visibleDates.last?.date,
-                   let events = viewModel.dataSource?.calendar(startDate: firstDate, endDate: lastDate),
-                   !events.isEmpty {
-                    TSCalendarEventsView(
-                        weekData: visibleDates,  // 보이는 날짜만 전달
-                        events: events,
-                        dayWidth: dayWidth,
-                        height: geometry.size.height - offsetY
-                    )
-                    .offset(
-                        x: (CGFloat(visibleStartIndex) * dayWidth) + weekNumberWidth,
-                        y: offsetY
-                    )
+            // 일정 행들 (bars 스타일일 때만)
+            if viewModel.config.eventDisplayStyle == .bars {
+                GeometryReader { geometry in
+                    let weekNumberWidth = viewModel.config.showWeekNumber ? (appearance.weekNumberContentStyle.width ?? TSCalendarConstants.weekNumberWidth) : 0
+                    let dayWidth = (geometry.size.width - weekNumberWidth) / 7
+                    let offsetY = (appearance.dayContentStyle.height ?? TSCalendarConstants.daySize) + 2
+
+                    if let firstDate = visibleDates.first?.date,
+                       let lastDate = visibleDates.last?.date,
+                       let events = viewModel.dataSource?.calendar(startDate: firstDate, endDate: lastDate),
+                       !events.isEmpty {
+                        TSCalendarEventsView(
+                            weekData: visibleDates,  // 보이는 날짜만 전달
+                            events: events,
+                            dayWidth: dayWidth,
+                            height: geometry.size.height - offsetY
+                        )
+                        .offset(
+                            x: (CGFloat(visibleStartIndex) * dayWidth) + weekNumberWidth,
+                            y: offsetY
+                        )
+                    }
                 }
             }
         }
+    }
+
+    // MARK: - Event Indicator
+
+    @ViewBuilder
+    private func eventIndicator(for date: TSCalendarDate) -> some View {
+        let count = eventCount(for: date.date)
+        if count > 0 {
+            switch viewModel.config.eventDisplayStyle {
+            case .dots:
+                Circle()
+                    .fill(appearance.eventContentStyle.color)
+                    .frame(width: 4, height: 4)
+            case .count:
+                Text("+\(count)")
+                    .font(.system(size: 8))
+                    .foregroundColor(appearance.eventContentStyle.color)
+            default:
+                EmptyView()
+            }
+        }
+    }
+
+    private func eventCount(for date: Date) -> Int {
+        guard let events = viewModel.dataSource?.calendar(date: date) else { return 0 }
+        return events.count
     }
     
     private func foregroundColor(for date: TSCalendarDate) -> Color {
