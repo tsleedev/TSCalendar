@@ -18,7 +18,8 @@ public final class TSCalendarConfig: ObservableObject {
     @Published public var showHeader: Bool
     @Published public var showWeekNumber: Bool
     @Published public var startWeekDay: TSCalendarStartWeekDay
-    
+    @Published public var weekdaySymbolType: TSCalendarWeekdaySymbolType
+
     // heightStyle 제외한 모든 프로퍼티 변경을 모니터링하는 publisher
     public var calendarSettingsDidChange: AnyPublisher<Void, Never> {
         let publishers: [AnyPublisher<Void, Never>] = [
@@ -29,13 +30,14 @@ public final class TSCalendarConfig: ObservableObject {
             $scrollDirection.dropFirst().map { _ in () }.eraseToAnyPublisher(),
             $showHeader.dropFirst().map { _ in () }.eraseToAnyPublisher(),
             $showWeekNumber.dropFirst().map { _ in () }.eraseToAnyPublisher(),
-            $startWeekDay.dropFirst().map { _ in () }.eraseToAnyPublisher()
+            $startWeekDay.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $weekdaySymbolType.dropFirst().map { _ in () }.eraseToAnyPublisher()
         ]
-        
+
         return Publishers.MergeMany(publishers)
             .eraseToAnyPublisher()
     }
-    
+
     private var identifiableProperties: [Any] {
         [
             autoSelectToday,
@@ -46,14 +48,15 @@ public final class TSCalendarConfig: ObservableObject {
             scrollDirection,
             showHeader,
             showWeekNumber,
-            startWeekDay
+            startWeekDay,
+            weekdaySymbolType
         ]
     }
-    
+
     public var id: String {
         identifiableProperties.map { "\($0)" }.joined(separator: "_")
     }
-    
+
     public init(
         autoSelectToday: Bool = true,
         displayMode: TSCalendarDisplayMode = .month,
@@ -63,7 +66,8 @@ public final class TSCalendarConfig: ObservableObject {
         scrollDirection: TSCalendarScrollDirection = .vertical,
         showHeader: Bool = true,
         showWeekNumber: Bool = false,
-        startWeekDay: TSCalendarStartWeekDay = .sunday
+        startWeekDay: TSCalendarStartWeekDay = .sunday,
+        weekdaySymbolType: TSCalendarWeekdaySymbolType = .veryShort
     ) {
         self.autoSelectToday = autoSelectToday
         self.displayMode = displayMode
@@ -74,5 +78,6 @@ public final class TSCalendarConfig: ObservableObject {
         self.showHeader = showHeader
         self.showWeekNumber = showWeekNumber
         self.startWeekDay = startWeekDay
+        self.weekdaySymbolType = weekdaySymbolType
     }
 }

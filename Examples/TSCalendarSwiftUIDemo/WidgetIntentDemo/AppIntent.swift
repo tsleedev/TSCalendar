@@ -8,6 +8,7 @@
 import WidgetKit
 import AppIntents
 
+// MARK: - Widget Configuration Intent
 struct ConfigurationAppIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "Select Time Range" }
     static var description: IntentDescription { "Choose a time range to display the calendar in months or weeks." }
@@ -35,5 +36,49 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
                 .plus2: "+2 Months / 2 Weeks"
             ]
         }
+    }
+}
+
+// MARK: - Navigation Storage
+enum WidgetNavigationStorage {
+    private static let key = "widget_calendar_offset"
+
+    static var currentOffset: Int {
+        get { UserDefaults.standard.integer(forKey: key) }
+        set { UserDefaults.standard.set(newValue, forKey: key) }
+    }
+}
+
+// MARK: - Navigation Intents
+struct NavigatePreviousIntent: AppIntent {
+    static var title: LocalizedStringResource { "Previous Month" }
+    static var description: IntentDescription { "Navigate to previous month" }
+
+    func perform() async throws -> some IntentResult {
+        WidgetNavigationStorage.currentOffset -= 1
+        WidgetCenter.shared.reloadTimelines(ofKind: "WidgetIntentDemo")
+        return .result()
+    }
+}
+
+struct NavigateNextIntent: AppIntent {
+    static var title: LocalizedStringResource { "Next Month" }
+    static var description: IntentDescription { "Navigate to next month" }
+
+    func perform() async throws -> some IntentResult {
+        WidgetNavigationStorage.currentOffset += 1
+        WidgetCenter.shared.reloadTimelines(ofKind: "WidgetIntentDemo")
+        return .result()
+    }
+}
+
+struct NavigateTodayIntent: AppIntent {
+    static var title: LocalizedStringResource { "Today" }
+    static var description: IntentDescription { "Navigate to current month" }
+
+    func perform() async throws -> some IntentResult {
+        WidgetNavigationStorage.currentOffset = 0
+        WidgetCenter.shared.reloadTimelines(ofKind: "WidgetIntentDemo")
+        return .result()
     }
 }

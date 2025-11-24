@@ -14,6 +14,9 @@ final class TSCalendarViewModel: ObservableObject {
     @Published private(set) var datesData: [[[TSCalendarDate]]] = []
     @Published private(set) var currentHeight: CGFloat?
 
+    /// 애니메이션 트리거: 1 = next, -1 = previous, nil = 대기 중
+    @Published var pendingAnimatedMove: Int?
+
     // MARK: - Properties
     private let calendar = Calendar(identifier: .gregorian)
     private let minimumDate: Date?
@@ -106,7 +109,7 @@ extension TSCalendarViewModel {
         updateHeight(for: nextDate, animated: true)
     }
 
-    func moveTo(date: Date) {
+    func moveTo(date: Date, animated: Bool = true) {
         let normalizedDate = calendar.startOfDay(for: date)
 
         guard canMove(to: normalizedDate) else { return }
@@ -122,8 +125,14 @@ extension TSCalendarViewModel {
             let yearDiff = targetYear - currentYear
             let monthDiff = (yearDiff * 12) + (targetMonth - currentMonth)
 
-            willMoveDate(by: monthDiff)
-            moveDate(by: monthDiff)
+            // 1개월/주 이동이고 애니메이션 활성화 시 슬라이드 애니메이션
+            if animated && !disableSwiftUIAnimation && abs(monthDiff) == 1 {
+                pendingAnimatedMove = monthDiff > 0 ? 1 : -1
+            } else {
+                // 여러 개월 이동 또는 애니메이션 비활성화 시 즉시 이동
+                willMoveDate(by: monthDiff)
+                moveDate(by: monthDiff)
+            }
         } else {
             generateAllDates()
         }

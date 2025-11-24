@@ -18,12 +18,30 @@ public struct TSCalendarConstants {
 
 public struct TSCalendarAppearance: Sendable {
     // Formatters
-    public let weekdaySymbols = Calendar.current.shortWeekdaySymbols.map { $0.uppercased() }
     public let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "d"
         return formatter
     }()
+
+    /// 요일 심볼 반환 (타입에 따라)
+    public func getWeekdaySymbols(type: TSCalendarWeekdaySymbolType) -> [String] {
+        let calendar = Calendar.current
+        switch type {
+        case .veryShort:
+            return calendar.veryShortWeekdaySymbols.map { $0.uppercased() }
+        case .short:
+            return calendar.shortWeekdaySymbols
+        case .narrow:
+            // standaloneWeekdaySymbols의 첫 글자 (한국어: 일, 월, 화...)
+            return calendar.veryShortStandaloneWeekdaySymbols
+        }
+    }
+
+    /// 기존 호환성을 위한 기본 weekdaySymbols (deprecated, getWeekdaySymbols 사용 권장)
+    public var weekdaySymbols: [String] {
+        getWeekdaySymbols(type: .veryShort)
+    }
     
     public func getHeaderTitle(date: Date, displayMode: TSCalendarDisplayMode) -> String {
         let dateFormatter = DateFormatter()

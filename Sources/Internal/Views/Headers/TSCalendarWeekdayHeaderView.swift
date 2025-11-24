@@ -29,7 +29,7 @@ struct TSCalendarWeekdayHeaderView: View {
     }
     
     private func getWeekdaySymbols() -> [String] {
-        let symbols = appearance.weekdaySymbols
+        let symbols = appearance.getWeekdaySymbols(type: viewModel.config.weekdaySymbolType)
         let offset = viewModel.config.startWeekDay.rawValue
         return Array(symbols[offset...] + symbols[..<offset])
     }

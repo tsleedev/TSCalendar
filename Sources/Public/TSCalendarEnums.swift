@@ -74,7 +74,7 @@ public enum TSCalendarStartWeekDay: Int, CaseIterable {
     case thursday = 4
     case friday = 5
     case saturday = 6
-    
+
     public var description: String {
         switch self {
         case .sunday: return "Sunday"
@@ -85,5 +85,19 @@ public enum TSCalendarStartWeekDay: Int, CaseIterable {
         case .friday: return "Friday"
         case .saturday: return "Saturday"
         }
+    }
+}
+
+/// 요일 헤더 심볼 타입
+public enum TSCalendarWeekdaySymbolType: String, CaseIterable {
+    /// 매우 짧은 형식: S, M, T, W, T, F, S (영어) / 일, 월, 화... (한국어 등)
+    case veryShort = "Very Short"
+    /// 짧은 형식: Sun, Mon, Tue... (영어) / 일, 월, 화... (한국어)
+    case short = "Short"
+    /// 한 글자 형식: S, M, T... (영어) / 일, 월, 화... (한국어)
+    case narrow = "Narrow"
+
+    public var description: String {
+        return self.rawValue
     }
 }

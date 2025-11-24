@@ -90,6 +90,34 @@ private class PagingGestureHandler: ObservableObject {
         pendingWorkItem = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + transitionDelay, execute: workItem)
     }
+
+    /// 외부 버튼 클릭 시 애니메이션 트리거 처리
+    func handleExternalTrigger(
+        direction: Int,
+        pageSize: CGFloat,
+        nextPageSize: CGFloat? = nil
+    ) {
+        // 이미 애니메이션 중이면 무시
+        guard transitionState == nil else { return }
+
+        // 방향에 따른 애니메이션 설정
+        if direction > 0 {
+            transitionState = .next
+            viewModel.willMoveDate(by: 1)
+            withAnimation(transitionAnimation) {
+                offset = -(nextPageSize ?? pageSize)
+            }
+        } else if direction < 0 {
+            transitionState = .previous
+            viewModel.willMoveDate(by: -1)
+            withAnimation(transitionAnimation) {
+                offset = pageSize
+            }
+        }
+
+        // pendingAnimatedMove 초기화
+        viewModel.pendingAnimatedMove = nil
+    }
 }
 
 struct TSCalendarPagingView: View {
@@ -186,6 +214,14 @@ private struct FixedHeightHorizontalPagingView: View {
                     }
             )
             .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
+            .onChange(of: viewModel.pendingAnimatedMove) { direction in
+                if let direction = direction {
+                    handler.handleExternalTrigger(
+                        direction: direction,
+                        pageSize: geometry.size.width
+                    )
+                }
+            }
         }
         .frame(height: viewModel.currentHeight)
     }
@@ -253,6 +289,15 @@ private struct FixedHeightVerticalPagingView: View {
                     }
             )
             .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
+            .onChange(of: viewModel.pendingAnimatedMove) { direction in
+                if let direction = direction {
+                    handler.handleExternalTrigger(
+                        direction: direction,
+                        pageSize: viewModel.getPageHeight(at: 0),
+                        nextPageSize: viewModel.getPageHeight(at: 1)
+                    )
+                }
+            }
         }
         .frame(
             height: {
@@ -321,6 +366,14 @@ private struct FlexibleHeightHorizontalPagingView: View {
                     }
             )
             .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
+            .onChange(of: viewModel.pendingAnimatedMove) { direction in
+                if let direction = direction {
+                    handler.handleExternalTrigger(
+                        direction: direction,
+                        pageSize: geometry.size.width
+                    )
+                }
+            }
         }
     }
 
@@ -385,6 +438,14 @@ private struct FlexibleHeightVerticalPagingView: View {
                     }
             )
             .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
+            .onChange(of: viewModel.pendingAnimatedMove) { direction in
+                if let direction = direction {
+                    handler.handleExternalTrigger(
+                        direction: direction,
+                        pageSize: geometry.size.height
+                    )
+                }
+            }
         }
     }
 

@@ -46,44 +46,45 @@ struct WidgetIntentDemoEntryView : View {
     @Environment(\.widgetFamily) var widgetFamily // 위젯 크기 확인
     let calendar = Calendar.current
     var entry: Provider.Entry
-    
+
     @StateObject private var controller = CalendarController()
-    
+
+    /// 현재 표시할 월의 offset (UserDefaults에서 읽음)
+    private var currentOffset: Int {
+        WidgetNavigationStorage.currentOffset
+    }
+
+    /// 표시할 날짜 계산
+    private var displayDate: Date {
+        calendar.date(byAdding: .month, value: currentOffset, to: .now) ?? .now
+    }
+
     var body: some View {
         VStack(spacing: 0) {
-//            Text(controller.headerTitle)
-//                .font(.system(size: 12, weight: .semibold))
-//                .padding(.horizontal, 16)
-//                .padding(.vertical, 4)
-//                .frame(maxWidth: .infinity, alignment: .leading)
             switch widgetFamily {
             case .systemSmall:
+                // 스몰: 컴팩트 네비게이션 헤더 + 달력
+                smallNavigationHeader
                 TSCalendar(
-                    initialDate: calendar.date(
-                        byAdding: .month,
-                        value: entry.configuration.selectedOffset.rawValue,
-                        to: .now
-                    ) ?? .now,
+                    initialDate: displayDate,
                     config: .init(
                         autoSelectToday: false,
-                        displayMode: .week,
+                        displayMode: .month,
                         isPagingEnabled: false,
                         showHeader: false
                     ),
                     appearance: TSCalendarAppearance(type: .widget(.small))
                 )
             case .systemMedium:
+                // 미디엄: 네비게이션 헤더 + 주 뷰
+                navigationHeader
                 TSCalendar(
-                    initialDate: calendar.date(
-                        byAdding: .month,
-                        value: entry.configuration.selectedOffset.rawValue,
-                        to: .now
-                    ) ?? .now,
+                    initialDate: displayDate,
                     config: .init(
                         autoSelectToday: false,
                         displayMode: .week,
                         isPagingEnabled: false,
-//                        showHeader: false
+                        showHeader: false,
                         showWeekNumber: true
                     ),
                     appearance: TSCalendarAppearance(type: .widget(.medium)),
@@ -91,17 +92,15 @@ struct WidgetIntentDemoEntryView : View {
                     dataSource: controller
                 )
             case .systemLarge:
+                // 라지: 네비게이션 헤더 + 월 뷰
+                navigationHeader
                 TSCalendar(
-                    initialDate: calendar.date(
-                        byAdding: .month,
-                        value: entry.configuration.selectedOffset.rawValue,
-                        to: .now
-                    ) ?? .now,
+                    initialDate: displayDate,
                     config: .init(
                         autoSelectToday: false,
                         displayMode: .month,
                         isPagingEnabled: false,
-//                        showHeader: false
+                        showHeader: false,
                         showWeekNumber: true
                     ),
                     appearance: TSCalendarAppearance(type: .widget(.large)),
@@ -113,29 +112,103 @@ struct WidgetIntentDemoEntryView : View {
             }
         }
     }
+
+    /// 스몰 위젯용 컴팩트 네비게이션 헤더
+    private var smallNavigationHeader: some View {
+        HStack {
+            Button(intent: NavigatePreviousIntent()) {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 10, weight: .semibold))
+                    .frame(width: 20, height: 20)
+            }
+            .buttonStyle(.plain)
+
+            Spacer()
+
+            Button(intent: NavigateTodayIntent()) {
+                Text(shortHeaderTitle)
+                    .font(.system(size: 10, weight: .semibold))
+            }
+            .buttonStyle(.plain)
+
+            Spacer()
+
+            Button(intent: NavigateNextIntent()) {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 10, weight: .semibold))
+                    .frame(width: 20, height: 20)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 4)
+        .frame(height: 20)
+    }
+
+    /// 네비게이션 헤더
+    private var navigationHeader: some View {
+        HStack {
+            Button(intent: NavigatePreviousIntent()) {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 16, weight: .semibold))
+                    .frame(width: 32, height: 32)
+            }
+            .buttonStyle(.plain)
+
+            Spacer()
+
+            Button(intent: NavigateTodayIntent()) {
+                Text(headerTitle)
+                    .font(.system(size: 14, weight: .semibold))
+            }
+            .buttonStyle(.plain)
+
+            Spacer()
+
+            Button(intent: NavigateNextIntent()) {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 16, weight: .semibold))
+                    .frame(width: 32, height: 32)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 8)
+        .frame(height: 36)
+    }
+
+    /// 헤더 타이틀 생성
+    private var headerTitle: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = DateFormatter.dateFormat(
+            fromTemplate: "MMMM yyyy",
+            options: 0,
+            locale: Locale.current
+        )
+        return formatter.string(from: displayDate)
+    }
+
+    /// 스몰 위젯용 짧은 헤더 타이틀 (Nov 2025)
+    private var shortHeaderTitle: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = DateFormatter.dateFormat(
+            fromTemplate: "MMM yyyy",
+            options: 0,
+            locale: Locale.current
+        )
+        return formatter.string(from: displayDate)
+    }
 }
 
 struct WidgetIntentDemo: Widget {
     let kind: String = "WidgetIntentDemo"
     
     var body: some WidgetConfiguration {
-        if #available(iOSApplicationExtension 15.0, *) {
-            return createWidgetConfiguration().contentMarginsDisabled()
-        } else {
-            return createWidgetConfiguration()
-        }
+        createWidgetConfiguration().contentMarginsDisabled()
     }
-    
+
     func createWidgetConfiguration() -> some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
-            if #available(iOS 17.0, *) {
-                WidgetIntentDemoEntryView(entry: entry)
-                    .containerBackground(.fill.tertiary, for: .widget)
-            } else {
-                WidgetIntentDemoEntryView(entry: entry)
-                    .padding()
-                    .background()
-            }
+            WidgetIntentDemoEntryView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
         }
     }
 }

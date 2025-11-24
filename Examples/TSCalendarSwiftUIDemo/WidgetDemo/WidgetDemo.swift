@@ -70,23 +70,13 @@ struct WidgetDemo: Widget {
     let kind: String = "WidgetDemo"
 
     var body: some WidgetConfiguration {
-        if #available(iOSApplicationExtension 15.0, *) {
-            return createWidgetConfiguration().contentMarginsDisabled()
-        } else {
-            return createWidgetConfiguration()
-        }
+        createWidgetConfiguration().contentMarginsDisabled()
     }
-    
+
     func createWidgetConfiguration() -> some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            if #available(iOS 17.0, *) {
-                WidgetDemoEntryView(entry: entry)
-                    .containerBackground(.fill.tertiary, for: .widget)
-            } else {
-                WidgetDemoEntryView(entry: entry)
-                    .padding()
-                    .background()
-            }
+            WidgetDemoEntryView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("My Widget")
         .description("This is an example widget.")
