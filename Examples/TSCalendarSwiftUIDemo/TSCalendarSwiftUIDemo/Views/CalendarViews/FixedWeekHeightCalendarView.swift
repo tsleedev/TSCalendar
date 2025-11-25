@@ -12,7 +12,8 @@ struct FixedWeekHeightCalendarView: View {
     @StateObject private var controller = CalendarController(
         config: TSCalendarConfig(
             heightStyle: .fixed(60),
-            scrollDirection: .vertical
+            scrollDirection: .vertical,
+            showWeekNumber: true
         )
     )
     @State private var showSettings = false

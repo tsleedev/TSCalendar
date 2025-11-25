@@ -11,7 +11,8 @@ import TSCalendar
 struct FullSizeCalendarView: View {
     @StateObject private var controller = CalendarController(
         config: TSCalendarConfig(
-            scrollDirection: .vertical
+            scrollDirection: .vertical,
+            showWeekNumber: true
         )
     )
     @State private var showSettings = false

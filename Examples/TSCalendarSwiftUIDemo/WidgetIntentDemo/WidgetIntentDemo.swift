@@ -72,7 +72,8 @@ struct WidgetIntentDemoEntryView : View {
                         displayMode: .month,
                         eventDisplayStyle: .count,  // "+1", "+2" 형태로 이벤트 표시
                         isPagingEnabled: false,
-                        showHeader: false
+                        showHeader: false,
+                        showWeekNumber: true
                     ),
                     appearance: TSCalendarAppearance(type: .widget(.small)),
                     delegate: controller,

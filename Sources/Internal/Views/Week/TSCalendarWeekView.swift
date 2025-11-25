@@ -44,19 +44,33 @@ struct TSCalendarWeekView: View {
     var body: some View {
         ZStack(alignment: .top) {
             // 날짜 행
-            HStack(spacing: 0) {
+            HStack(alignment: .top, spacing: 0) {
                 // 주차 표시 추가
                 if viewModel.config.showWeekNumber, let date = weekData.first?.date {
-                    VStack {
-                        Text("\(viewModel.weekNumberOfYear(for: date))")
-                            .textStyle(appearance.weekNumberContentStyle)
-                            .foregroundColor(appearance.weekNumberContentStyle.color)
-                            .frame(
-                                width: appearance.weekNumberContentStyle.width ?? TSCalendarConstants.weekNumberWidth,
-                                height: appearance.dayContentStyle.height ?? TSCalendarConstants.daySize
-                            )
-                        Spacer()
+                    GeometryReader { geometry in
+                        VStack(spacing: 1) {
+                            Text("\(viewModel.weekNumberOfYear(for: date))")
+                                .textStyle(appearance.weekNumberContentStyle)
+                                .foregroundColor(appearance.weekNumberContentStyle.color)
+                                .frame(
+                                    width: appearance.weekNumberContentStyle.width ?? TSCalendarConstants.weekNumberWidth,
+                                    height: appearance.dayContentStyle.height ?? TSCalendarConstants.daySize
+                                )
+
+                            // 이벤트 인디케이터 공간 (dots/count 스타일)
+                            if viewModel.config.eventDisplayStyle == .dots || viewModel.config.eventDisplayStyle == .count {
+                                weekNumberSpacer
+                            }
+
+                            Spacer()
+                        }
+                        .frame(
+                            width: geometry.size.width,
+                            height: geometry.size.height
+                        )
+                        .contentShape(Rectangle())
                     }
+                    .frame(width: appearance.weekNumberContentStyle.width ?? TSCalendarConstants.weekNumberWidth)
                 }
                 
                 ForEach(weekData) { date in
@@ -178,6 +192,11 @@ struct TSCalendarWeekView: View {
             return appearance.todayColor
         }
         return .clear
+    }
+
+    private var weekNumberSpacer: some View {
+        Color.clear
+            .frame(height: appearance.eventMoreContentStyle.height ?? TSCalendarConstants.eventMoreHeight)
     }
 }
 
