@@ -16,12 +16,14 @@ struct TSCalendarWeekdayHeaderView: View {
             if viewModel.config.showWeekNumber {
                 Text("W")
                     .textStyle(appearance.weekdayHeaderContentStyle)
+                    .foregroundColor(appearance.weekdayHeaderContentStyle.color)
                     .frame(width: appearance.weekNumberContentStyle.width)
             }
-            
+
             ForEach(getWeekdaySymbols(), id: \.self) { symbol in
                 Text(symbol)
                     .textStyle(appearance.weekdayHeaderContentStyle)
+                    .foregroundColor(appearance.weekdayHeaderContentStyle.color)
                     .frame(maxWidth: .infinity)
             }
         }

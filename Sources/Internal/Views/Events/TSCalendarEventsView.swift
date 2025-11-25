@@ -50,30 +50,14 @@ struct TSCalendarEventsView: View {
 
                 // 날짜별 남은 이벤트 개수 표시
                 ForEach(weekData.indices, id: \.self) { index in
-                    let date = weekData[index].date
-                    let allEventsForDay = dateEvents.flatMap { $0 }.filter { event in
-                        let dayIndex =
-                            weekData.firstIndex {
-                                Calendar.current.isDate($0.date, inSameDayAs: date)
-                            } ?? -1
-                        return dayIndex >= event.startIndex && dayIndex <= event.endIndex
-                    }
-
-                    let visibleCount = allEventsForDay.filter { $0.offsetY < CGFloat(maxRows) }
-                        .count
-                    let totalCount = allEventsForDay.count
-                    let remainingCount = totalCount - visibleCount
-
-                    if remainingCount > 0 {
-                        Text("+\(remainingCount)")
-                            .textStyle(appearance.eventMoreContentStyle)
-                            .frame(width: dayWidth, height: moreHeight, alignment: .center)
-                            .background(.yellow)
-                            .offset(
-                                x: dayWidth * CGFloat(index),
-                                y: rowHeight * CGFloat(maxRows)
-                            )
-                    }
+                    remainingCountView(
+                        index: index,
+                        dateEvents: dateEvents,
+                        dayWidth: dayWidth,
+                        moreHeight: moreHeight,
+                        rowHeight: rowHeight,
+                        maxRows: maxRows
+                    )
                 }
             }
         } else {
@@ -154,5 +138,39 @@ struct TSCalendarEventsView: View {
         }
 
         return rows
+    }
+
+    @ViewBuilder
+    private func remainingCountView(
+        index: Int,
+        dateEvents: [[DateEvent]],
+        dayWidth: CGFloat,
+        moreHeight: CGFloat,
+        rowHeight: CGFloat,
+        maxRows: Int
+    ) -> some View {
+        let date = weekData[index].date
+        let allEventsForDay = dateEvents.flatMap { $0 }.filter { event in
+            let dayIndex = weekData.firstIndex {
+                Calendar.current.isDate($0.date, inSameDayAs: date)
+            } ?? -1
+            return dayIndex >= event.startIndex && dayIndex <= event.endIndex
+        }
+
+        let visibleCount = allEventsForDay.filter { $0.offsetY < CGFloat(maxRows) }.count
+        let totalCount = allEventsForDay.count
+        let remainingCount = totalCount - visibleCount
+
+        if remainingCount > 0 {
+            Text("+\(remainingCount)")
+                .textStyle(appearance.eventMoreContentStyle)
+                .foregroundColor(appearance.eventMoreContentStyle.color)
+                .frame(width: dayWidth, height: moreHeight, alignment: .center)
+                .background(.yellow)
+                .offset(
+                    x: dayWidth * CGFloat(index),
+                    y: rowHeight * CGFloat(maxRows)
+                )
+        }
     }
 }

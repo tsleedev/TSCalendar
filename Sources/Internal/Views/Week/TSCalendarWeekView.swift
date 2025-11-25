@@ -50,6 +50,7 @@ struct TSCalendarWeekView: View {
                     VStack {
                         Text("\(viewModel.weekNumberOfYear(for: date))")
                             .textStyle(appearance.weekNumberContentStyle)
+                            .foregroundColor(appearance.weekNumberContentStyle.color)
                             .frame(
                                 width: appearance.weekNumberContentStyle.width ?? TSCalendarConstants.weekNumberWidth,
                                 height: appearance.dayContentStyle.height ?? TSCalendarConstants.daySize
@@ -133,19 +134,28 @@ struct TSCalendarWeekView: View {
     @ViewBuilder
     private func eventIndicator(for date: TSCalendarDate) -> some View {
         let count = eventCount(for: date.date)
-        if count > 0 {
-            switch viewModel.config.eventDisplayStyle {
-            case .dots:
-                Circle()
-                    .fill(appearance.eventContentStyle.color)
-                    .frame(width: 4, height: 4)
-            case .count:
-                Text("+\(count)")
-                    .textStyle(appearance.eventMoreContentStyle)
-            default:
-                EmptyView()
+        let height = appearance.eventMoreContentStyle.height ?? TSCalendarConstants.eventMoreHeight
+
+        Group {
+            if count > 0 {
+                switch viewModel.config.eventDisplayStyle {
+                case .dots:
+                    Circle()
+                        .fill(appearance.eventContentStyle.color)
+                        .frame(width: 4, height: 4)
+                case .count:
+                    Text("+\(count)")
+                        .textStyle(appearance.eventMoreContentStyle)
+                        .foregroundColor(appearance.eventMoreContentStyle.color)
+                default:
+                    EmptyView()
+                }
+            } else {
+                // 빈 공간 유지 (일관된 높이)
+                Color.clear
             }
         }
+        .frame(height: height)
     }
 
     private func eventCount(for date: Date) -> Int {

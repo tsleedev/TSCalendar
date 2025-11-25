@@ -151,30 +151,48 @@ public struct TSCalendarAppearance: Sendable {
             switch size {
             case .small:
                 self.init(
-                    monthHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 10), color: .primary, height: 20),
+                    todayColor: .gray.opacity(0.5),
+                    selectedColor: .gray.opacity(0.5),
+                    saturdayColor: .blue,
+                    sundayColor: .red,
+                    weekdayColor: .primary,
+                    otherMonthDateOpacity: 0.3,
+                    monthHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 10), color: .primary, height: 15),
                     weekdayHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 7), color: .gray, height: 10),
                     weekNumberContentStyle: TSCalendarContentStyle(font: .system(size: 7), color: .gray, width: 10),
-                    dayContentStyle: TSCalendarContentStyle(font: .system(size: 9), color: .primary, width: 15, height: 15),
-                    eventContentStyle: TSCalendarContentStyle(font: .system(size: 6), color: .gray, height: 15),
-                    eventMoreContentStyle: TSCalendarContentStyle(font: .system(size: 10), color: .gray, height: 6)
+                    dayContentStyle: TSCalendarContentStyle(font: .system(size: 9), color: .primary, width: 13, height: 13),
+                    eventContentStyle: TSCalendarContentStyle(font: .system(size: 6), color: .gray, height: 6),
+                    eventMoreContentStyle: TSCalendarContentStyle(font: .system(size: 6), color: .gray, height: 5)
                 )
             case .medium:
                 self.init(
+                    todayColor: .gray.opacity(0.5),
+                    selectedColor: .gray.opacity(0.5),
+                    saturdayColor: .blue,
+                    sundayColor: .red,
+                    weekdayColor: .primary,
+                    otherMonthDateOpacity: 0.3,
                     monthHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 12, weight: .semibold), color: .primary, height: 20),
                     weekdayHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 9), color: .gray, height: 10),
                     weekNumberContentStyle: TSCalendarContentStyle(font: .system(size: 10), color: .gray, width: 15),
                     dayContentStyle: TSCalendarContentStyle(font: .system(size: 11, weight: .semibold), color: .primary, width: 18, height: 18),
                     eventContentStyle: TSCalendarContentStyle(font: .system(size: 10, weight: .semibold), color: .gray, tracking: -0.5, height: 13),
-                    eventMoreContentStyle: TSCalendarContentStyle(font: .system(size: 9), color: .gray, height: 9)
+                    eventMoreContentStyle: TSCalendarContentStyle(font: .system(size: 7), color: .gray, height: 9)
                 )
             case .large:
                 self.init(
+                    todayColor: .gray.opacity(0.5),
+                    selectedColor: .gray.opacity(0.5),
+                    saturdayColor: .blue,
+                    sundayColor: .red,
+                    weekdayColor: .primary,
+                    otherMonthDateOpacity: 0.3,
                     monthHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 12, weight: .semibold), color: .primary, height: 20),
                     weekdayHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 9), color: .gray, height: 10),
                     weekNumberContentStyle: TSCalendarContentStyle(font: .system(size: 10), color: .gray, width: 20),
                     dayContentStyle: TSCalendarContentStyle(font: .system(size: 11, weight: .semibold), color: .primary, width: 18, height: 18),
                     eventContentStyle: TSCalendarContentStyle(font: .system(size: 10, weight: .semibold), color: .gray, tracking: -0.5, height: 13),
-                    eventMoreContentStyle: TSCalendarContentStyle(font: .system(size: 9), color: .gray, height: 9)
+                    eventMoreContentStyle: TSCalendarContentStyle(font: .system(size: 7), color: .gray, height: 9)
                 )
             }
         }

@@ -11,7 +11,6 @@ extension Text {
     func textStyle(_ style: TSCalendarContentStyle) -> Text {
         self
             .font(style.font)
-            .foregroundColor(style.color)
             .kerning(style.kerning)
             .tracking(style.tracking)
     }

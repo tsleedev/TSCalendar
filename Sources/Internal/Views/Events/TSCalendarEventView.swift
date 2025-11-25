@@ -27,6 +27,7 @@ struct TSCalendarEventView: View {
                     tracking: appearance.eventContentStyle.tracking
                 )
             )
+            .foregroundColor(event.textColor)
             .lineLimit(1)
             .padding(.horizontal, 2)
             .fixedSize(horizontal: true, vertical: false)

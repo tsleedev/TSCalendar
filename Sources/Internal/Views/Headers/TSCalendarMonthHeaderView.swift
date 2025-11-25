@@ -34,6 +34,7 @@ struct TSCalendarMonthHeaderView: View {
                 displayMode: viewModel.config.displayMode
             ))
             .textStyle(appearance.monthHeaderContentStyle)
+            .foregroundColor(appearance.monthHeaderContentStyle.color)
 
             Spacer()
 
@@ -49,6 +50,7 @@ struct TSCalendarMonthHeaderView: View {
                 displayMode: viewModel.config.displayMode
             ))
             .textStyle(appearance.monthHeaderContentStyle)
+            .foregroundColor(appearance.monthHeaderContentStyle.color)
 
             Spacer()
         }
