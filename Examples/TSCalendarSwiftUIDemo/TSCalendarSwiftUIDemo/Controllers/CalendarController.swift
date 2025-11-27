@@ -11,10 +11,28 @@ import TSCalendar
 final class CalendarController: ObservableObject, TSCalendarDelegate, TSCalendarDataSource {
     @Published private(set) var headerTitle: String = ""
     @Published var config: TSCalendarConfig
+    @Published var currentDisplayedDate: Date = .now
 
     init(config: TSCalendarConfig = .init()) {
         self.config = config
         self.headerTitle = getHeaderTitle(date: .now)
+    }
+
+    // MARK: - Navigation Methods
+
+    func moveTo(_ date: Date) {
+        currentDisplayedDate = date
+    }
+
+    func moveDay(by days: Int) {
+        guard let newDate = Calendar.current.date(byAdding: .day, value: days, to: currentDisplayedDate) else { return }
+        currentDisplayedDate = newDate
+    }
+
+    func move(by value: Int) {
+        let component: Calendar.Component = config.displayMode == .month ? .month : .weekOfYear
+        guard let newDate = Calendar.current.date(byAdding: component, value: value, to: currentDisplayedDate) else { return }
+        currentDisplayedDate = newDate
     }
 
     var events: [TSCalendarEvent] = [

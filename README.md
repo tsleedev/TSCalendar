@@ -34,12 +34,12 @@ iOS 15+ 용 SwiftUI & UIKit 달력 라이브러리
    ```
    https://github.com/tsleedev/TSCalendar.git
    ```
-4. 버전 선택: `0.4.0` 이상
+4. 버전 선택: `0.7.0` 이상
 
 #### Package.swift에 추가
 ```swift
 dependencies: [
-    .package(url: "https://github.com/tsleedev/TSCalendar.git", from: "0.4.0")
+    .package(url: "https://github.com/tsleedev/TSCalendar.git", from: "0.7.0")
 ]
 ```
 
@@ -90,9 +90,11 @@ class ViewController: UIViewController {
 
 ### 달력 네비게이션
 
-외부에서 달력을 프로그래매틱하게 이동시킬 수 있습니다. 커스텀 헤더를 만들 때 유용합니다.
+외부에서 달력을 프로그래매틱하게 이동시킬 수 있습니다. 커스텀 헤더나 네비게이션 버튼을 만들 때 유용합니다.
 
 #### SwiftUI - currentDisplayedDate Binding (권장)
+
+전체 화면 달력에서 월/주 단위로 이동할 때 가장 간단한 방법입니다.
 
 ```swift
 import SwiftUI
@@ -145,7 +147,9 @@ struct ContentView: View {
 }
 ```
 
-#### UIKit
+#### UIKit - TSCalendarUIView 메서드 (모달, 복잡한 네비게이션에 권장)
+
+모달이나 복잡한 네비게이션 시나리오에서는 UIKit의 TSCalendarUIView를 직접 사용하세요.
 
 ```swift
 import UIKit
@@ -165,47 +169,126 @@ class ViewController: UIViewController {
         // Auto Layout 설정...
     }
 
-    @objc func previousButtonTapped() {
-        calendarView.moveToPrevious()  // 이전 월/주로 이동
+    @objc func moveToToday() {
+        // 오늘 날짜로 이동하고 선택
+        calendarView.selectDate(Date())
     }
 
-    @objc func nextButtonTapped() {
-        calendarView.moveToNext()  // 다음 월/주로 이동
+    @objc func movePreviousDay() {
+        // 선택된 날짜에서 하루 이전으로
+        calendarView.moveDay(by: -1)
     }
 
-    @objc func jumpToDate() {
-        // 특정 날짜로 여러 단계 이동
-        calendarView.move(by: 3)   // 3개월 앞으로
-        calendarView.move(by: -2)  // 2개월 뒤로
+    @objc func moveNextDay() {
+        // 선택된 날짜에서 하루 다음으로
+        calendarView.moveDay(by: 1)
+    }
+
+    @objc func jumpToSpecificDate() {
+        // 특정 날짜로 이동 (선택하지 않음)
+        let futureDate = Calendar.current.date(byAdding: .month, value: 3, to: Date())!
+        calendarView.moveTo(futureDate, animated: true)
     }
 }
 ```
 
-### SwiftUI 제어 방법
+#### SwiftUI에서 UIKit 메서드 사용하기
 
-**1. currentDisplayedDate Binding (권장)**
+SwiftUI 환경에서도 UIViewRepresentable을 통해 TSCalendarUIView의 메서드를 사용할 수 있습니다.
+
 ```swift
-@State private var currentDisplayedDate = Date()
+import SwiftUI
+import TSCalendar
 
-TSCalendar(
-    currentDisplayedDate: $currentDisplayedDate,  // 양방향 바인딩
-    selectedDate: $selectedDate,
-    config: config
-)
+struct ProgrammaticNavigationView: View {
+    @StateObject private var controller = CalendarController()
+    @State private var calendarRef: TSCalendarUIView?
 
-// 날짜 변경으로 달력 이동
-currentDisplayedDate = Calendar.current.date(byAdding: .month, value: 1, to: currentDisplayedDate)!
+    var body: some View {
+        VStack(spacing: 16) {
+            // 네비게이션 버튼들
+            HStack(spacing: 12) {
+                Button("Previous Day") {
+                    calendarRef?.moveDay(by: -1)
+                }
+
+                Button("Move to Today") {
+                    calendarRef?.selectDate(Date())
+                }
+
+                Button("Next Day") {
+                    calendarRef?.moveDay(by: 1)
+                }
+            }
+            .padding()
+
+            // UIKit 달력을 SwiftUI로 래핑
+            CalendarWrapper(
+                controller: controller,
+                calendarRef: $calendarRef
+            )
+        }
+    }
+}
+
+private struct CalendarWrapper: UIViewRepresentable {
+    let controller: CalendarController
+    @Binding var calendarRef: TSCalendarUIView?
+
+    func makeUIView(context: Context) -> TSCalendarUIView {
+        let calendar = TSCalendarUIView(
+            config: controller.config,
+            delegate: controller,
+            dataSource: controller
+        )
+        DispatchQueue.main.async {
+            calendarRef = calendar
+        }
+        return calendar
+    }
+
+    func updateUIView(_ uiView: TSCalendarUIView, context: Context) {
+        uiView.reloadCalendar()
+    }
+}
 ```
 
-**2. UIKit 메서드 (UIKit 전용)**
+### 네비게이션 API
+
+#### moveTo(date:animated:)
+특정 날짜로 달력을 이동합니다. 날짜를 선택하지는 않습니다.
+
 ```swift
-// TSCalendarUIView에서 사용 가능
-calendarView.moveToNext()
-calendarView.moveToPrevious()
-calendarView.move(by: 3)
+// 3개월 후로 이동
+let futureDate = Calendar.current.date(byAdding: .month, value: 3, to: Date())!
+calendarView.moveTo(futureDate, animated: true)
+
+// 1개월 차이: 슬라이드 애니메이션
+// 여러 개월 차이: 즉시 이동
 ```
 
-**참고**: 네비게이션 시 `calendar(pageDidChange:)` delegate만 호출되며, `calendar(didSelect:)`는 호출되지 않습니다. 이는 페이지 이동과 날짜 선택을 명확히 구분하기 위함입니다.
+#### moveDay(by:)
+선택된 날짜를 기준으로 일 단위로 이동합니다. 월 경계를 자동으로 처리합니다.
+
+```swift
+calendarView.moveDay(by: 1)    // 다음 날 (애니메이션)
+calendarView.moveDay(by: -1)   // 이전 날 (애니메이션)
+calendarView.moveDay(by: 7)    // 일주일 후 (즉시 이동)
+```
+
+#### selectDate(_:)
+특정 날짜로 이동하고 선택합니다. `calendar(didSelect:)` delegate가 호출됩니다.
+
+```swift
+calendarView.selectDate(Date())  // 오늘 날짜 선택
+```
+
+### Delegate 호출 규칙
+
+- **프로그래매틱 네비게이션** (`moveTo`, `moveDay`): `calendar(pageDidChange:)` 만 호출
+- **사용자 선택** (`selectDate`, 탭): `calendar(didSelect:)` + `calendar(pageDidChange:)` 호출
+
+이를 통해 프로그래밍 로직과 사용자 인터랙션을 명확히 구분할 수 있습니다.
 
 ## ⚙️ 설정
 
@@ -374,6 +457,21 @@ open TSCalendarSwiftUIDemo.xcodeproj
 현재 알려진 주요 버그는 없습니다. 문제를 발견하시면 [Issues](https://github.com/tsleedev/TSCalendar/issues)에 등록해주세요.
 
 ## 📝 변경 이력
+
+### 0.7.0 (2025-01-27)
+- 일 단위 네비게이션 API 추가
+  - `moveDay(by:)`: 선택된 날짜를 기준으로 일 단위로 이동
+  - 월 경계를 자동으로 처리하며, 1일 이동 시 애니메이션 적용
+- `moveTo(date:animated:)` 주간 모드 지원 개선
+  - 월간 모드와 주간 모드 모두에서 정확한 주차 계산
+- API 단순화
+  - 불필요한 메서드 제거: `move(by:)`, `moveToNext()`, `moveToPrevious()`
+  - 명확한 API로 통합: `moveTo()`, `moveDay()`, `selectDate()`
+- 프로그래매틱 네비게이션과 사용자 선택 분리
+  - 네비게이션 메서드는 `pageDidChange` delegate만 호출
+  - `selectDate()`만 `didSelect` delegate 호출
+- ProgrammaticNavigationCalendarView 예제 추가
+  - UIViewRepresentable를 통한 SwiftUI 통합 예제
 
 ### 0.4.0 (2025-11-21)
 - 선언적 네비게이션 API 추가

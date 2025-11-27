@@ -8,7 +8,7 @@
 import Combine
 import SwiftUI
 
-final class TSCalendarViewModel: ObservableObject {
+public final class TSCalendarViewModel: ObservableObject {
     // MARK: - Published Properties
     @Published private(set) var displayedDates: [Date] = []
     @Published private(set) var datesData: [[[TSCalendarDate]]] = []
@@ -114,28 +114,78 @@ extension TSCalendarViewModel {
 
         guard canMove(to: normalizedDate) else { return }
 
-        let currentMonth = calendar.component(.month, from: currentDisplayedDate)
-        let currentYear = calendar.component(.year, from: currentDisplayedDate)
+        switch config.displayMode {
+        case .month:
+            let currentMonth = calendar.component(.month, from: currentDisplayedDate)
+            let currentYear = calendar.component(.year, from: currentDisplayedDate)
 
-        let targetMonth = calendar.component(.month, from: normalizedDate)
-        let targetYear = calendar.component(.year, from: normalizedDate)
+            let targetMonth = calendar.component(.month, from: normalizedDate)
+            let targetYear = calendar.component(.year, from: normalizedDate)
 
-        // 연도 및 월 비교
-        if currentYear != targetYear || currentMonth != targetMonth {
-            let yearDiff = targetYear - currentYear
-            let monthDiff = (yearDiff * 12) + (targetMonth - currentMonth)
+            // 연도 및 월 비교
+            if currentYear != targetYear || currentMonth != targetMonth {
+                let yearDiff = targetYear - currentYear
+                let monthDiff = (yearDiff * 12) + (targetMonth - currentMonth)
 
-            // 1개월/주 이동이고 애니메이션 활성화 시 슬라이드 애니메이션
-            if animated && !disableSwiftUIAnimation && abs(monthDiff) == 1 {
-                pendingAnimatedMove = monthDiff > 0 ? 1 : -1
-            } else {
-                // 여러 개월 이동 또는 애니메이션 비활성화 시 즉시 이동
-                willMoveDate(by: monthDiff)
-                moveDate(by: monthDiff)
+                // 1개월 이동이고 애니메이션 활성화 시 슬라이드 애니메이션
+                if animated && !disableSwiftUIAnimation && abs(monthDiff) == 1 {
+                    pendingAnimatedMove = monthDiff > 0 ? 1 : -1
+                } else {
+                    // 여러 개월 이동 또는 애니메이션 비활성화 시 즉시 이동
+                    willMoveDate(by: monthDiff)
+                    moveDate(by: monthDiff)
+                }
             }
-        } else {
-            generateAllDates()
+            // 같은 월이면 이미 표시 중이므로 이동 불필요
+
+        case .week:
+            let currentWeek = calendar.component(.weekOfYear, from: currentDisplayedDate)
+            let currentYear = calendar.component(.yearForWeekOfYear, from: currentDisplayedDate)
+
+            let targetWeek = calendar.component(.weekOfYear, from: normalizedDate)
+            let targetYear = calendar.component(.yearForWeekOfYear, from: normalizedDate)
+
+            // 연도 및 주차 비교
+            if currentYear != targetYear || currentWeek != targetWeek {
+                // 주차 차이 계산 (정확한 계산을 위해 날짜 기반으로 계산)
+                let weekDiff = calculateWeekDifference(from: currentDisplayedDate, to: normalizedDate)
+
+                // 1주 이동이고 애니메이션 활성화 시 슬라이드 애니메이션
+                if animated && !disableSwiftUIAnimation && abs(weekDiff) == 1 {
+                    pendingAnimatedMove = weekDiff > 0 ? 1 : -1
+                } else {
+                    // 여러 주 이동 또는 애니메이션 비활성화 시 즉시 이동
+                    willMoveDate(by: weekDiff)
+                    moveDate(by: weekDiff)
+                }
+            }
+            // 같은 주면 이미 표시 중이므로 이동 불필요
         }
+    }
+
+    private func calculateWeekDifference(from startDate: Date, to endDate: Date) -> Int {
+        let startWeek = getCurrentWeek(from: startDate)
+        let endWeek = getCurrentWeek(from: endDate)
+
+        let components = calendar.dateComponents([.weekOfYear], from: startWeek, to: endWeek)
+        return components.weekOfYear ?? 0
+    }
+
+    func moveDay(by days: Int) {
+        // 라이브러리가 관리하는 selectedDate를 기준으로 계산
+        let baseDate = selectedDate ?? Date()
+        guard let targetDate = calendar.date(byAdding: .day, value: days, to: baseDate),
+              canMove(to: targetDate)
+        else { return }
+
+        // 선택 날짜 내부적으로만 변경 (delegate 호출 안 함)
+        selectedDate = targetDate
+
+        // 달력 이동 (pageDidChange만 호출됨)
+        moveTo(date: targetDate, animated: abs(days) == 1)
+
+        // 같은 달이어도 선택 표시 업데이트 필요
+        generateAllDates()
     }
 
     func selectDate(_ date: Date) {

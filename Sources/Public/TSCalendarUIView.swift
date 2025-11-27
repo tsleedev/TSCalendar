@@ -177,49 +177,50 @@ public class TSCalendarUIView: UIView {
 
 // MARK: - Public Navigation Methods
 extension TSCalendarUIView {
-    /// 다음 월 또는 주로 이동합니다 (애니메이션 포함).
+    /// 특정 날짜로 달력을 이동합니다.
     ///
-    /// `config.displayMode`에 따라 다음 월(.month) 또는 다음 주(.week)로 이동합니다.
-    /// 스와이프와 동일한 슬라이드 애니메이션이 적용됩니다.
+    /// - Parameters:
+    ///   - date: 이동할 목표 날짜
+    ///   - animated: 애니메이션 여부 (기본값: true)
     ///
-    /// - Note: `calendar(pageDidChange:)` delegate 메서드가 호출되지만,
-    ///   `calendar(didSelect:)`는 호출되지 않습니다.
-    public func moveToNext() {
-        viewModel.pendingAnimatedMove = 1
-    }
-
-    /// 이전 월 또는 주로 이동합니다 (애니메이션 포함).
-    ///
-    /// `config.displayMode`에 따라 이전 월(.month) 또는 이전 주(.week)로 이동합니다.
-    /// 스와이프와 동일한 슬라이드 애니메이션이 적용됩니다.
-    ///
-    /// - Note: `calendar(pageDidChange:)` delegate 메서드가 호출되지만,
-    ///   `calendar(didSelect:)`는 호출되지 않습니다.
-    public func moveToPrevious() {
-        viewModel.pendingAnimatedMove = -1
-    }
-
-    /// 지정된 값만큼 월 또는 주를 이동합니다.
-    ///
-    /// `config.displayMode`에 따라 월(.month) 또는 주(.week) 단위로 이동합니다.
-    /// 1개월/주 이동 시에는 슬라이드 애니메이션이 적용되고,
-    /// 여러 개월/주 이동 시에는 즉시 이동합니다.
-    ///
-    /// - Parameter value: 이동할 개수. 양수는 미래 방향, 음수는 과거 방향으로 이동합니다.
-    ///
-    /// - Note: `calendar(pageDidChange:)` delegate 메서드가 호출되지만,
-    ///   `calendar(didSelect:)`는 호출되지 않습니다.
+    /// - Note:
+    ///   - 1개월 차이일 때는 슬라이드 애니메이션, 여러 개월 차이일 때는 즉시 이동합니다.
+    ///   - 이 메서드는 달력을 이동만 하며, 날짜를 선택하지 않습니다.
+    ///   - 날짜 선택이 필요한 경우 `selectDate(_:)`를 별도로 호출하세요.
+    ///   - `calendar(didSelect:)`는 호출되지 않습니다.
     ///
     /// 예시:
     /// ```swift
-    /// calendarView.move(by: 2)   // 2개월 또는 2주 앞으로 (즉시)
-    /// calendarView.move(by: -1)  // 1개월 또는 1주 뒤로 (애니메이션)
+    /// // 오늘로 이동
+    /// calendarView.moveTo(Date())
+    ///
+    /// // 3개월 후로 이동
+    /// let futureDate = Calendar.current.date(byAdding: .month, value: 3, to: Date())!
+    /// calendarView.moveTo(futureDate, animated: true)
     /// ```
-    public func move(by value: Int) {
-        if abs(value) == 1 {
-            viewModel.pendingAnimatedMove = value > 0 ? 1 : -1
-        } else {
-            viewModel.moveDate(by: value)
-        }
+    public func moveTo(_ date: Date, animated: Bool = true) {
+        viewModel.moveTo(date: date, animated: animated)
+    }
+
+    /// 지정된 일수만큼 달력을 이동합니다.
+    ///
+    /// 현재 표시된 날짜에서 지정된 일수만큼 앞뒤로 이동합니다.
+    /// 1일 이동 시에는 슬라이드 애니메이션이 적용되고, 여러 일 이동 시에는 즉시 이동합니다.
+    ///
+    /// - Parameter days: 이동할 일수. 양수는 미래 방향, 음수는 과거 방향으로 이동합니다.
+    ///
+    /// - Note:
+    ///   - 월/주 경계를 자동으로 처리합니다.
+    ///   - `calendar(pageDidChange:)` delegate 메서드가 호출되지만,
+    ///     `calendar(didSelect:)`는 호출되지 않습니다. 이는 이동(navigation)이지 선택(selection)이 아니기 때문입니다.
+    ///
+    /// 예시:
+    /// ```swift
+    /// calendarView.moveDay(by: 1)    // 하루 앞으로 (애니메이션)
+    /// calendarView.moveDay(by: -1)   // 하루 뒤로 (애니메이션)
+    /// calendarView.moveDay(by: 7)    // 일주일 앞으로 (즉시)
+    /// ```
+    public func moveDay(by days: Int) {
+        viewModel.moveDay(by: days)
     }
 }
