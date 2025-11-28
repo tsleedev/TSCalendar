@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 public final class TSCalendarConfig: ObservableObject {
-    @Published public var autoSelectToday: Bool
+    @Published public var autoSelect: Bool
     @Published public var displayMode: TSCalendarDisplayMode
     @Published public var eventDisplayStyle: TSCalendarEventDisplayStyle
     @Published public var heightStyle: TSCalendarHeightStyle
@@ -21,10 +21,25 @@ public final class TSCalendarConfig: ObservableObject {
     @Published public var startWeekDay: TSCalendarStartWeekDay
     @Published public var weekdaySymbolType: TSCalendarWeekdaySymbolType
 
-    // heightStyle 제외한 모든 프로퍼티 변경을 모니터링하는 publisher
+    // Layout에 영향을 주는 프로퍼티 변경을 모니터링하는 publisher
+    // 이 프로퍼티들이 변경되면 ViewModel 재생성이 필요함
+    public var layoutDidChange: AnyPublisher<Void, Never> {
+        let publishers: [AnyPublisher<Void, Never>] = [
+            $displayMode.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $scrollDirection.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $heightStyle.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $monthStyle.dropFirst().map { _ in () }.eraseToAnyPublisher()
+        ]
+
+        return Publishers.MergeMany(publishers)
+            .eraseToAnyPublisher()
+    }
+
+    // 일반 설정 변경을 모니터링하는 publisher (하위 호환성 유지)
+    // 이 프로퍼티들은 @Published 메커니즘으로 자동 반영되므로 reload 불필요
     public var calendarSettingsDidChange: AnyPublisher<Void, Never> {
         let publishers: [AnyPublisher<Void, Never>] = [
-            $autoSelectToday.dropFirst().map { _ in () }.eraseToAnyPublisher(),
+            $autoSelect.dropFirst().map { _ in () }.eraseToAnyPublisher(),
             $displayMode.dropFirst().map { _ in () }.eraseToAnyPublisher(),
             $eventDisplayStyle.dropFirst().map { _ in () }.eraseToAnyPublisher(),
             $isPagingEnabled.dropFirst().map { _ in () }.eraseToAnyPublisher(),
@@ -42,7 +57,7 @@ public final class TSCalendarConfig: ObservableObject {
 
     private var identifiableProperties: [Any] {
         [
-            autoSelectToday,
+            autoSelect,
             displayMode,
             eventDisplayStyle,
 //            heightStyle,      // 외부에서 새로고침 필요
@@ -61,7 +76,7 @@ public final class TSCalendarConfig: ObservableObject {
     }
 
     public init(
-        autoSelectToday: Bool = true,
+        autoSelect: Bool = true,
         displayMode: TSCalendarDisplayMode = .month,
         eventDisplayStyle: TSCalendarEventDisplayStyle = .bars,
         heightStyle: TSCalendarHeightStyle = .flexible,
@@ -73,7 +88,7 @@ public final class TSCalendarConfig: ObservableObject {
         startWeekDay: TSCalendarStartWeekDay = .sunday,
         weekdaySymbolType: TSCalendarWeekdaySymbolType = .veryShort
     ) {
-        self.autoSelectToday = autoSelectToday
+        self.autoSelect = autoSelect
         self.displayMode = displayMode
         self.eventDisplayStyle = eventDisplayStyle
         self.heightStyle = heightStyle

@@ -60,8 +60,7 @@ struct TSCalendarMonthHeaderView: View {
     // MARK: - Navigation Button
     private func navigationButton(direction: Int) -> some View {
         Button(action: {
-            viewModel.willMoveDate(by: direction)
-            viewModel.moveDate(by: direction)
+            viewModel.moveMonth(by: direction, animated: true)
         }) {
             Image(systemName: direction < 0 ? "chevron.left" : "chevron.right")
                 .foregroundColor(.primary)

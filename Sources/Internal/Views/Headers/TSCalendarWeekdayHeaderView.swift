@@ -20,7 +20,7 @@ struct TSCalendarWeekdayHeaderView: View {
                     .frame(width: appearance.weekNumberContentStyle.width)
             }
 
-            ForEach(getWeekdaySymbols(), id: \.self) { symbol in
+            ForEach(Array(getWeekdaySymbols().enumerated()), id: \.offset) { index, symbol in
                 Text(symbol)
                     .textStyle(appearance.weekdayHeaderContentStyle)
                     .foregroundColor(appearance.weekdayHeaderContentStyle.color)

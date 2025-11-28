@@ -112,7 +112,9 @@ extension TSCalendarViewModel {
     func moveTo(date: Date, animated: Bool = true) {
         let normalizedDate = calendar.startOfDay(for: date)
 
-        guard canMove(to: normalizedDate) else { return }
+        guard canMove(to: normalizedDate) else {
+            return
+        }
 
         switch config.displayMode {
         case .month:
@@ -128,7 +130,7 @@ extension TSCalendarViewModel {
                 let monthDiff = (yearDiff * 12) + (targetMonth - currentMonth)
 
                 // 1개월 이동이고 애니메이션 활성화 시 슬라이드 애니메이션
-                if animated && !disableSwiftUIAnimation && abs(monthDiff) == 1 {
+                if animated && abs(monthDiff) == 1 {
                     pendingAnimatedMove = monthDiff > 0 ? 1 : -1
                 } else {
                     // 여러 개월 이동 또는 애니메이션 비활성화 시 즉시 이동
@@ -151,7 +153,7 @@ extension TSCalendarViewModel {
                 let weekDiff = calculateWeekDifference(from: currentDisplayedDate, to: normalizedDate)
 
                 // 1주 이동이고 애니메이션 활성화 시 슬라이드 애니메이션
-                if animated && !disableSwiftUIAnimation && abs(weekDiff) == 1 {
+                if animated && abs(weekDiff) == 1 {
                     pendingAnimatedMove = weekDiff > 0 ? 1 : -1
                 } else {
                     // 여러 주 이동 또는 애니메이션 비활성화 시 즉시 이동
@@ -171,7 +173,7 @@ extension TSCalendarViewModel {
         return components.weekOfYear ?? 0
     }
 
-    func moveDay(by days: Int) {
+    func moveDay(by days: Int, animated: Bool = true) {
         // 라이브러리가 관리하는 selectedDate를 기준으로 계산
         let baseDate = selectedDate ?? Date()
         guard let targetDate = calendar.date(byAdding: .day, value: days, to: baseDate),
@@ -182,10 +184,42 @@ extension TSCalendarViewModel {
         selectedDate = targetDate
 
         // 달력 이동 (pageDidChange만 호출됨)
-        moveTo(date: targetDate, animated: abs(days) == 1)
+        moveTo(date: targetDate, animated: animated)
 
-        // 같은 달이어도 선택 표시 업데이트 필요
-        generateAllDates()
+        // animated=false일 때만 즉시 generateAllDates 호출
+        // animated=true일 때는 애니메이션 완료 후 moveDate()에서 자동 호출
+        if !animated {
+            generateAllDates()
+        }
+    }
+
+    func moveMonth(by months: Int, animated: Bool = true) {
+        // 월 이동은 현재 표시된 날짜 기준으로 계산
+        let baseDate = currentDisplayedDate
+        guard let targetDate = calendar.date(byAdding: .month, value: months, to: baseDate),
+              canMove(to: targetDate)
+        else { return }
+
+        // autoSelect가 켜져 있으면 선택 로직 적용
+        if config.autoSelect {
+            let today = Date()
+            if calendar.isDate(targetDate, equalTo: today, toGranularity: .month) {
+                // 현재 달이면 오늘 선택
+                selectedDate = calendar.startOfDay(for: today)
+            } else {
+                // 다른 달이면 1일 선택
+                selectedDate = calendar.startOfMonth(for: targetDate)
+            }
+        }
+        // autoSelect가 꺼져 있으면 selectedDate 변경 없음
+
+        moveTo(date: targetDate, animated: animated)
+
+        // animated=false일 때만 즉시 generateAllDates 호출
+        // animated=true일 때는 애니메이션 완료 후 moveDate()에서 자동 호출
+        if !animated {
+            generateAllDates()
+        }
     }
 
     func selectDate(_ date: Date) {
@@ -360,7 +394,7 @@ extension TSCalendarViewModel {
 // MARK: - Private Helpers
 extension TSCalendarViewModel {
     fileprivate func handleDateSelection(for nextDate: Date) {
-        guard config.autoSelectToday else { return }
+        guard config.autoSelect else { return }
 
         let today = Date()
         if calendar.isDate(nextDate, equalTo: today, toGranularity: .month) {

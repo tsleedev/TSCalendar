@@ -97,13 +97,17 @@ public class TSCalendarUIView: UIView {
     }
     
     private func bind() {
-        // heightStyle를 제외한 프로퍼티들 변경 감지 (자연스러운 애니메이션을 위해 heightStyle 수동으로 업데이트 필요)
-        config.calendarSettingsDidChange
+        // Layout 변경 시에만 ViewModel 재생성
+        // displayMode, scrollDirection, heightStyle, monthStyle 변경 시 reload 필요
+        config.layoutDidChange
             .sink { [weak self] _ in
                 guard let self else { return }
                 reloadCalendar()
             }
             .store(in: &configCancellables)
+
+        // 일반 설정 변경은 @Published 메커니즘으로 자동 반영되므로 reload 불필요
+        // autoSelect, showHeader, showWeekNumber 등은 기존 ViewModel에서 관찰됨
     }
     
     private func bindCalendarHeight() {
@@ -205,9 +209,10 @@ extension TSCalendarUIView {
     /// 지정된 일수만큼 달력을 이동합니다.
     ///
     /// 현재 표시된 날짜에서 지정된 일수만큼 앞뒤로 이동합니다.
-    /// 1일 이동 시에는 슬라이드 애니메이션이 적용되고, 여러 일 이동 시에는 즉시 이동합니다.
     ///
-    /// - Parameter days: 이동할 일수. 양수는 미래 방향, 음수는 과거 방향으로 이동합니다.
+    /// - Parameters:
+    ///   - days: 이동할 일수. 양수는 미래 방향, 음수는 과거 방향으로 이동합니다.
+    ///   - animated: 애니메이션 여부 (기본값: true)
     ///
     /// - Note:
     ///   - 월/주 경계를 자동으로 처리합니다.
@@ -216,11 +221,37 @@ extension TSCalendarUIView {
     ///
     /// 예시:
     /// ```swift
-    /// calendarView.moveDay(by: 1)    // 하루 앞으로 (애니메이션)
-    /// calendarView.moveDay(by: -1)   // 하루 뒤로 (애니메이션)
-    /// calendarView.moveDay(by: 7)    // 일주일 앞으로 (즉시)
+    /// calendarView.moveDay(by: 1)                    // 하루 앞으로 (애니메이션)
+    /// calendarView.moveDay(by: -1, animated: false)  // 하루 뒤로 (즉시)
+    /// calendarView.moveDay(by: 7)                    // 일주일 앞으로 (애니메이션)
     /// ```
-    public func moveDay(by days: Int) {
-        viewModel.moveDay(by: days)
+    public func moveDay(by days: Int, animated: Bool = true) {
+        viewModel.moveDay(by: days, animated: animated)
+    }
+
+    /// 지정된 월수만큼 달력을 이동합니다.
+    ///
+    /// 선택된 날짜에서 지정된 월수만큼 앞뒤로 이동합니다.
+    ///
+    /// - Parameters:
+    ///   - months: 이동할 월수. 양수는 미래 방향, 음수는 과거 방향으로 이동합니다.
+    ///   - animated: 애니메이션 여부 (기본값: true)
+    ///
+    /// - Note:
+    ///   - `autoSelect` 설정이 켜져 있으면:
+    ///     - 현재 달로 이동 시: 오늘 날짜 선택
+    ///     - 다른 달로 이동 시: 해당 월의 1일 선택
+    ///   - `autoSelect` 설정이 꺼져 있으면 달력만 이동하고 선택은 변경하지 않습니다.
+    ///   - `calendar(pageDidChange:)` delegate 메서드가 호출되지만,
+    ///     `calendar(didSelect:)`는 호출되지 않습니다.
+    ///
+    /// 예시:
+    /// ```swift
+    /// calendarView.moveMonth(by: 1)                    // 다음 달로 (애니메이션)
+    /// calendarView.moveMonth(by: -1, animated: false)  // 이전 달로 (즉시)
+    /// calendarView.moveMonth(by: 3)                    // 3개월 앞으로 (애니메이션)
+    /// ```
+    public func moveMonth(by months: Int, animated: Bool = true) {
+        viewModel.moveMonth(by: months, animated: animated)
     }
 }

@@ -68,7 +68,7 @@ struct WidgetIntentDemoEntryView : View {
                 TSCalendar(
                     initialDate: displayDate,
                     config: .init(
-                        autoSelectToday: false,
+                        autoSelect: false,
                         displayMode: .month,
                         eventDisplayStyle: .count,  // "+1", "+2" 형태로 이벤트 표시
                         isPagingEnabled: false,
@@ -85,7 +85,7 @@ struct WidgetIntentDemoEntryView : View {
                 TSCalendar(
                     initialDate: displayDate,
                     config: .init(
-                        autoSelectToday: false,
+                        autoSelect: false,
                         displayMode: .week,
                         isPagingEnabled: false,
                         showHeader: false,
@@ -101,7 +101,7 @@ struct WidgetIntentDemoEntryView : View {
                 TSCalendar(
                     initialDate: displayDate,
                     config: .init(
-                        autoSelectToday: false,
+                        autoSelect: false,
                         displayMode: .month,
                         isPagingEnabled: false,
                         showHeader: false,

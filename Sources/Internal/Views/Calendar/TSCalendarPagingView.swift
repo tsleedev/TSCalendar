@@ -74,8 +74,11 @@ private class PagingGestureHandler: ObservableObject {
     func handleOffsetChange() {
         guard let state = transitionState,
             !isDragging
-        else { return }
-        transitionState = nil
+        else {
+            return
+        }
+
+        // Don't clear transitionState here - keep it to block rapid clicks until animation completes
 
         // 이전 작업이 있다면 취소
         pendingWorkItem?.cancel()
@@ -84,6 +87,8 @@ private class PagingGestureHandler: ObservableObject {
         let workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
             self.viewModel.moveDate(by: state.direction)
+            // Clear transitionState BEFORE resetting offset to prevent triggering handleOffsetChange again
+            self.transitionState = nil
             self.offset = 0
         }
 
@@ -97,8 +102,13 @@ private class PagingGestureHandler: ObservableObject {
         pageSize: CGFloat,
         nextPageSize: CGFloat? = nil
     ) {
+        // pendingAnimatedMove 초기화 - guard 이전에 수행하여 차단된 경우에도 초기화 보장
+        viewModel.pendingAnimatedMove = nil
+
         // 이미 애니메이션 중이면 무시
-        guard transitionState == nil else { return }
+        guard transitionState == nil else {
+            return
+        }
 
         // 방향에 따른 애니메이션 설정
         if direction > 0 {
@@ -114,9 +124,6 @@ private class PagingGestureHandler: ObservableObject {
                 offset = pageSize
             }
         }
-
-        // pendingAnimatedMove 초기화
-        viewModel.pendingAnimatedMove = nil
     }
 }
 
@@ -213,7 +220,9 @@ private struct FixedHeightHorizontalPagingView: View {
                         )
                     }
             )
-            .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
+            .onChange(of: handler.offset) { _ in
+                handler.handleOffsetChange()
+            }
             .onChange(of: viewModel.pendingAnimatedMove) { direction in
                 if let direction = direction {
                     handler.handleExternalTrigger(
@@ -288,7 +297,9 @@ private struct FixedHeightVerticalPagingView: View {
                         )
                     }
             )
-            .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
+            .onChange(of: handler.offset) { _ in
+                handler.handleOffsetChange()
+            }
             .onChange(of: viewModel.pendingAnimatedMove) { direction in
                 if let direction = direction {
                     handler.handleExternalTrigger(
@@ -365,7 +376,9 @@ private struct FlexibleHeightHorizontalPagingView: View {
                         )
                     }
             )
-            .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
+            .onChange(of: handler.offset) { _ in
+                handler.handleOffsetChange()
+            }
             .onChange(of: viewModel.pendingAnimatedMove) { direction in
                 if let direction = direction {
                     handler.handleExternalTrigger(
@@ -437,7 +450,9 @@ private struct FlexibleHeightVerticalPagingView: View {
                         )
                     }
             )
-            .onChange(of: handler.offset) { _ in handler.handleOffsetChange() }
+            .onChange(of: handler.offset) { _ in
+                handler.handleOffsetChange()
+            }
             .onChange(of: viewModel.pendingAnimatedMove) { direction in
                 if let direction = direction {
                     handler.handleExternalTrigger(

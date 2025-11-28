@@ -321,8 +321,8 @@ config.showHeader = true
 // 주차 번호 표시
 config.showWeekNumber = false
 
-// 오늘 날짜 자동 선택
-config.autoSelectToday = true
+// 네비게이션 시 자동 선택
+config.autoSelect = true
 ```
 
 ### TSCalendarAppearance

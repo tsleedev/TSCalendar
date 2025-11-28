@@ -11,7 +11,7 @@ import TSCalendar
 struct FullSizeStaticCalendarView: View {
     @StateObject private var controller = CalendarController(
         config: TSCalendarConfig(
-            autoSelectToday: false,
+            autoSelect: false,
             isPagingEnabled: false,
             scrollDirection: .vertical
         )
