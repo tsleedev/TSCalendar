@@ -183,13 +183,20 @@ extension TSCalendarViewModel {
         // 선택 날짜 내부적으로만 변경 (delegate 호출 안 함)
         selectedDate = targetDate
 
-        // 달력 이동 (pageDidChange만 호출됨)
-        moveTo(date: targetDate, animated: animated)
+        // 월 경계 체크
+        let currentMonth = calendar.component(.month, from: currentDisplayedDate)
+        let targetMonth = calendar.component(.month, from: targetDate)
+        let isSameMonth = currentMonth == targetMonth
 
-        // animated=false일 때만 즉시 generateAllDates 호출
-        // animated=true일 때는 애니메이션 완료 후 moveDate()에서 자동 호출
-        if !animated {
+        if isSameMonth {
+            // 같은 달: 항상 즉시 업데이트 (animated 무시)
             generateAllDates()
+        } else {
+            // 월 경계: animated 파라미터에 따라
+            moveTo(date: targetDate, animated: animated)
+            if !animated {
+                generateAllDates()
+            }
         }
     }
 
