@@ -15,12 +15,6 @@ public struct TSCalendar: View {
     private let appearance: TSCalendarAppearance
     private let customization: TSCalendarCustomization?
 
-    /// ViewModel에 접근하기 위한 프로퍼티
-    /// - Note: 이 프로퍼티는 View가 생성된 후에만 접근해야 합니다.
-    public var calendarViewModel: TSCalendarViewModel {
-        viewModel
-    }
-
     public init(
         initialDate: Date = .now,
         minimumDate: Date? = nil,
