@@ -8,12 +8,13 @@
 import SwiftUI
 
 public struct TSCalendarConstants {
-    public static let monthHeaderHeight: CGFloat = 40
-    public static let weekdayHeaderHeight: CGFloat = 30
+    public static let monthHeaderRowHeight: CGFloat = 40
+    public static let weekdayHeaderRowHeight: CGFloat = 30
     public static let daySize: CGFloat = 25
     public static let weekNumberWidth: CGFloat = 20
-    public static let eventHeight: CGFloat = 18
-    public static let eventMoreHeight: CGFloat = 18
+    public static let eventRowHeight: CGFloat = 15
+    public static let eventMoreRowHeight: CGFloat = 18
+    public static let eventSpacing: CGFloat = 2
 }
 
 public struct TSCalendarAppearance: Sendable {
@@ -95,12 +96,12 @@ public struct TSCalendarAppearance: Sendable {
         monthHeaderContentStyle: TSCalendarContentStyle = TSCalendarContentStyle(
             font: .system(size: 17),
             color: .primary,
-            height: TSCalendarConstants.monthHeaderHeight
+            rowHeight: TSCalendarConstants.monthHeaderRowHeight
         ),
         weekdayHeaderContentStyle: TSCalendarContentStyle = TSCalendarContentStyle(
             font: .system(size: 12),
             color: .gray,
-            height: TSCalendarConstants.weekdayHeaderHeight
+            rowHeight: TSCalendarConstants.weekdayHeaderRowHeight
         ),
         weekNumberContentStyle: TSCalendarContentStyle = TSCalendarContentStyle(
             font: .system(size: 12),
@@ -111,17 +112,18 @@ public struct TSCalendarAppearance: Sendable {
             font: .system(size: 14),
             color: .primary,
             width: TSCalendarConstants.daySize,
-            height: TSCalendarConstants.daySize
+            rowHeight: TSCalendarConstants.daySize
         ),
         eventContentStyle: TSCalendarContentStyle = TSCalendarContentStyle(
             font: .system(size: 10),
             color: .gray,
-            height: TSCalendarConstants.eventHeight
+            rowHeight: TSCalendarConstants.eventRowHeight,
+            spacing: TSCalendarConstants.eventSpacing
         ),
         eventMoreContentStyle: TSCalendarContentStyle = TSCalendarContentStyle(
             font: .system(size: 10),
             color: .gray,
-            height: TSCalendarConstants.eventMoreHeight
+            rowHeight: TSCalendarConstants.eventMoreRowHeight
         )
     ) {
         // 기본 색상 초기화
@@ -157,12 +159,12 @@ public struct TSCalendarAppearance: Sendable {
                     sundayColor: .red,
                     weekdayColor: .primary,
                     otherMonthDateOpacity: 0.3,
-                    monthHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 10), color: .primary, height: 15),
-                    weekdayHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 7), color: .gray, height: 10),
+                    monthHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 10), color: .primary, rowHeight: 15),
+                    weekdayHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 7), color: .gray, rowHeight: 10),
                     weekNumberContentStyle: TSCalendarContentStyle(font: .system(size: 7), color: .gray, width: 10),
-                    dayContentStyle: TSCalendarContentStyle(font: .system(size: 9), color: .primary, width: 13, height: 13),
-                    eventContentStyle: TSCalendarContentStyle(font: .system(size: 6), color: .gray, height: 6),
-                    eventMoreContentStyle: TSCalendarContentStyle(font: .system(size: 6), color: .gray, height: 5)
+                    dayContentStyle: TSCalendarContentStyle(font: .system(size: 9), color: .primary, width: 13, rowHeight: 13),
+                    eventContentStyle: TSCalendarContentStyle(font: .system(size: 6), color: .gray, rowHeight: 6, spacing: 1),
+                    eventMoreContentStyle: TSCalendarContentStyle(font: .system(size: 6), color: .gray, rowHeight: 5)
                 )
             case .medium:
                 self.init(
@@ -172,12 +174,12 @@ public struct TSCalendarAppearance: Sendable {
                     sundayColor: .red,
                     weekdayColor: .primary,
                     otherMonthDateOpacity: 0.3,
-                    monthHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 12, weight: .semibold), color: .primary, height: 20),
-                    weekdayHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 9), color: .gray, height: 10),
+                    monthHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 12, weight: .semibold), color: .primary, rowHeight: 20),
+                    weekdayHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 9), color: .gray, rowHeight: 10),
                     weekNumberContentStyle: TSCalendarContentStyle(font: .system(size: 10), color: .gray, width: 15),
-                    dayContentStyle: TSCalendarContentStyle(font: .system(size: 11, weight: .semibold), color: .primary, width: 18, height: 18),
-                    eventContentStyle: TSCalendarContentStyle(font: .system(size: 10, weight: .semibold), color: .gray, tracking: -0.5, height: 13),
-                    eventMoreContentStyle: TSCalendarContentStyle(font: .system(size: 7), color: .gray, height: 9)
+                    dayContentStyle: TSCalendarContentStyle(font: .system(size: 11, weight: .semibold), color: .primary, width: 18, rowHeight: 18),
+                    eventContentStyle: TSCalendarContentStyle(font: .system(size: 10, weight: .semibold), color: .gray, tracking: -0.5, rowHeight: 13, spacing: 1),
+                    eventMoreContentStyle: TSCalendarContentStyle(font: .system(size: 7), color: .gray, rowHeight: 9)
                 )
             case .large:
                 self.init(
@@ -187,12 +189,12 @@ public struct TSCalendarAppearance: Sendable {
                     sundayColor: .red,
                     weekdayColor: .primary,
                     otherMonthDateOpacity: 0.3,
-                    monthHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 12, weight: .semibold), color: .primary, height: 20),
-                    weekdayHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 9), color: .gray, height: 10),
+                    monthHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 12, weight: .semibold), color: .primary, rowHeight: 20),
+                    weekdayHeaderContentStyle: TSCalendarContentStyle(font: .system(size: 9), color: .gray, rowHeight: 10),
                     weekNumberContentStyle: TSCalendarContentStyle(font: .system(size: 10), color: .gray, width: 20),
-                    dayContentStyle: TSCalendarContentStyle(font: .system(size: 11, weight: .semibold), color: .primary, width: 18, height: 18),
-                    eventContentStyle: TSCalendarContentStyle(font: .system(size: 10, weight: .semibold), color: .gray, tracking: -0.5, height: 13),
-                    eventMoreContentStyle: TSCalendarContentStyle(font: .system(size: 7), color: .gray, height: 9)
+                    dayContentStyle: TSCalendarContentStyle(font: .system(size: 11, weight: .semibold), color: .primary, width: 18, rowHeight: 18),
+                    eventContentStyle: TSCalendarContentStyle(font: .system(size: 10, weight: .semibold), color: .gray, tracking: -0.5, rowHeight: 13, spacing: 1),
+                    eventMoreContentStyle: TSCalendarContentStyle(font: .system(size: 7), color: .gray, rowHeight: 9)
                 )
             }
         }

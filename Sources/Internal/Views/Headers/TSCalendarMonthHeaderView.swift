@@ -19,7 +19,7 @@ struct TSCalendarMonthHeaderView: View {
                 staticHeader
             }
         }
-        .frame(height: appearance.monthHeaderContentStyle.height)
+        .frame(height: appearance.monthHeaderContentStyle.rowHeight)
     }
 
     // MARK: - Paging Header (버튼이 있는 헤더)

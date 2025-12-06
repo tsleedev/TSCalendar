@@ -27,7 +27,7 @@ struct TSCalendarWeekdayHeaderView: View {
                     .frame(maxWidth: .infinity)
             }
         }
-        .frame(height: appearance.weekNumberContentStyle.height)
+        .frame(height: appearance.weekdayHeaderContentStyle.rowHeight)
     }
     
     private func getWeekdaySymbols() -> [String] {

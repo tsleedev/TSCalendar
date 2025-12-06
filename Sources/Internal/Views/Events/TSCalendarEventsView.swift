@@ -24,9 +24,11 @@ struct TSCalendarEventsView: View {
 
     var body: some View {
         let totalWidth = dayWidth * CGFloat(weekData.count)
-        let rowHeight = appearance.eventContentStyle.height ?? TSCalendarConstants.eventHeight
+        let eventRowHeight = appearance.eventContentStyle.rowHeight ?? TSCalendarConstants.eventRowHeight
+        let spacing = appearance.eventContentStyle.spacing
+        let rowHeight = eventRowHeight + spacing
         let moreHeight =
-            appearance.eventMoreContentStyle.height ?? TSCalendarConstants.eventMoreHeight
+            appearance.eventMoreContentStyle.rowHeight ?? TSCalendarConstants.eventMoreRowHeight
         let dateEvents = processEvents(events)
         let maxRows = Int((height - moreHeight) / rowHeight)
         if maxRows > 0 {
@@ -166,7 +168,6 @@ struct TSCalendarEventsView: View {
                 .textStyle(appearance.eventMoreContentStyle)
                 .foregroundColor(appearance.eventMoreContentStyle.color)
                 .frame(width: dayWidth, height: moreHeight, alignment: .center)
-                .background(.yellow)
                 .offset(
                     x: dayWidth * CGFloat(index),
                     y: rowHeight * CGFloat(maxRows)

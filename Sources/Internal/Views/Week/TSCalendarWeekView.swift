@@ -54,7 +54,7 @@ struct TSCalendarWeekView: View {
                                 .foregroundColor(appearance.weekNumberContentStyle.color)
                                 .frame(
                                     width: appearance.weekNumberContentStyle.width ?? TSCalendarConstants.weekNumberWidth,
-                                    height: appearance.dayContentStyle.height ?? TSCalendarConstants.daySize
+                                    height: appearance.dayContentStyle.rowHeight ?? TSCalendarConstants.daySize
                                 )
 
                             // 이벤트 인디케이터 공간 (dots/count 스타일)
@@ -81,7 +81,7 @@ struct TSCalendarWeekView: View {
                                 .foregroundColor(foregroundColor(for: date))
                                 .frame(
                                     width: appearance.dayContentStyle.width ?? TSCalendarConstants.daySize,
-                                    height: appearance.dayContentStyle.height ?? TSCalendarConstants.daySize
+                                    height: appearance.dayContentStyle.rowHeight ?? TSCalendarConstants.daySize
                                 )
                                 .background(backgroundColor(for: date))
                                 .clipShape(Circle())
@@ -121,7 +121,7 @@ struct TSCalendarWeekView: View {
                 GeometryReader { geometry in
                     let weekNumberWidth = viewModel.config.showWeekNumber ? (appearance.weekNumberContentStyle.width ?? TSCalendarConstants.weekNumberWidth) : 0
                     let dayWidth = (geometry.size.width - weekNumberWidth) / 7
-                    let offsetY = (appearance.dayContentStyle.height ?? TSCalendarConstants.daySize) + 2
+                    let offsetY = (appearance.dayContentStyle.rowHeight ?? TSCalendarConstants.daySize) + 2
 
                     if let firstDate = visibleDates.first?.date,
                        let lastDate = visibleDates.last?.date,
@@ -148,7 +148,7 @@ struct TSCalendarWeekView: View {
     @ViewBuilder
     private func eventIndicator(for date: TSCalendarDate) -> some View {
         let count = eventCount(for: date.date)
-        let height = appearance.eventMoreContentStyle.height ?? TSCalendarConstants.eventMoreHeight
+        let height = appearance.eventMoreContentStyle.rowHeight ?? TSCalendarConstants.eventMoreRowHeight
 
         Group {
             if count > 0 {
@@ -196,7 +196,7 @@ struct TSCalendarWeekView: View {
 
     private var weekNumberSpacer: some View {
         Color.clear
-            .frame(height: appearance.eventMoreContentStyle.height ?? TSCalendarConstants.eventMoreHeight)
+            .frame(height: appearance.eventMoreContentStyle.rowHeight ?? TSCalendarConstants.eventMoreRowHeight)
     }
 }
 

@@ -18,6 +18,8 @@ struct TSCalendarEventView: View {
     private let margin: CGFloat = 2
     
     var body: some View {
+        let eventRowHeight = appearance.eventContentStyle.rowHeight ?? TSCalendarConstants.eventRowHeight
+
         Text(event.title)
             .textStyle(
                 TSCalendarContentStyle(
@@ -31,7 +33,7 @@ struct TSCalendarEventView: View {
             .lineLimit(1)
             .padding(.horizontal, 2)
             .fixedSize(horizontal: true, vertical: false)
-            .frame(width: width - margin, alignment: .leading)
+            .frame(width: width - margin, height: eventRowHeight, alignment: .leading)
             .background(event.backgroundColor)
             .cornerRadius(4)
             .offset(x: offsetX, y: offsetY)
