@@ -21,6 +21,59 @@ struct TSCalendarWeekView: View {
             return 1
         }
     }
+
+    // MARK: - Date Cell Views
+
+    @ViewBuilder
+    private func dateCellView(for date: TSCalendarDate) -> some View {
+        if let urlBuilder = viewModel.config.widgetDateURL {
+            Link(destination: urlBuilder(date.date)) {
+                dateCellContent(for: date)
+            }
+        } else {
+            dateCellContent(for: date)
+                .onTapGesture {
+                    viewModel.selectDate(date.date)
+                }
+        }
+    }
+
+    private func dateCellContent(for date: TSCalendarDate) -> some View {
+        GeometryReader { geometry in
+            VStack(spacing: 1) {
+                Text(appearance.dateFormatter.string(from: date.date))
+                    .textStyle(appearance.dayContentStyle)
+                    .foregroundColor(foregroundColor(for: date))
+                    .frame(
+                        width: appearance.dayContentStyle.width ?? TSCalendarConstants.daySize,
+                        height: appearance.dayContentStyle.rowHeight ?? TSCalendarConstants.daySize
+                    )
+                    .background(backgroundColor(for: date))
+                    .clipShape(Circle())
+                    .overlay {
+                        if date.isSelected {
+                            Circle()
+                                .strokeBorder(
+                                    appearance.selectedColor,
+                                    lineWidth: 1
+                                )
+                        }
+                    }
+
+                // 이벤트 인디케이터 (dots/count 스타일)
+                if viewModel.config.eventDisplayStyle == .dots || viewModel.config.eventDisplayStyle == .count {
+                    eventIndicator(for: date)
+                }
+
+                Spacer()
+            }
+            .frame(
+                width: geometry.size.width,
+                height: geometry.size.height
+            )
+            .contentShape(Rectangle())
+        }
+    }
     
     private var visibleDates: [TSCalendarDate] {
         weekData.filter { date in
@@ -74,45 +127,9 @@ struct TSCalendarWeekView: View {
                 }
                 
                 ForEach(weekData) { date in
-                    GeometryReader { geometry in
-                        VStack(spacing: 1) {
-                            Text(appearance.dateFormatter.string(from: date.date))
-                                .textStyle(appearance.dayContentStyle)
-                                .foregroundColor(foregroundColor(for: date))
-                                .frame(
-                                    width: appearance.dayContentStyle.width ?? TSCalendarConstants.daySize,
-                                    height: appearance.dayContentStyle.rowHeight ?? TSCalendarConstants.daySize
-                                )
-                                .background(backgroundColor(for: date))
-                                .clipShape(Circle())
-                                .overlay {
-                                    if date.isSelected {
-                                        Circle()
-                                            .strokeBorder(
-                                                appearance.selectedColor,
-                                                lineWidth: 1
-                                            )
-                                    }
-                                }
-
-                            // 이벤트 인디케이터 (dots/count 스타일)
-                            if viewModel.config.eventDisplayStyle == .dots || viewModel.config.eventDisplayStyle == .count {
-                                eventIndicator(for: date)
-                            }
-
-                            Spacer()
-                        }
-                        .frame(
-                            width: geometry.size.width,
-                            height: geometry.size.height
-                        )
-                        .contentShape(Rectangle())
-                    }
-                    .frame(maxWidth: .infinity)
-                    .onTapGesture {
-                        viewModel.selectDate(date.date)
-                    }
-                    .opacity(dateOpacity(for: date))
+                    dateCellView(for: date)
+                        .frame(maxWidth: .infinity)
+                        .opacity(dateOpacity(for: date))
                 }
             }
             

@@ -58,7 +58,7 @@ xcodebuild -project Examples/TSCalendarUIKitDemo/TSCalendarUIKitDemo.xcodeproj -
 
 - **플랫폼**: iOS 15.0+, Swift 6.0+
 - **아키텍처**: SwiftUI/Combine을 사용한 MVVM
-- **위젯 지원**: 크기별 외관을 가진 위젯 확장 포함
+- **위젯 지원**: 크기별 외관을 가진 위젯 확장 포함, `widgetDateURL`로 날짜 탭 딥링크 지원
 - **지역화**: 국제 지원을 위해 Locale.current와 함께 DateFormatter 사용
 - **상태 관리**: @StateObject, @ObservedObject, @Published 프로퍼티 사용
 - **반응형 업데이트**: Combine 퍼블리셔를 통한 설정 변경이 뷰 재구성 트리거

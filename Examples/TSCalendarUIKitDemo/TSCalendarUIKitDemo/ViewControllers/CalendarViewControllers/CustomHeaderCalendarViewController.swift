@@ -170,11 +170,19 @@ class CustomHeaderCalendarViewController: UIViewController {
     }
     
     @objc private func previousButtonTapped() {
-        calendarView.moveToPrevious()
+        let currentDate = calendarView.currentDisplayedDate
+        let unit: Calendar.Component = controller.config.displayMode == .month ? .month : .weekOfMonth
+        if let newDate = Calendar.current.date(byAdding: unit, value: -1, to: currentDate) {
+            calendarView.moveTo(newDate, animated: true)
+        }
     }
 
     @objc private func nextButtonTapped() {
-        calendarView.moveToNext()
+        let currentDate = calendarView.currentDisplayedDate
+        let unit: Calendar.Component = controller.config.displayMode == .month ? .month : .weekOfMonth
+        if let newDate = Calendar.current.date(byAdding: unit, value: 1, to: currentDate) {
+            calendarView.moveTo(newDate, animated: true)
+        }
     }
 
     @objc private func todayButtonTapped() {

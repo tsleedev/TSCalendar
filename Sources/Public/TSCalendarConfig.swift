@@ -21,6 +21,10 @@ public final class TSCalendarConfig: ObservableObject {
     @Published public var startWeekDay: TSCalendarStartWeekDay
     @Published public var weekdaySymbolType: TSCalendarWeekdaySymbolType
 
+    /// 위젯용: 날짜 탭 시 사용할 URL 생성 클로저
+    /// 설정되면 onTapGesture 대신 Link를 사용하여 위젯에서 날짜 탭이 작동합니다.
+    public var widgetDateURL: ((Date) -> URL)?
+
     // Layout에 영향을 주는 프로퍼티 변경을 모니터링하는 publisher
     // 이 프로퍼티들이 변경되면 ViewModel 재생성이 필요함
     public var layoutDidChange: AnyPublisher<Void, Never> {
@@ -86,7 +90,8 @@ public final class TSCalendarConfig: ObservableObject {
         showHeader: Bool = true,
         showWeekNumber: Bool = false,
         startWeekDay: TSCalendarStartWeekDay = .sunday,
-        weekdaySymbolType: TSCalendarWeekdaySymbolType = .veryShort
+        weekdaySymbolType: TSCalendarWeekdaySymbolType = .veryShort,
+        widgetDateURL: ((Date) -> URL)? = nil
     ) {
         self.autoSelect = autoSelect
         self.displayMode = displayMode
@@ -99,5 +104,6 @@ public final class TSCalendarConfig: ObservableObject {
         self.showWeekNumber = showWeekNumber
         self.startWeekDay = startWeekDay
         self.weekdaySymbolType = weekdaySymbolType
+        self.widgetDateURL = widgetDateURL
     }
 }

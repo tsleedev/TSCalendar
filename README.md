@@ -34,12 +34,12 @@ iOS 15+ 용 SwiftUI & UIKit 달력 라이브러리
    ```
    https://github.com/tsleedev/TSCalendar.git
    ```
-4. 버전 선택: `0.7.0` 이상
+4. 버전 선택: `1.0.0` 이상
 
 #### Package.swift에 추가
 ```swift
 dependencies: [
-    .package(url: "https://github.com/tsleedev/TSCalendar.git", from: "0.7.0")
+    .package(url: "https://github.com/tsleedev/TSCalendar.git", from: "1.0.0")
 ]
 ```
 
@@ -323,6 +323,52 @@ config.showWeekNumber = false
 
 // 네비게이션 시 자동 선택
 config.autoSelect = true
+
+// 위젯용 날짜 탭 URL (WidgetKit 전용)
+config.widgetDateURL = { date in
+    let formatter = ISO8601DateFormatter()
+    formatter.formatOptions = [.withFullDate]
+    return URL(string: "myapp://calendar?date=\(formatter.string(from: date))")!
+}
+```
+
+### 위젯에서 날짜 탭 처리
+
+WidgetKit에서는 `onTapGesture`가 작동하지 않으므로, `widgetDateURL`을 설정하여 날짜 탭 시 딥링크로 앱을 열 수 있습니다.
+
+```swift
+// Widget에서 사용
+struct CalendarWidget: Widget {
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: "calendar", provider: Provider()) { entry in
+            TSCalendar(
+                initialDate: entry.date,
+                config: .init(
+                    displayMode: .week,
+                    widgetDateURL: { date in
+                        let formatter = ISO8601DateFormatter()
+                        formatter.formatOptions = [.withFullDate]
+                        let dateString = formatter.string(from: date)
+                        return URL(string: "myapp://open/calendar?date=\(dateString)")!
+                    }
+                )
+            )
+        }
+    }
+}
+
+// 앱에서 URL 처리
+@main
+struct MyApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .onOpenURL { url in
+                    // url.query에서 date 파싱하여 처리
+                }
+        }
+    }
+}
 ```
 
 ### TSCalendarAppearance
@@ -457,6 +503,29 @@ open TSCalendarSwiftUIDemo.xcodeproj
 현재 알려진 주요 버그는 없습니다. 문제를 발견하시면 [Issues](https://github.com/tsleedev/TSCalendar/issues)에 등록해주세요.
 
 ## 📝 변경 이력
+
+### 1.0.0 (2025-12-28) 🎉 정식 릴리스
+- **위젯 날짜 탭 지원** (`widgetDateURL`)
+  - WidgetKit에서 날짜 탭 시 딥링크로 앱 열기 지원
+  - `TSCalendarConfig`에 `widgetDateURL: ((Date) -> URL)?` 프로퍼티 추가
+  - `Link` 기반으로 위젯에서 날짜별 URL 처리
+- Example 앱 개선
+  - SwiftUI Widget Demo에 날짜 탭 URL 핸들링 추가
+  - UIKit Demo의 deprecated API 수정
+- 안정성 검증 완료 후 정식 버전 릴리스
+
+### 0.9.1 (2025-12-27)
+- BREAKING: `height` → `rowHeight` 파라미터명 변경
+- `spacing` 프로퍼티 추가
+
+### 0.9.0 (2025-12-26)
+- BREAKING: `calendarViewModel` 프로퍼티 제거
+
+### 0.8.1 (2025-12-25)
+- `moveDay` 동작 개선
+
+### 0.8.0 (2025-12-24)
+- 내부 개선
 
 ### 0.7.0 (2025-01-27)
 - 일 단위 네비게이션 API 추가

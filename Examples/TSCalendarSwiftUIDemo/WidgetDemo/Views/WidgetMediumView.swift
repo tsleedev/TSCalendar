@@ -6,13 +6,42 @@
 //
 
 import SwiftUI
+import TSCalendar
 
 struct WidgetMediumView: View {
+    @StateObject private var controller = CalendarController()
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        TSCalendar(
+            config: .init(
+                displayMode: .week,
+                eventDisplayStyle: .dots,
+                isPagingEnabled: false,
+                showHeader: false,
+                widgetDateURL: Self.buildDateURL  // 위젯 날짜 탭 URL
+            ),
+            appearance: TSCalendarAppearance(type: .widget(.medium)),
+            delegate: controller,
+            dataSource: controller
+        )
+        .padding(.vertical, 4)
+    }
+
+    /// 날짜 탭 시 앱을 열기 위한 URL 생성
+    private static func buildDateURL(for date: Date) -> URL {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withFullDate]
+        let dateString = formatter.string(from: date)
+        return URL(string: "tscalendardemo://calendar?date=\(dateString)")!
     }
 }
 
-#Preview {
-    WidgetMediumView()
+#if DEBUG
+import WidgetKit
+
+#Preview(as: .systemMedium) {
+    WidgetDemo()
+} timeline: {
+    SimpleEntry(date: .now, emoji: "😀")
 }
+#endif
