@@ -40,7 +40,7 @@ struct TSCalendarWeekView: View {
 
     private func dateCellContent(for date: TSCalendarDate) -> some View {
         GeometryReader { geometry in
-            VStack(spacing: 1) {
+            VStack(spacing: appearance.dayContentStyle.spacing) {
                 Text(appearance.dateFormatter.string(from: date.date))
                     .textStyle(appearance.dayContentStyle)
                     .foregroundColor(foregroundColor(for: date))
@@ -101,7 +101,7 @@ struct TSCalendarWeekView: View {
                 // 주차 표시 추가
                 if viewModel.config.showWeekNumber, let date = weekData.first?.date {
                     GeometryReader { geometry in
-                        VStack(spacing: 1) {
+                        VStack(spacing: appearance.dayContentStyle.spacing) {
                             Text("\(viewModel.weekNumberOfYear(for: date))")
                                 .textStyle(appearance.weekNumberContentStyle)
                                 .foregroundColor(appearance.weekNumberContentStyle.color)
@@ -138,7 +138,7 @@ struct TSCalendarWeekView: View {
                 GeometryReader { geometry in
                     let weekNumberWidth = viewModel.config.showWeekNumber ? (appearance.weekNumberContentStyle.width ?? TSCalendarConstants.weekNumberWidth) : 0
                     let dayWidth = (geometry.size.width - weekNumberWidth) / 7
-                    let offsetY = (appearance.dayContentStyle.rowHeight ?? TSCalendarConstants.daySize) + 2
+                    let offsetY = (appearance.dayContentStyle.rowHeight ?? TSCalendarConstants.daySize) + appearance.dayContentStyle.spacing
 
                     if let firstDate = visibleDates.first?.date,
                        let lastDate = visibleDates.last?.date,

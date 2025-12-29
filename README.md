@@ -394,6 +394,50 @@ TSCalendar(
 )
 ```
 
+### Spacing 설정
+
+`TSCalendarContentStyle`의 `spacing` 프로퍼티는 각 컨텐츠의 **하단 여백**을 설정합니다.
+
+```
+┌─────────────────────────┐
+│   January 2025          │  monthHeader
+├─────────────────────────┤
+│  일 월 화 수 목 금 토    │  weekdayHeader
+│  (spacing)              │  ← weekdayHeaderContentStyle.spacing
+├─────────────────────────┤
+│     15                  │  day
+│    (spacing)            │  ← dayContentStyle.spacing
+│   │이벤트 1│            │  event
+│    (spacing)            │  ← eventContentStyle.spacing
+│   │이벤트 2│            │
+└─────────────────────────┘
+```
+
+```swift
+// 위젯에서 간격 조정 예시
+let appearance = TSCalendarAppearance(
+    weekdayHeaderContentStyle: TSCalendarContentStyle(
+        font: .system(size: 9),
+        color: .gray,
+        rowHeight: 10,
+        spacing: 2  // 요일 헤더 하단 여백
+    ),
+    dayContentStyle: TSCalendarContentStyle(
+        font: .system(size: 11),
+        color: .primary,
+        width: 18,
+        rowHeight: 18,
+        spacing: 1  // 날짜 하단 여백
+    ),
+    eventContentStyle: TSCalendarContentStyle(
+        font: .system(size: 10),
+        color: .gray,
+        rowHeight: 13,
+        spacing: 1  // 이벤트 간 여백
+    )
+)
+```
+
 ### 이벤트 표시
 
 ```swift
@@ -503,6 +547,14 @@ open TSCalendarSwiftUIDemo.xcodeproj
 현재 알려진 주요 버그는 없습니다. 문제를 발견하시면 [Issues](https://github.com/tsleedev/TSCalendar/issues)에 등록해주세요.
 
 ## 📝 변경 이력
+
+### 1.0.1 (2025-12-29)
+- **Spacing 설정 기능 개선**
+  - `spacing` 프로퍼티를 각 컨텐츠의 **하단 여백**으로 통일
+  - `weekdayHeaderContentStyle.spacing`: 요일 헤더 하단 여백
+  - `dayContentStyle.spacing`: 날짜 하단 여백
+  - `eventContentStyle.spacing`: 이벤트 간 여백
+- 위젯에서 세밀한 레이아웃 조정 가능
 
 ### 1.0.0 (2025-12-28) 🎉 정식 릴리스
 - **위젯 날짜 탭 지원** (`widgetDateURL`)
