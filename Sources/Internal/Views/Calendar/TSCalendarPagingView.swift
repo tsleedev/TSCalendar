@@ -34,6 +34,9 @@ private class PagingGestureHandler: ObservableObject {
     // 레이스 컨디션 방지를 위한 DispatchWorkItem
     private var pendingWorkItem: DispatchWorkItem?
 
+    // 빠른 스와이프 시 이동 횟수 누적 (다음: +1, 이전: -1)
+    private var pendingMoveCount: Int = 0
+
     init(viewModel: TSCalendarViewModel) {
         self.viewModel = viewModel
     }
@@ -53,12 +56,14 @@ private class PagingGestureHandler: ObservableObject {
 
         if translation > dragThreshold {
             transitionState = .previous
+            pendingMoveCount -= 1
             viewModel.willMoveDate(by: -1)
             withAnimation(transitionAnimation) {
                 offset = pageSize
             }
         } else if translation < -dragThreshold {
             transitionState = .next
+            pendingMoveCount += 1
             viewModel.willMoveDate(by: 1)
             withAnimation(transitionAnimation) {
                 offset = -(nextPageSize ?? pageSize)
@@ -72,9 +77,7 @@ private class PagingGestureHandler: ObservableObject {
     }
 
     func handleOffsetChange() {
-        guard let state = transitionState,
-            !isDragging
-        else {
+        guard transitionState != nil, !isDragging else {
             return
         }
 
@@ -86,7 +89,16 @@ private class PagingGestureHandler: ObservableObject {
         // 새로운 작업 생성
         let workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
-            self.viewModel.moveDate(by: state.direction)
+
+            // 누적된 이동 횟수를 로컬에 저장 후 리셋
+            let moveBy = self.pendingMoveCount
+            self.pendingMoveCount = 0
+
+            // 누적된 횟수가 0이 아닐 때만 이동 (앞뒤로 스와이프해서 상쇄된 경우 제외)
+            if moveBy != 0 {
+                self.viewModel.moveDate(by: moveBy)
+            }
+
             // Clear transitionState BEFORE resetting offset to prevent triggering handleOffsetChange again
             self.transitionState = nil
             self.offset = 0
@@ -113,12 +125,14 @@ private class PagingGestureHandler: ObservableObject {
         // 방향에 따른 애니메이션 설정
         if direction > 0 {
             transitionState = .next
+            pendingMoveCount += 1
             viewModel.willMoveDate(by: 1)
             withAnimation(transitionAnimation) {
                 offset = -(nextPageSize ?? pageSize)
             }
         } else if direction < 0 {
             transitionState = .previous
+            pendingMoveCount -= 1
             viewModel.willMoveDate(by: -1)
             withAnimation(transitionAnimation) {
                 offset = pageSize
