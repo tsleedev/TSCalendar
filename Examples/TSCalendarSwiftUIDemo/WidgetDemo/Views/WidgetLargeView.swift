@@ -19,7 +19,7 @@ struct WidgetLargeView: View {
                 isPagingEnabled: false,
                 monthStyle: .fixed,
                 showHeader: false,
-                widgetDateURL: Self.buildDateURL  // 위젯 날짜 탭 URL
+                widgetDateURL: Self.buildDateURL
             ),
             appearance: TSCalendarAppearance(type: .widget(.large)),
             delegate: controller,
@@ -28,7 +28,6 @@ struct WidgetLargeView: View {
         .padding(.vertical, 4)
     }
 
-    /// 날짜 탭 시 앱을 열기 위한 URL 생성
     private static func buildDateURL(for date: Date) -> URL {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withFullDate]

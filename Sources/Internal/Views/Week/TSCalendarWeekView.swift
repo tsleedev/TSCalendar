@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppIntents
 
 struct TSCalendarWeekView: View {
     @Environment(\.calendarAppearance) private var appearance
@@ -26,11 +27,19 @@ struct TSCalendarWeekView: View {
 
     @ViewBuilder
     private func dateCellView(for date: TSCalendarDate) -> some View {
-        if let urlBuilder = viewModel.config.widgetDateURL {
+        if let intentBuilder = viewModel.config.widgetDateIntent {
+            // Intent 우선: 위젯 내 동작용
+            Button(intent: intentBuilder(date.date)) {
+                dateCellContent(for: date)
+            }
+            .buttonStyle(.plain)
+        } else if let urlBuilder = viewModel.config.widgetDateURL {
+            // URL: 앱 열기용
             Link(destination: urlBuilder(date.date)) {
                 dateCellContent(for: date)
             }
         } else {
+            // 기본: 앱 내 날짜 선택
             dateCellContent(for: date)
                 .onTapGesture {
                     viewModel.selectDate(date.date)

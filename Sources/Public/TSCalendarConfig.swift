@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import AppIntents
 
 public final class TSCalendarConfig: ObservableObject {
     @Published public var autoSelect: Bool
@@ -21,9 +22,14 @@ public final class TSCalendarConfig: ObservableObject {
     @Published public var startWeekDay: TSCalendarStartWeekDay
     @Published public var weekdaySymbolType: TSCalendarWeekdaySymbolType
 
-    /// 위젯용: 날짜 탭 시 사용할 URL 생성 클로저
-    /// 설정되면 onTapGesture 대신 Link를 사용하여 위젯에서 날짜 탭이 작동합니다.
+    /// 위젯용: 날짜 탭 시 앱을 열기 위한 URL 생성 클로저
+    /// 설정되면 Link를 사용하여 앱을 엽니다.
     public var widgetDateURL: ((Date) -> URL)?
+
+    /// 위젯용: 날짜 탭 시 실행할 AppIntent 생성 클로저
+    /// 설정되면 Button(intent:)를 사용하여 위젯 내에서 동작합니다.
+    /// widgetDateIntent가 widgetDateURL보다 우선합니다.
+    public var widgetDateIntent: ((Date) -> any AppIntent)?
 
     // Layout에 영향을 주는 프로퍼티 변경을 모니터링하는 publisher
     // 이 프로퍼티들이 변경되면 ViewModel 재생성이 필요함
@@ -91,7 +97,8 @@ public final class TSCalendarConfig: ObservableObject {
         showWeekNumber: Bool = false,
         startWeekDay: TSCalendarStartWeekDay = .sunday,
         weekdaySymbolType: TSCalendarWeekdaySymbolType = .veryShort,
-        widgetDateURL: ((Date) -> URL)? = nil
+        widgetDateURL: ((Date) -> URL)? = nil,
+        widgetDateIntent: ((Date) -> any AppIntent)? = nil
     ) {
         self.autoSelect = autoSelect
         self.displayMode = displayMode
@@ -105,5 +112,6 @@ public final class TSCalendarConfig: ObservableObject {
         self.startWeekDay = startWeekDay
         self.weekdaySymbolType = weekdaySymbolType
         self.widgetDateURL = widgetDateURL
+        self.widgetDateIntent = widgetDateIntent
     }
 }
