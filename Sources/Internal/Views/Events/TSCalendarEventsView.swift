@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppIntents
 
 private struct DateEvent {
     let event: TSCalendarEvent
@@ -21,6 +22,7 @@ struct TSCalendarEventsView: View {
     let events: [TSCalendarEvent]
     let dayWidth: CGFloat
     let height: CGFloat
+    let widgetEventIntent: ((TSCalendarEvent) -> any AppIntent)?
 
     var body: some View {
         let totalWidth = dayWidth * CGFloat(weekData.count)
@@ -44,7 +46,8 @@ struct TSCalendarEventsView: View {
                             event: dateEvent.event,
                             width: min(eventWidth, totalWidth),
                             offsetX: dayWidth * CGFloat(dateEvent.startIndex),
-                            offsetY: rowHeight * dateEvent.offsetY
+                            offsetY: rowHeight * dateEvent.offsetY,
+                            widgetEventIntent: widgetEventIntent
                         )
                         .frame(height: rowHeight)
                     }

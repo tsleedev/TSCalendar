@@ -6,21 +6,23 @@
 //
 
 import SwiftUI
+import AppIntents
 
 struct TSCalendarEventView: View {
     @Environment(\.calendarAppearance) private var appearance
-    
+
     let event: TSCalendarEvent
     let width: CGFloat
     let offsetX: CGFloat
     let offsetY: CGFloat
-    
+    let widgetEventIntent: ((TSCalendarEvent) -> any AppIntent)?
+
     private let margin: CGFloat = 2
-    
+
     var body: some View {
         let eventRowHeight = appearance.eventContentStyle.rowHeight ?? TSCalendarConstants.eventRowHeight
 
-        Text(event.title)
+        let content = Text(event.title)
             .textStyle(
                 TSCalendarContentStyle(
                     font: appearance.eventContentStyle.font,
@@ -36,6 +38,17 @@ struct TSCalendarEventView: View {
             .frame(width: width - margin, height: eventRowHeight, alignment: .leading)
             .background(event.backgroundColor)
             .cornerRadius(4)
-            .offset(x: offsetX, y: offsetY)
+
+        Group {
+            if let intentBuilder = widgetEventIntent {
+                Button(intent: intentBuilder(event)) {
+                    content
+                }
+                .buttonStyle(.plain)
+            } else {
+                content
+            }
+        }
+        .offset(x: offsetX, y: offsetY)
     }
 }

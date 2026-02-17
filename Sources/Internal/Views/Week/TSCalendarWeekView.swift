@@ -157,7 +157,8 @@ struct TSCalendarWeekView: View {
                             weekData: visibleDates,  // 보이는 날짜만 전달
                             events: events,
                             dayWidth: dayWidth,
-                            height: geometry.size.height - offsetY
+                            height: geometry.size.height - offsetY,
+                            widgetEventIntent: viewModel.config.widgetEventIntent
                         )
                         .offset(
                             x: (CGFloat(visibleStartIndex) * dayWidth) + weekNumberWidth,

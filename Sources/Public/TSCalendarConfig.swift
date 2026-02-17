@@ -31,6 +31,10 @@ public final class TSCalendarConfig: ObservableObject {
     /// widgetDateIntent가 widgetDateURL보다 우선합니다.
     public var widgetDateIntent: ((Date) -> any AppIntent)?
 
+    /// 위젯용: 이벤트 바 탭 시 실행할 AppIntent 생성 클로저
+    /// 설정되면 이벤트 바를 Button(intent:)로 래핑합니다.
+    public var widgetEventIntent: ((TSCalendarEvent) -> any AppIntent)?
+
     // Layout에 영향을 주는 프로퍼티 변경을 모니터링하는 publisher
     // 이 프로퍼티들이 변경되면 ViewModel 재생성이 필요함
     public var layoutDidChange: AnyPublisher<Void, Never> {
@@ -98,7 +102,8 @@ public final class TSCalendarConfig: ObservableObject {
         startWeekDay: TSCalendarStartWeekDay = .sunday,
         weekdaySymbolType: TSCalendarWeekdaySymbolType = .veryShort,
         widgetDateURL: ((Date) -> URL)? = nil,
-        widgetDateIntent: ((Date) -> any AppIntent)? = nil
+        widgetDateIntent: ((Date) -> any AppIntent)? = nil,
+        widgetEventIntent: ((TSCalendarEvent) -> any AppIntent)? = nil
     ) {
         self.autoSelect = autoSelect
         self.displayMode = displayMode
@@ -113,5 +118,6 @@ public final class TSCalendarConfig: ObservableObject {
         self.weekdaySymbolType = weekdaySymbolType
         self.widgetDateURL = widgetDateURL
         self.widgetDateIntent = widgetDateIntent
+        self.widgetEventIntent = widgetEventIntent
     }
 }
