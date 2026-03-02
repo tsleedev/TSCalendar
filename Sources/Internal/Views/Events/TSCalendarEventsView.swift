@@ -32,7 +32,7 @@ struct TSCalendarEventsView: View {
         let moreHeight =
             appearance.eventMoreContentStyle.rowHeight ?? TSCalendarConstants.eventMoreRowHeight
         let dateEvents = processEvents(events)
-        let maxRows = Int((height - moreHeight) / rowHeight)
+        let maxRows = rowHeight > 0 ? Int((height - moreHeight) / rowHeight) : 0
         if maxRows > 0 {
             ZStack(alignment: .topLeading) {
                 // maxRows - 1까지만 표시
