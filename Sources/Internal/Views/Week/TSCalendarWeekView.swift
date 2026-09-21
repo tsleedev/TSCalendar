@@ -206,6 +206,15 @@ struct TSCalendarWeekView: View {
     
     private func foregroundColor(for date: TSCalendarDate) -> Color {
         let weekday = Calendar.current.component(.weekday, from: date.date)
+        if date.isToday {
+            if (weekday == 1 || weekday == 7),
+               let weekendForegroundColor = appearance.todayWeekendForegroundColor {
+                return weekendForegroundColor
+            }
+            if let todayForegroundColor = appearance.todayForegroundColor {
+                return todayForegroundColor
+            }
+        }
         if weekday == 1 {
             return appearance.sundayColor
         } else if weekday == 7 {
@@ -215,10 +224,14 @@ struct TSCalendarWeekView: View {
     }
     
     private func backgroundColor(for date: TSCalendarDate) -> Color {
-        if date.isToday {
-            return appearance.todayColor
+        guard date.isToday else { return .clear }
+        let weekday = Calendar.current.component(.weekday, from: date.date)
+        if weekday == 1 {
+            return appearance.todaySundayColor ?? appearance.todayColor
+        } else if weekday == 7 {
+            return appearance.todaySaturdayColor ?? appearance.todayColor
         }
-        return .clear
+        return appearance.todayColor
     }
 
     private var weekNumberSpacer: some View {
