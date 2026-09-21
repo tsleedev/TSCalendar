@@ -69,6 +69,14 @@ public struct TSCalendarAppearance: Sendable {
     
     // Colors
     public let todayColor: Color
+    /// 오늘 날짜의 글자색. nil이면 기존 요일별 글자색을 사용합니다.
+    public let todayForegroundColor: Color?
+    /// 오늘이 일요일일 때의 배경색. nil이면 todayColor를 사용합니다.
+    public let todaySundayColor: Color?
+    /// 오늘이 토요일일 때의 배경색. nil이면 todayColor를 사용합니다.
+    public let todaySaturdayColor: Color?
+    /// 오늘이 토요일·일요일일 때의 글자색. nil이면 기존 오늘 글자색 처리를 따릅니다.
+    public let todayWeekendForegroundColor: Color?
     public let selectedColor: Color
     public let saturdayColor: Color
     public let sundayColor: Color
@@ -88,6 +96,10 @@ public struct TSCalendarAppearance: Sendable {
     // Default Initializer
     public init(
         todayColor: Color = .gray.opacity(0.5),
+        todayForegroundColor: Color? = nil,
+        todaySundayColor: Color? = nil,
+        todaySaturdayColor: Color? = nil,
+        todayWeekendForegroundColor: Color? = nil,
         selectedColor: Color = .gray.opacity(0.5),
         saturdayColor: Color = .blue,
         sundayColor: Color = .red,
@@ -128,6 +140,10 @@ public struct TSCalendarAppearance: Sendable {
     ) {
         // 기본 색상 초기화
         self.todayColor = todayColor
+        self.todayForegroundColor = todayForegroundColor
+        self.todaySundayColor = todaySundayColor
+        self.todaySaturdayColor = todaySaturdayColor
+        self.todayWeekendForegroundColor = todayWeekendForegroundColor
         self.selectedColor = selectedColor
         self.saturdayColor = saturdayColor
         self.sundayColor = sundayColor
